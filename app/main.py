@@ -7,7 +7,10 @@ from app.conversation import (
 from app.llm import ask_llm
 
 from app.commands import parse_calculator_command
-from app.tools.calculator import calculate
+from app.tools.calculator import (
+    CALCULATOR_TOOL_SCHEMA,
+    calculate,
+)
 
 def main() -> None:
     print("nanobot-rebuild")
@@ -59,11 +62,25 @@ def main() -> None:
         add_message(messages, "user", user_message)
 
         try:
-            answer = ask_llm(messages)
+            result = ask_llm(messages, tools=[CALCULATOR_TOOL_SCHEMA],)
         except Exception as exc:
             messages.pop()  # 移除用户消息
             print(f"\nLLM 调用失败: {exc}")
             continue
+        if result.tool_calls:
+            print("\nLLM 调用工具:")
+            for tool_call in result.tool_calls:
+                print(f"id: {tool_call.id}")
+                print(f"name: {tool_call.name}")
+                print(f"arguments: {tool_call.arguments}")
+            print("status:"
+                  "stage 4: tool call handling"
+                  "not implemented yet"
+                  )
+            print("--------------------------------")
+            messages.pop()  # 移除用户消息
+            continue
+        answer = result.content
         add_message(messages, "assistant", answer)
 
         print(f"\nAssistant > {answer}")
