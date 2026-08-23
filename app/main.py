@@ -6,15 +6,19 @@ from app.conversation import (
 
 from app.llm import ask_llm
 
+from app.commands import parse_calculator_command
+from app.tools.calculator import calculate
 
 def main() -> None:
     print("nanobot-rebuild")
-    print("stage 2: multi-turn conversation")
+    print("stage 3: first tool")
     print()
     print("命令:")
-    print("  /history  查看当前上下文")
-    print("  /clear    清空当前上下文")
-    print("  exit      退出程序")
+    print("  /calc A OP B   使用计算器")
+    print("  /history       查看当前上下文")
+    print("  /clear         清空当前上下文")
+    print("  exit           退出程序")
+
 
     messages = create_conversation()
     while True:
@@ -35,6 +39,21 @@ def main() -> None:
         if user_message == "/clear":
             messages = create_conversation()
             print("\n上下文已清空。")
+            continue
+        if user_message.startswith("/calc"):
+            try:
+                left, operator, right = parse_calculator_command(user_message)
+                result = calculate(left, operator, right)
+            except (ValueError, ZeroDivisionError) as exc:
+                print(f"\n计算器命令错误: {exc}")
+            print(
+                f"\nCalculator > "
+                f"{left:g} "
+                f"{operator} "
+                f"{right:g} "
+                f"= {result:g}"
+            )
+
             continue
 
         add_message(messages, "user", user_message)
