@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "Rebuild a lightweight AI agent from scratch"
 requires-python = ">=3.11"
 
+dependencies = [
+    "openai>=2.8.0",
+]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
