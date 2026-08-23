@@ -15,7 +15,9 @@ def build_messages(user_message: str)-> list[dict[str,str]]:
     return [
         {"role": "user", "content": user_message}
     ]
-def ask_llm(user_message: str) -> str:
+def ask_llm(
+    messages: list[dict[str, str]],
+    ) -> str:
     """
     Ask the language model a question.
 
@@ -38,14 +40,14 @@ def ask_llm(user_message: str) -> str:
             )
     client = OpenAI(
         api_key=api_key, 
-        base_url=base_url or None)
+        base_url=base_url or None
+        )
     
-    messages = build_messages(user_message)
     response = client.chat.completions.create(
         model=model,
         messages=messages,
         temperature=0.7,
-        max_tokens=150
+        # max_tokens=150
     )
     content = response.choices[0].message.content
     return content or "No response from the language model."
