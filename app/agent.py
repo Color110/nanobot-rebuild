@@ -3,11 +3,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.llm import LLMResult, ToolCallRequest, ask_llm
-from app.tools.calculator import (
-    CALCULATOR_TOOL_SCHEMA,
-    calculate,
-)
-MAX_AGENT_ITERATIONS = 5
+from app.tools.registry import ToolRegistry
+MAX_AGENT_ITERATIONS = 8
 
 @dataclass
 class ToolExecutionRecord:
@@ -25,7 +22,6 @@ class AgentRunResult:
     """
     记录一次Agent的运行过程。
     """
-
     final_content: str
     iterations: int
     tools_used: list[ToolExecutionRecord]
@@ -54,25 +50,10 @@ def build_assistant_tool_call_message(
         "content": result.content or None,
         "tool_calls": tool_calls,
     }
-def execute_tool_call(
-    tool_call: ToolCallRequest,
-) -> str:
-    """
-    执行一个工具调用，并返回执行记录。
-    """
-    if tool_call.name == "calculator":
-        result = calculate(
-            left=tool_call.arguments["left"],
-            operator=tool_call.arguments["operator"],
-            right=tool_call.arguments["right"],
-        )
-
-        return str(result)
-    
-    raise ValueError(f"未知的工具调用: {tool_call.name}")
 
 def run_agent_turn(
     messages: list[dict[str,Any]],
+    tool_registry: ToolRegistry,
     max_iterations: int = MAX_AGENT_ITERATIONS,
 ) -> AgentRunResult:
     """
@@ -80,17 +61,19 @@ def run_agent_turn(
 
     Args:
         messages (list[dict[str, Any]]): 当前的对话上下文。
+        tool_registry (ToolRegistry): 工具注册表。
         max_iterations (int): 最大迭代次数。
     """
+
     tools_used: list[ToolExecutionRecord] = []
     for iteration in range(1, max_iterations + 1):
-        result = ask_llm(messages, tools=[CALCULATOR_TOOL_SCHEMA])
+        result = ask_llm(messages, tools=tool_registry.get_definitions())
         if result.tool_calls:
             assistant_tool_message = (build_assistant_tool_call_message(result))
             messages.append(assistant_tool_message)
             for tool_call in result.tool_calls:
                 try:
-                    tool_output = execute_tool_call(tool_call)
+                    tool_output = tool_registry.execute(tool_call.name, tool_call.arguments)
                     is_error = False
                 except Exception as exc:
                     tool_output = (

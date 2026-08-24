@@ -1,15 +1,21 @@
-from app.conversation import (
-    create_conversation, 
-    add_message, 
-    format_history
-)
+from pathlib import Path
 
-from app.llm import ask_llm
 from app.agent import run_agent_turn
 from app.commands import parse_calculator_command
+from app.conversation import (
+    add_message,
+    create_conversation,
+    format_history,
+)
 from app.tools.calculator import (
-    CALCULATOR_TOOL_SCHEMA,
+    CalculatorTool,
     calculate,
+)
+from app.tools.read_file import (
+    ReadTextFileTool,
+)
+from app.tools.registry import (
+    ToolRegistry,
 )
 
 def main() -> None:
@@ -20,7 +26,12 @@ def main() -> None:
     print("  /calc A OP B   人工直接调用计算器")
     print("  /history       查看完整 Agent Context")
     print("  /clear         清空当前上下文")
+    print("  /tools          查看 Agent Tools")
     print("  exit           退出程序")
+    workspace = Path("workspace")
+    tool_registry = ToolRegistry()  
+    tool_registry.register(CalculatorTool())
+    tool_registry.register(ReadTextFileTool(workspace=workspace))
 
 
     messages = create_conversation()
@@ -43,6 +54,19 @@ def main() -> None:
             messages = create_conversation()
             print("\n上下文已清空。")
             continue
+        if user_message == "/tools":
+            print(
+                "\nAvailable Tools:"
+            )
+
+            for name in (
+                tool_registry.names()
+            ):
+                print(
+                    f"  - {name}"
+                )
+
+            continue
         if user_message.startswith("/calc"):
             try:
                 left, operator, right = parse_calculator_command(user_message)
@@ -62,7 +86,7 @@ def main() -> None:
         add_message(messages, "user", user_message)
 
         try:
-            agent_result = run_agent_turn(messages)
+            agent_result = run_agent_turn(messages, tool_registry)
 
         except Exception as exc:
             del messages[turn_start_index:]  # 移除用户消息和Agent的所有消息

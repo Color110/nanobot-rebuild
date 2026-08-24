@@ -1,15 +1,28 @@
-import pytest
-
-from app.agent import run_agent_turn
+from app.tools.calculator import (
+    CalculatorTool,
+)
+from app.tools.registry import (
+    ToolRegistry,
+)
+from app.agent import (
+    run_agent_turn,
+    LLMResult,
+    ToolCallRequest,
+)
 from app.conversation import (
     add_message,
     create_conversation,
 )
-from app.llm import (
-    LLMResult,
-    ToolCallRequest,
-)
+from typing import Any
+from pathlib import Path
 
+
+registry = ToolRegistry()
+
+registry.register(
+    CalculatorTool()
+)
+import pytest
 
 def test_agent_loop_executes_tool(
     monkeypatch,
@@ -55,7 +68,7 @@ def test_agent_loop_executes_tool(
     )
 
     result = run_agent_turn(
-        messages
+        messages,tool_registry=registry
     )
 
     assert result.final_content == (
@@ -133,7 +146,7 @@ def test_tool_call_id_is_preserved(
         "10加5",
     )
 
-    run_agent_turn(messages)
+    run_agent_turn(messages,tool_registry=registry)
 
     assistant_tool_message = messages[2]
     tool_result_message = messages[3]
@@ -192,5 +205,6 @@ def test_agent_max_iterations(
     ):
         run_agent_turn(
             messages,
+            tool_registry=registry,
             max_iterations=2,
         )

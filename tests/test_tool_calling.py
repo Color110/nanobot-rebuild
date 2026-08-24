@@ -2,15 +2,12 @@ from app.llm import (
     parse_tool_arguments,
 )
 from app.tools.calculator import (
-    CALCULATOR_TOOL_SCHEMA,
+    CalculatorTool,
 )
 
-
 def test_calculator_tool_schema():
-    function = (
-        CALCULATOR_TOOL_SCHEMA["function"]
-    )
-
+    schema = CalculatorTool().to_schema()
+    function = schema["function"]
     assert function["name"] == "calculator"
 
     parameters = function["parameters"]
@@ -28,11 +25,8 @@ def test_calculator_tool_schema():
 
 def test_operator_schema():
     operator = (
-        CALCULATOR_TOOL_SCHEMA
-        ["function"]
-        ["parameters"]
-        ["properties"]
-        ["operator"]
+        CalculatorTool()
+        .to_schema()["function"]["parameters"]["properties"]["operator"]
     )
 
     assert operator["enum"] == [
