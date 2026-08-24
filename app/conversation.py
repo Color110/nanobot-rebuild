@@ -1,13 +1,17 @@
-SYSTEM_PROMPT =(
-    "你是nanobot-rebuild，一个由开源模型驱动的聊天机器人。"
-    "你将根据用户的输入提供有帮助、准确清晰和相关的回答。"
+from typing import Any
+
+SYSTEM_PROMPT = (
+    "你是 nanobot-rebuild 的 AI 助手。"
+    "请准确、清晰地回答用户问题。"
+    "当有合适的工具能够提供更可靠的结果时，优先使用工具。"
 )
-def create_conversation() -> list[dict[str, str]]:
+
+def create_conversation() -> list[dict[str, Any]]:
     """
     创建一个新的对话上下文。
 
     Returns:
-        list[dict[str, str]]: 一个空的对话上下文列表。
+        list[dict[str, Any]]: 一个空的对话上下文列表。
     """
     return [
         {
@@ -17,7 +21,7 @@ def create_conversation() -> list[dict[str, str]]:
     ]
 
 def add_message(
-    messages: list[dict[str, str]],
+    messages: list[dict[str, Any]],
     role: str, 
     content: str
 ) -> None:
@@ -34,20 +38,39 @@ def add_message(
         "content": content
     })
 
-def format_history(messages: list[dict[str, str]]) -> str:
+def format_history(messages: list[dict[str, Any]]) -> str:
     """
     格式化对话历史记录为字符串。
 
     Args:
-        history (list[dict[str, str]]): 对话历史记录。
+        history (list[dict[str, Any]]): 对话历史记录。
 
     Returns:
         str: 格式化后的对话历史记录字符串。
     """
     lines: list[str] = []
     for index,message in enumerate(messages):
-        role = message["role"]
-        content = message["content"]
+        role = message.get("role", "unknown",)
+        content = message.get("content","",)
+        if(role == "assistant" and message.get("tool_call")):
+            lines.append(
+                f"{index}:"
+                f"[assistant/tool_call]"
+                f"{message['tool_calls']}"
+            )
+            continue
+        if role == "tool":
+            tool_call_id = message.get(
+                "tool_call_id",
+                "unknown",
+            )
+
+            lines.append(
+                f"{index}: "
+                f"[tool:{tool_call_id}] "
+                f"{content}"
+            )
+            continue
         lines.append(
             f"{index}: [{role}] {content}"
         )

@@ -5,7 +5,7 @@ from app.conversation import (
 )
 
 from app.llm import ask_llm
-
+from app.agent import run_agent_turn
 from app.commands import parse_calculator_command
 from app.tools.calculator import (
     CALCULATOR_TOOL_SCHEMA,
@@ -14,11 +14,11 @@ from app.tools.calculator import (
 
 def main() -> None:
     print("nanobot-rebuild")
-    print("stage 3: first tool")
+    print("stage 5: agent loop")
     print()
     print("命令:")
-    print("  /calc A OP B   使用计算器")
-    print("  /history       查看当前上下文")
+    print("  /calc A OP B   人工直接调用计算器")
+    print("  /history       查看完整 Agent Context")
     print("  /clear         清空当前上下文")
     print("  exit           退出程序")
 
@@ -58,32 +58,44 @@ def main() -> None:
             )
 
             continue
-
+        turn_start_index = len(messages)
         add_message(messages, "user", user_message)
 
         try:
-            result = ask_llm(messages, tools=[CALCULATOR_TOOL_SCHEMA],)
-        except Exception as exc:
-            messages.pop()  # 移除用户消息
-            print(f"\nLLM 调用失败: {exc}")
-            continue
-        if result.tool_calls:
-            print("\nLLM 调用工具:")
-            for tool_call in result.tool_calls:
-                print(f"id: {tool_call.id}")
-                print(f"name: {tool_call.name}")
-                print(f"arguments: {tool_call.arguments}")
-            print("status:"
-                  "stage 4: tool call handling"
-                  "not implemented yet"
-                  )
-            print("--------------------------------")
-            messages.pop()  # 移除用户消息
-            continue
-        answer = result.content
-        add_message(messages, "assistant", answer)
+            agent_result = run_agent_turn(messages)
 
-        print(f"\nAssistant > {answer}")
+        except Exception as exc:
+            del messages[turn_start_index:]  # 移除用户消息和Agent的所有消息
+            print(f"\nagent 调用失败: {exc}")
+            continue
+
+        if agent_result.tools_used:
+            print("\n--- 工具调用 ---")
+            for index,record in enumerate(agent_result.tools_used, start=1):
+                status = "错误" if record.is_error else "成功"
+                print(f" arguments"
+                      f"{record.arguments}")
+                print(
+                    f"    output   : "
+                    f"{record.output}"
+                )
+
+                print(
+                    f"    status   : "
+                    f"{status}"
+                )
+            print(
+                "------------------------"
+            )
+        print(
+            f"\nAgent iterations > "
+            f"{agent_result.iterations}"
+        )
+
+        print(
+            f"\nAssistant > "
+            f"{agent_result.final_content}"
+        )
 
 
 if __name__ == "__main__":
