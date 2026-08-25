@@ -1,51 +1,71 @@
 from pathlib import Path
 from typing import Any
+from abc import ABC, abstractmethod
+
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+)
 
 from app.tools.base import BaseTool
 
+
+class ReadTextFileArguments(BaseModel):
+
+    model_config = ConfigDict(
+        extra="forbid"
+    )
+
+    path: str = Field(
+        min_length=1,
+        description=(
+            "相对于 Agent workspace "
+            "的 UTF-8 文本文件路径，"
+            "例如 notes.txt"
+        ),
+    )
+
+
 class ReadTextFileTool(BaseTool):
-    """
-    读取 Agent workspace 中的 UTF-8 文本文件。
-    """
 
     def __init__(
         self,
         workspace: Path,
     ) -> None:
+
         self.workspace = workspace.resolve()
-        self.workspace.mkdir(parents=True, exist_ok=True)
-    
+
+        self.workspace.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
     @property
     def name(self) -> str:
         return "read_text_file"
-    
+
     @property
     def description(self) -> str:
         return (
             "读取 Agent workspace 中的 UTF-8 文本文件。"
             "当用户要求查看、读取或分析本地文本文件时使用。"
-            "path 参数必须是相对于 workspace 的路径。"
+            "path 必须是相对于 workspace 的路径。"
         )
-    @property
-    def parameters(self) -> dict[str, Any]:
-        return {
-            "type": "object",
-            "properties": {
-                "path": {
-                    "type": "string",
-                    "description": (
-                        "相对于 Agent workspace "
-                        "的文本文件路径，"
-                        "例如 notes.txt"
-                    ),
-                },
-            },
-            "required": ["path"],
-            "additionalProperties": False,
-        }
 
-    def execute(self, **kwargs: Any) -> str:
-        path = kwargs.get("path")
+    @property
+    def argument_model(
+        self,
+    ) -> type[BaseModel]:
+
+        return ReadTextFileArguments
+
+    def execute(
+        self,
+        **kwargs: Any,
+    ) -> str:
+
+        path = kwargs["path"]
 
         target = (
             self.workspace / path

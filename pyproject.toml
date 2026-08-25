@@ -1,11 +1,12 @@
 [project]
 name = "nanobot-rebuild"
-version = "0.7.0"
+version = "0.8.0"
 description = "Rebuild a lightweight AI agent from scratch"
 requires-python = ">=3.11"
 
 dependencies = [
     "openai>=2.8.0",
+    "pydantic>=2.12.0,<3.0.0",
 ]
 
 [tool.pytest.ini_options]

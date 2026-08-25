@@ -4,7 +4,8 @@
 #     第二个：
 #         LLM 返回 name="read_text_file" 后，怎么找到这个 Python 对象？
 from typing import Any
-from app.tools.base import BaseTool
+from app.tools.base import BaseTool, ToolResult
+from pydantic import ValidationError
 
 class ToolRegistry:
     """
@@ -12,7 +13,7 @@ class ToolRegistry:
     """
     def __init__(self) -> None:
         self._tools: dict[str, BaseTool] = {}
-        
+
     def register(
         self,
         tool: BaseTool,
@@ -61,22 +62,90 @@ class ToolRegistry:
         self,
         name: str,
         arguments: dict[str, Any],
-    ) -> str:
+    ) -> ToolResult:
         """
         根据 Tool 名称执行对应 Tool。
         """
 
-        tool = self.get(name)
+        tool = self._tools.get(name)
 
-        return tool.execute(
-            **arguments
+        if tool is None:
+            available = ", ".join(self.names())
+            return ToolResult.error(
+                content=(
+                    f"未知 Tool: {name}。可用 Tool: {available}"
+                    ),
+                    error_type="UNKNOWN_TOOL"
+            )
+        
+        try:
+            validated_arguments = (
+                tool.validate_arguments(
+                    arguments
+                )
+            )
+        except ValidationError as exc:
+
+            return ToolResult.error(
+                content=(
+                    self._format_validation_error(
+                        exc
+                    )
+                ),
+                error_type="VALIDATION_ERROR",
+            )
+
+        except TypeError as exc:
+
+            return ToolResult.error(
+                content=str(exc),
+                error_type="VALIDATION_ERROR",
+            )
+
+        try:
+            output = tool.execute(
+                **validated_arguments
+            )
+
+        except Exception as exc:
+
+            return ToolResult.error(
+                content=(
+                    f"{type(exc).__name__}: "
+                    f"{exc}"
+                ),
+                error_type="EXECUTION_ERROR",
+            )
+
+        return ToolResult.success(
+            content=str(output)
         )
 
+    @staticmethod
+    def _format_validation_error(
+        exc: ValidationError,
+    ) -> str:
+
+        parts: list[str] = []
+
+        for error in exc.errors():
+
+            location = ".".join(
+                str(item)
+                for item in error["loc"]
+            )
+
+            message = error["msg"]
+
+            parts.append(
+                f"{location}: {message}"
+            )
+
+        return "; ".join(parts)
+
     def names(self) -> list[str]:
-        """
-        获取当前已注册 Tool 名称。
-        """
 
         return list(
             self._tools.keys()
         )
+

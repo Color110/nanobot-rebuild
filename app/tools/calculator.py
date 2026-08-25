@@ -1,5 +1,25 @@
-from typing import Any
+from typing import Any,Literal
 from app.tools.base import BaseTool
+from pydantic import BaseModel, ConfigDict, Field
+from abc import ABC, abstractmethod
+
+class CalculatorArguments(BaseModel):
+    """
+    Calculator Tool 的参数模型。
+    """
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+
+    left: float = Field(
+        description="左操作数",
+    )
+    operator: Literal["+", "-", "*", "/"] = Field(
+        description="四则运算符",
+    )
+    right: float = Field(
+        description="右操作数",
+    )
 
 def calculate(
     left: float,
@@ -57,7 +77,35 @@ class CalculatorTool(BaseTool):
             "当用户要求进行加、减、乘、除数学计算时，"
             "应该使用此工具，而不是自行心算。"
         )
-    
+
+    @property
+    def argument_model(self) -> type[BaseModel]:
+        return CalculatorArguments
+        
+    def execute(
+        self,
+        **kwargs: Any,
+    ) -> str:
+        left = kwargs.get("left")
+        operator = kwargs.get("operator")
+        right = kwargs.get("right")
+
+        if left is None or operator is None or right is None:
+            raise ValueError(
+                "缺少必要参数: left, operator, right"
+            )
+
+        result = calculate(
+            left=left,
+            operator=operator,
+            right=right,
+        )
+
+        return str(result)
+
+
+
+
     @property
     def parameters(self) -> dict[str, Any]:
         return {
@@ -85,23 +133,4 @@ class CalculatorTool(BaseTool):
             "additionalProperties": False,
         }
     
-    def execute(
-        self,
-        **kwargs: Any,
-    ) -> str:
-        left = kwargs.get("left")
-        operator = kwargs.get("operator")
-        right = kwargs.get("right")
-
-        if left is None or operator is None or right is None:
-            raise ValueError(
-                "缺少必要参数: left, operator, right"
-            )
-
-        result = calculate(
-            left=left,
-            operator=operator,
-            right=right,
-        )
-
-        return str(result)
+    

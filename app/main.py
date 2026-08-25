@@ -97,6 +97,11 @@ def main() -> None:
             print("\n--- 工具调用 ---")
             for index,record in enumerate(agent_result.tools_used, start=1):
                 status = "错误" if record.is_error else "成功"
+                if record.error_type:
+                    print(
+                        f"    error    : "
+                        f"{record.error_type}"
+                    )
                 print(f" arguments"
                       f"{record.arguments}")
                 print(

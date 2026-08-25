@@ -4,6 +4,7 @@ SYSTEM_PROMPT = (
     "你是 nanobot-rebuild 的 AI 助手。"
     "请准确、清晰地回答用户问题。"
     "当有合适的工具能够提供更可靠的结果时，优先使用工具。"
+  
 )
 
 def create_conversation() -> list[dict[str, Any]]:

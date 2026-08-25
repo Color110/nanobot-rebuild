@@ -16,6 +16,7 @@ class ToolExecutionRecord:
     arguments: dict[str, Any]
     output: str
     is_error: bool = False
+    error_type: str | None = None
 
 @dataclass
 class AgentRunResult:
@@ -72,27 +73,41 @@ def run_agent_turn(
             assistant_tool_message = (build_assistant_tool_call_message(result))
             messages.append(assistant_tool_message)
             for tool_call in result.tool_calls:
-                try:
-                    tool_output = tool_registry.execute(tool_call.name, tool_call.arguments)
-                    is_error = False
-                except Exception as exc:
-                    tool_output = (
-                        "ToolError: "
-                        f"{type(exc).__name__}: "
-                        f"{exc}"
+                tool_result = (
+                    tool_registry.execute(
+                        name=tool_call.name,
+                        arguments=tool_call.arguments,
                     )
-                    is_error = True
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": (tool_call.id),
-                    "content": tool_output,
-                })
+                )
+
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": (
+                            tool_call.id
+                        ),
+                        "content": (
+                            tool_result
+                            .to_llm_content()
+                        ),
+                    }
+                )
+
                 tools_used.append(
                     ToolExecutionRecord(
                         name=tool_call.name,
-                        arguments=(tool_call.arguments),
-                        output=tool_output,
-                        is_error=is_error
+                        arguments=(
+                            tool_call.arguments
+                        ),
+                        output=(
+                            tool_result.content
+                        ),
+                        is_error=(
+                            tool_result.is_error
+                        ),
+                        error_type=(
+                            tool_result.error_type
+                        ),
                     )
                 )
             continue
