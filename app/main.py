@@ -23,6 +23,11 @@ from app.tools.read_file import (
 from app.tools.registry import (
     ToolRegistry,
 )
+from app.memory import (
+    MemoryStore,
+    consolidate_session_to_memory,
+)
+
 
 def parse_args() -> argparse.Namespace:
 
@@ -56,6 +61,7 @@ def main() -> None:
 
     args = parse_args()
     workspace = Path("workspace")
+    memory_store = MemoryStore(workspace=workspace)
 
     session_manager = SessionManager(Path(args.sessions_dir))
 
@@ -80,6 +86,9 @@ def main() -> None:
     print("  /history        查看完整 Agent Context")
     print("  /clear          清空当前 Session")
     print("  /calc A OP B    人工调用计算器")
+    print("  /memory         查看长期记忆")
+    print("  /memorize       从当前Session提取长期记忆")
+    print("  /memory-clear   清空长期记忆")
     print("  exit            退出程序")
 
     while True:
@@ -150,11 +159,48 @@ def main() -> None:
             )
 
             continue
+        if user_message == "/memory":
+            records = memory_store.list_records()
+            print("\n--- Long-term Memory ---")
+            if not records:
+                print("(empty)")
+            else:
+                for record in records:
+                    print(f"{record.key} = {record.value}")
+                    print(f"    source : {record.source_session}")
+                    print(f"    updated: {record.updated_at}")
+            print("------------------------")
+            continue
+        if user_message == "/memorize":
+            try:
+                changed, candidates = consolidate_session_to_memory(
+                    messages=session.messages,
+                    session_id=session.session_id,
+                    store=memory_store,
+                )
+            except Exception as exc:
+                print(f"\nMemory consolidation failed: {exc}")
+                continue
+
+            print("\nMemory extraction:")
+            if not candidates:
+                print("  没有发现值得长期保存的信息。")
+            else:
+                for memory in candidates:
+                    print(f"  - {memory.key} = {memory.value}")
+
+            print(f"\nMemory records changed: {changed}")
+            continue
+        if user_message == "/memory-clear":
+            memory_store.clear()
+            print("长期记忆已清空。")
+            continue
+            
         turn_start_index = len(messages)
         add_message(messages, "user", user_message)
 
         try:
-            agent_result = run_agent_turn(messages, tool_registry)
+            agent_result = run_agent_turn(messages, tool_registry,memory_store)
 
         except Exception as exc:
             del messages[turn_start_index:]  # 移除用户消息和Agent的所有消息

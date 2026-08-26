@@ -4,6 +4,9 @@ from typing import Any
 
 from app.llm import LLMResult, ToolCallRequest, ask_llm
 from app.tools.registry import ToolRegistry
+from app.context import build_runtime_messages
+from app.memory import MemoryStore
+
 MAX_AGENT_ITERATIONS = 8
 
 @dataclass
@@ -53,8 +56,9 @@ def build_assistant_tool_call_message(
     }
 
 def run_agent_turn(
-    messages: list[dict[str,Any]],
+    messages: list[dict[str, Any]],
     tool_registry: ToolRegistry,
+    memory_store: MemoryStore | None = None,
     max_iterations: int = MAX_AGENT_ITERATIONS,
 ) -> AgentRunResult:
     """
@@ -68,7 +72,13 @@ def run_agent_turn(
 
     tools_used: list[ToolExecutionRecord] = []
     for iteration in range(1, max_iterations + 1):
-        result = ask_llm(messages, tools=tool_registry.get_definitions())
+        runtime_messages = (
+            build_runtime_messages(
+                session_messages=messages,
+                memory_store=memory_store,
+            )
+        )
+        result = ask_llm(runtime_messages, tools=tool_registry.get_definitions())
         if result.tool_calls:
             assistant_tool_message = (build_assistant_tool_call_message(result))
             messages.append(assistant_tool_message)

@@ -5,3 +5,4 @@ __pycache__/
 .env
 text.txt
 runtime/
+workspace/memory/
