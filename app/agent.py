@@ -4,7 +4,12 @@ from typing import Any
 
 from app.llm import LLMResult, ToolCallRequest, ask_llm
 from app.tools.registry import ToolRegistry
-from app.context import build_runtime_messages
+from app.context import (
+    ContextPolicy,
+    ContextStats,
+    build_runtime_context,
+)
+
 from app.memory import MemoryStore
 
 MAX_AGENT_ITERATIONS = 8
@@ -29,6 +34,7 @@ class AgentRunResult:
     final_content: str
     iterations: int
     tools_used: list[ToolExecutionRecord]
+    context_stats: ContextStats
 
 def build_assistant_tool_call_message(
     result:LLMResult,
@@ -59,6 +65,7 @@ def run_agent_turn(
     messages: list[dict[str, Any]],
     tool_registry: ToolRegistry,
     memory_store: MemoryStore | None = None,
+    context_policy: ContextPolicy | None = None,
     max_iterations: int = MAX_AGENT_ITERATIONS,
 ) -> AgentRunResult:
     """
@@ -71,14 +78,18 @@ def run_agent_turn(
     """
 
     tools_used: list[ToolExecutionRecord] = []
+    last_context_stats: ContextStats | None = None
+
     for iteration in range(1, max_iterations + 1):
-        runtime_messages = (
-            build_runtime_messages(
+        runtime_context  = (
+            build_runtime_context(
                 session_messages=messages,
                 memory_store=memory_store,
+                policy=context_policy,
             )
         )
-        result = ask_llm(runtime_messages, tools=tool_registry.get_definitions())
+        last_context_stats = runtime_context.stats
+        result = ask_llm(runtime_context.messages, tools=tool_registry.get_definitions())
         if result.tool_calls:
             assistant_tool_message = (build_assistant_tool_call_message(result))
             messages.append(assistant_tool_message)
@@ -93,44 +104,37 @@ def run_agent_turn(
                 messages.append(
                     {
                         "role": "tool",
-                        "tool_call_id": (
-                            tool_call.id
-                        ),
-                        "content": (
-                            tool_result
-                            .to_llm_content()
-                        ),
+                        "tool_call_id":tool_call.id,
+                        "content":tool_result.to_llm_content(),
                     }
                 )
 
                 tools_used.append(
                     ToolExecutionRecord(
                         name=tool_call.name,
-                        arguments=(
-                            tool_call.arguments
-                        ),
-                        output=(
-                            tool_result.content
-                        ),
-                        is_error=(
-                            tool_result.is_error
-                        ),
-                        error_type=(
-                            tool_result.error_type
-                        ),
+                        arguments=tool_call.arguments,
+                        output=tool_result.content,
+                        is_error=tool_result.is_error,
+                        error_type=tool_result.error_type,
                     )
                 )
             continue
+
         final_content = result.content 
         messages.append({
             "role": "assistant",
             "content": final_content,
         })
+        if last_context_stats is None:
+            raise RuntimeError("Agent 未能构建 Runtime Context")
+
         return AgentRunResult(
             final_content=final_content,
             iterations=iteration,
             tools_used=tools_used,
+            context_stats=last_context_stats,
         )
+       
     raise RuntimeError(
         f"Agent reached max iterations ({max_iterations}) without completing."
     )

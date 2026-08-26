@@ -27,7 +27,11 @@ from app.memory import (
     MemoryStore,
     consolidate_session_to_memory,
 )
-
+from app.context import (
+    ContextBudgetError,
+    ContextPolicy,
+    build_runtime_context,
+)
 
 def parse_args() -> argparse.Namespace:
 
@@ -54,8 +58,23 @@ def parse_args() -> argparse.Namespace:
             "Session 持久化目录"
         ),
     )
+    parser.add_argument(
+        "--context-budget",
+        type=int,
+        default=6000,
+        help="单次 LLM 输入的估算 Token Budget",
+    )
+
+    parser.add_argument(
+        "--memory-budget",
+        type=int,
+        default=1000,
+        help="Long-term Memory 最大估算 Token Budget",
+    )
 
     return parser.parse_args()
+
+
 
 def main() -> None:
 
@@ -73,6 +92,10 @@ def main() -> None:
     tool_registry = ToolRegistry()  
     tool_registry.register(CalculatorTool())
     tool_registry.register(ReadTextFileTool(workspace=workspace))
+    context_policy = ContextPolicy(
+    max_input_tokens=args.context_budget,
+    memory_budget_tokens=args.memory_budget,
+    )
 
     print("nanobot-rebuild")
     print("stage 8: session persistence")
@@ -90,6 +113,7 @@ def main() -> None:
     print("  /memorize       从当前Session提取长期记忆")
     print("  /memory-clear   清空长期记忆")
     print("  exit            退出程序")
+    print("  /context        查看本轮 Context Budget 状态")
 
     while True:
         user_message = input("\nYou > ").strip()
@@ -195,16 +219,56 @@ def main() -> None:
             memory_store.clear()
             print("长期记忆已清空。")
             continue
+        if user_message == "/context":
+            try:
+                context_result = build_runtime_context(
+                    session_messages=session.messages,
+                    memory_store=memory_store,
+                    policy=context_policy,
+                )
+            except ContextBudgetError as exc:
+                print(f"\nContext Error > {exc}")
+                continue
+
+            stats = context_result.stats
+
+            print("\n--- Context Stats ---")
+            print(
+                f"tokens   : {stats.estimated_input_tokens}"
+                f" / {stats.max_input_tokens}"
+            )
+            print(f"system   : {stats.system_tokens}")
+            print(f"memory   : {stats.memory_tokens}")
+            print(f"history  : {stats.history_tokens}")
+            print(
+                f"messages : {stats.selected_session_messages}"
+                f" / {stats.total_session_messages}"
+            )
+            print(f"dropped  : {stats.dropped_session_messages}")
+            print(
+                f"memories : {stats.selected_memory_records}"
+                f" / {stats.total_memory_records}"
+            )
+            print("---------------------")
+
+            continue
             
         turn_start_index = len(messages)
         add_message(messages, "user", user_message)
 
         try:
-            agent_result = run_agent_turn(messages, tool_registry,memory_store)
+            agent_result = run_agent_turn(messages, tool_registry,memory_store,context_policy)
+            # stats = agent_result.context_stats
 
+            # print(
+            #     "\nContext > "
+            #     f"{stats.estimated_input_tokens}/{stats.max_input_tokens} tokens, "
+            #     f"messages {stats.selected_session_messages}/{stats.total_session_messages}, "
+            #     f"memory {stats.selected_memory_records}/{stats.total_memory_records}"
+            # )
         except Exception as exc:
             del messages[turn_start_index:]  # 移除用户消息和Agent的所有消息
-            print(f"\nagent 调用失败: {exc}")
+            print(f"\nagent 调用失败le: {exc}")
             continue
 
         session_manager.save(session)
