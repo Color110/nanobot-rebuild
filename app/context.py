@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from app.memory import MemoryStore
 import tiktoken
 import json
+from app.skills import SkillLoader
+
 _ENCODING = tiktoken.get_encoding("o200k_base")
 
 class ContextBudgetError(RuntimeError):
@@ -15,6 +17,7 @@ class ContextPolicy:
 
     max_input_tokens: int = 6000
     memory_budget_tokens: int = 1000
+    skills_budget_tokens: int = 1200
 
     def __post_init__(self) -> None:
         if self.max_input_tokens <= 0:
@@ -23,9 +26,16 @@ class ContextPolicy:
         if self.memory_budget_tokens < 0:
             raise ValueError("memory_budget_tokens 不能小于 0")
 
-        if self.memory_budget_tokens >= self.max_input_tokens:
+        if self.skills_budget_tokens < 0:
+            raise ValueError("skills_budget_tokens 不能小于 0")
+
+        reserved = (
+            self.memory_budget_tokens
+            + self.skills_budget_tokens
+        )
+        if reserved >= self.max_input_tokens:
             raise ValueError(
-                "memory_budget_tokens 必须小于 max_input_tokens"
+                "Memory + Skills Budget 必须小于总 Context Budget"
             )
 
 @dataclass(frozen=True)
@@ -37,6 +47,7 @@ class ContextStats:
 
     system_tokens: int
     memory_tokens: int
+    skills_tokens: int
     history_tokens: int
 
     total_session_messages: int
@@ -45,6 +56,9 @@ class ContextStats:
 
     total_memory_records: int
     selected_memory_records: int
+
+    total_skills: int
+    active_skills: tuple[str, ...]
 
 @dataclass(frozen=True)
 class ContextBuildResult:
@@ -175,6 +189,7 @@ def build_memory_context(
 def build_runtime_context(
     session_messages: list[dict[str, Any]],
     memory_store: MemoryStore | None = None,
+    skill_loader: SkillLoader | None = None,
     policy: ContextPolicy | None = None,
 ) -> ContextBuildResult:
     """
@@ -223,23 +238,51 @@ def build_runtime_context(
         token_budget=available_memory_tokens,
     )
 
+    current_message = get_latest_user_text(history_messages)
+
+    available_skills_tokens = min(
+        policy.skills_budget_tokens,
+        policy.max_input_tokens- original_system_tokens- memory_tokens,
+    )
+    (
+        skills_text,
+        skills_tokens,
+        active_skills,
+        total_skills,
+    ) = build_skills_context(
+        skill_loader=skill_loader,
+        current_message=current_message,
+        token_budget=available_skills_tokens,
+    )
+
+
     runtime_prefix: list[dict[str, Any]] = []
+
+    runtime_sections = []
+
+    if memory_text:
+        runtime_sections.append(memory_text)
+
+    if skills_text:
+        runtime_sections.append(skills_text)
+
+
 
     if system_message is not None:
         original_content = str(system_message.get("content", ""))
-
-        if memory_text:
+        extra_context = "\n\n".join(runtime_sections)
+        if extra_context:
             system_message["content"] = (
-                f"{original_content}\n\n{memory_text}"
+                f"{original_content}\n\n{extra_context}"
             )
 
         runtime_prefix.append(system_message)
 
-    elif memory_text:
+    elif runtime_sections:
         runtime_prefix.append(
             {
                 "role": "system",
-                "content": memory_text,
+                "content": "\n\n".join(runtime_sections),
             }
         )
 
@@ -293,18 +336,21 @@ def build_runtime_context(
 
     stats = ContextStats(
         max_input_tokens=policy.max_input_tokens,
-        estimated_input_tokens=estimate_messages_tokens(runtime_messages),
-        system_tokens=original_system_tokens,
-        memory_tokens=memory_tokens,
-        history_tokens=selected_history_tokens,
-        total_session_messages=len(session_messages),
-        selected_session_messages=selected_session_messages,
-        dropped_session_messages=(
-            len(session_messages) - selected_session_messages
-        ),
-        total_memory_records=total_memory_records,
-        selected_memory_records=selected_memory_records,
-    )
+    estimated_input_tokens=estimate_messages_tokens(runtime_messages),
+    system_tokens=original_system_tokens,
+    memory_tokens=memory_tokens,
+    skills_tokens=skills_tokens,
+    history_tokens=selected_history_tokens,
+    total_session_messages=len(session_messages),
+    selected_session_messages=selected_session_messages,
+    dropped_session_messages=(
+        len(session_messages) - selected_session_messages
+    ),
+    total_memory_records=total_memory_records,
+    selected_memory_records=selected_memory_records,
+    total_skills=total_skills,
+    active_skills=active_skills,
+)
 
     return ContextBuildResult(
         messages=runtime_messages,
@@ -399,3 +445,78 @@ def build_runtime_messages(
         )
 
     return runtime_messages
+
+def get_latest_user_text(
+    messages: list[dict[str, Any]],
+) -> str:
+    for message in reversed(messages):
+        if message.get("role") != "user":
+            continue
+
+        content = message.get("content")
+
+        if isinstance(content, str):
+            return content
+
+    return ""
+
+def build_skills_context(
+    skill_loader: SkillLoader | None,
+    current_message: str,
+    token_budget: int,
+) -> tuple[str, int, tuple[str, ...], int]:
+    if skill_loader is None or token_budget <= 0:
+        return "", 0, (), 0
+
+    all_skills = skill_loader.list_skills()
+
+    if not all_skills:
+        return "", 0, (), 0
+
+    active_skills = skill_loader.get_active_skills(current_message)
+    active_names = tuple(skill.name for skill in active_skills)
+
+    active_text = skill_loader.render_active_skills(active_skills)
+    active_tokens = estimate_text_tokens(active_text) if active_text else 0
+
+    if active_tokens > token_budget:
+        raise ContextBudgetError(
+            "Active Skills 全文超过 Skills Context Budget"
+        )
+
+    summary = skill_loader.build_summary(
+        exclude=set(active_names)
+    )
+
+    if not summary:
+        return active_text, active_tokens, active_names, len(all_skills)
+
+    remaining_budget = token_budget - active_tokens
+    selected_summary_lines: list[str] = []
+    used_summary_tokens = 0
+
+    for line in summary.splitlines():
+        line_tokens = estimate_text_tokens(line + "\n")
+
+        if used_summary_tokens + line_tokens > remaining_budget:
+            break
+
+        selected_summary_lines.append(line)
+        used_summary_tokens += line_tokens
+
+    summary_text = "\n".join(selected_summary_lines).strip()
+
+    parts = [
+        part
+        for part in (active_text, summary_text)
+        if part
+    ]
+
+    final_text = "\n\n".join(parts)
+
+    return (
+        final_text,
+        estimate_text_tokens(final_text),
+        active_names,
+        len(all_skills),
+    )

@@ -32,6 +32,7 @@ from app.context import (
     ContextPolicy,
     build_runtime_context,
 )
+from app.skills import SkillLoader
 
 def parse_args() -> argparse.Namespace:
 
@@ -71,6 +72,12 @@ def parse_args() -> argparse.Namespace:
         default=1000,
         help="Long-term Memory 最大估算 Token Budget",
     )
+    parser.add_argument(
+        "--skills-budget",
+        type=int,
+        default=1200,
+        help="Skills 最大估算 Token Budget",
+    )
 
     return parser.parse_args()
 
@@ -81,7 +88,7 @@ def main() -> None:
     args = parse_args()
     workspace = Path("workspace")
     memory_store = MemoryStore(workspace=workspace)
-
+    skill_loader = SkillLoader(workspace=workspace)
     session_manager = SessionManager(Path(args.sessions_dir))
 
     existed = session_manager.exists(args.session)
@@ -93,12 +100,13 @@ def main() -> None:
     tool_registry.register(CalculatorTool())
     tool_registry.register(ReadTextFileTool(workspace=workspace))
     context_policy = ContextPolicy(
-    max_input_tokens=args.context_budget,
-    memory_budget_tokens=args.memory_budget,
+        max_input_tokens=args.context_budget,
+        memory_budget_tokens=args.memory_budget,
+        skills_budget_tokens=args.skills_budget,
     )
 
     print("nanobot-rebuild")
-    print("stage 8: session persistence")
+    print("stage 11: skills")
     print(f"session: {session.session_id}")
     print("status : "+ ("RESTORED" if existed else "NEW"))
     print(f"messages: {len(messages)}")
@@ -106,15 +114,15 @@ def main() -> None:
     print("  /session        查看当前 Session")
     print("  /sessions       查看已保存 Session")
     print("  /tools          查看 Agent Tools")
-    print("  /history        查看完整 Agent Context")
+    print("  /skills         查看可用 Skills")
+    print("  /history        查看完整 Session History")
+    print("  /context        查看本轮 Runtime Context 状态")
+    print("  /memory         查看长期记忆")
+    print("  /memorize       从当前 Session 提取长期记忆")
+    print("  /memory-clear   清空长期记忆")
     print("  /clear          清空当前 Session")
     print("  /calc A OP B    人工调用计算器")
-    print("  /memory         查看长期记忆")
-    print("  /memorize       从当前Session提取长期记忆")
-    print("  /memory-clear   清空长期记忆")
     print("  exit            退出程序")
-    print("  /context        查看本轮 Context Budget 状态")
-
     while True:
         user_message = input("\nYou > ").strip()
 
@@ -224,6 +232,7 @@ def main() -> None:
                 context_result = build_runtime_context(
                     session_messages=session.messages,
                     memory_store=memory_store,
+                    skill_loader=skill_loader,
                     policy=context_policy,
                 )
             except ContextBudgetError as exc:
@@ -249,23 +258,46 @@ def main() -> None:
                 f"memories : {stats.selected_memory_records}"
                 f" / {stats.total_memory_records}"
             )
-            print("---------------------")
+            print(f"skills   : {stats.skills_tokens}")
 
+            active = (
+                ", ".join(stats.active_skills)
+                if stats.active_skills
+                else "(none)"
+            )
+
+            print(f"active   : {active}")
+            print(f"available: {stats.total_skills}")
+            print("---------------------")
+            continue
+        if user_message == "/skills":
+            skills = skill_loader.list_skills()
+            print("\n--- Skills ---")
+            if not skills:
+                print("(none)")
+            else:
+                for skill in skills:
+                    mode = "always" if skill.always else "on-demand"
+                    print(f"{skill.name}")
+                    print(f"    mode       : {mode}")
+                    print(f"    description: {skill.description}")
+
+            print("--------------")
             continue
             
         turn_start_index = len(messages)
         add_message(messages, "user", user_message)
 
         try:
-            agent_result = run_agent_turn(messages, tool_registry,memory_store,context_policy)
-            # stats = agent_result.context_stats
+            agent_result = run_agent_turn(messages, tool_registry,memory_store,skill_loader,context_policy)
+            stats = agent_result.context_stats
 
-            # print(
-            #     "\nContext > "
-            #     f"{stats.estimated_input_tokens}/{stats.max_input_tokens} tokens, "
-            #     f"messages {stats.selected_session_messages}/{stats.total_session_messages}, "
-            #     f"memory {stats.selected_memory_records}/{stats.total_memory_records}"
-            # )
+            print(
+                "\nContext > "
+                f"{stats.estimated_input_tokens}/{stats.max_input_tokens} tokens, "
+                f"messages {stats.selected_session_messages}/{stats.total_session_messages}, "
+                f"memory {stats.selected_memory_records}/{stats.total_memory_records}"
+            )
         except Exception as exc:
             del messages[turn_start_index:]  # 移除用户消息和Agent的所有消息
             print(f"\nagent 调用失败le: {exc}")

@@ -121,7 +121,7 @@ def test_old_history_is_trimmed():
     result = build_runtime_context(
         messages,
         policy=ContextPolicy(
-            max_input_tokens=200,
+            max_input_tokens=2000,
             memory_budget_tokens=0,
         ),
     )
@@ -185,7 +185,7 @@ def test_tool_turn_is_kept_complete():
     result = build_runtime_context(
         messages,
         policy=ContextPolicy(
-            max_input_tokens=400,
+            max_input_tokens=4000,
             memory_budget_tokens=0,
         ),
     )
@@ -220,7 +220,106 @@ def test_latest_turn_too_large():
         build_runtime_context(
             messages,
             policy=ContextPolicy(
-                max_input_tokens=100,
+                max_input_tokens=2000,
                 memory_budget_tokens=0,
             ),
         )
+
+from app.skills import SkillLoader
+def test_explicit_skill_is_injected_into_runtime(tmp_path):
+    skill_dir = tmp_path / "skills" / "file-math"
+    skill_dir.mkdir(parents=True)
+
+    (skill_dir / "SKILL.md").write_text(
+        """---
+name: file-math
+description: 可靠执行文件数学任务
+always: false
+---
+
+# File Math
+
+必须先读取真实文件，再调用 calculator。
+""",
+        encoding="utf-8",
+    )
+
+    loader = SkillLoader(tmp_path)
+
+    session_messages = [
+        {
+            "role": "system",
+            "content": "你是助手。",
+        },
+        {
+            "role": "user",
+            "content": "$file-math 请执行任务",
+        },
+    ]
+
+    result = build_runtime_context(
+        session_messages=session_messages,
+        skill_loader=loader,
+        policy=ContextPolicy(
+            max_input_tokens=1000,
+            memory_budget_tokens=0,
+            skills_budget_tokens=500,
+        ),
+    )
+
+    system_content = result.messages[0]["content"]
+
+    assert "Active Skills" in system_content
+    assert "必须先读取真实文件" in system_content
+    assert result.stats.active_skills == ("file-math",)
+
+    # Runtime Context 构建不能污染 Session。
+    assert session_messages[0]["content"] == "你是助手。"
+
+def test_non_active_skill_only_exposes_summary(tmp_path):
+    skill_dir = tmp_path / "skills" / "file-math"
+    skill_dir.mkdir(parents=True)
+
+    (skill_dir / "SKILL.md").write_text(
+        """---
+name: file-math
+description: 可靠执行文件数学任务
+always: false
+---
+
+# Secret Procedure
+
+这里是只有激活后才应该加载的完整流程。
+""",
+        encoding="utf-8",
+    )
+
+    loader = SkillLoader(tmp_path)
+
+    session_messages = [
+        {
+            "role": "system",
+            "content": "你是助手。",
+        },
+        {
+            "role": "user",
+            "content": "TCP是什么？",
+        },
+    ]
+
+    result = build_runtime_context(
+        session_messages=session_messages,
+        skill_loader=loader,
+        policy=ContextPolicy(
+            max_input_tokens=1000,
+            memory_budget_tokens=0,
+            skills_budget_tokens=500,
+        ),
+    )
+
+    system_content = result.messages[0]["content"]
+
+    assert "file-math" in system_content
+    assert "可靠执行文件数学任务" in system_content
+    assert "只有激活后才应该加载" not in system_content
+    assert result.stats.active_skills == ()

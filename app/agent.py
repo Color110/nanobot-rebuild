@@ -11,6 +11,7 @@ from app.context import (
 )
 
 from app.memory import MemoryStore
+from app.skills import SkillLoader
 
 MAX_AGENT_ITERATIONS = 8
 
@@ -65,6 +66,7 @@ def run_agent_turn(
     messages: list[dict[str, Any]],
     tool_registry: ToolRegistry,
     memory_store: MemoryStore | None = None,
+    skill_loader: SkillLoader | None = None,
     context_policy: ContextPolicy | None = None,
     max_iterations: int = MAX_AGENT_ITERATIONS,
 ) -> AgentRunResult:
@@ -85,6 +87,7 @@ def run_agent_turn(
             build_runtime_context(
                 session_messages=messages,
                 memory_store=memory_store,
+                skill_loader=skill_loader,
                 policy=context_policy,
             )
         )

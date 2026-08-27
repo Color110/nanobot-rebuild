@@ -2,7 +2,6 @@ from typing import Any,Literal
 from app.tools.base import BaseTool
 from pydantic import BaseModel, ConfigDict, Field
 from abc import ABC, abstractmethod
-
 class CalculatorArguments(BaseModel):
     """
     Calculator Tool 的参数模型。
