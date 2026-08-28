@@ -9,8 +9,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.llm import ask_llm
-
+from app.providers import LLMProvider
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -203,7 +202,10 @@ def build_memory_transcript(messages: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def extract_memories(messages: list[dict[str, Any]]) -> list[MemoryCandidate]:
+def extract_memories(
+    messages: list[dict[str, Any]],
+    provider: LLMProvider,
+) -> list[MemoryCandidate]:
     transcript = build_memory_transcript(messages)
 
     if not transcript:
@@ -240,7 +242,7 @@ def extract_memories(messages: list[dict[str, Any]]) -> list[MemoryCandidate]:
         },
     ]
 
-    result = ask_llm(extraction_messages, tools=[MEMORY_SAVE_TOOL_SCHEMA])
+    result = provider.complete(extraction_messages, tools=[MEMORY_SAVE_TOOL_SCHEMA])
 
     candidates: list[MemoryCandidate] = []
 
@@ -258,7 +260,8 @@ def consolidate_session_to_memory(
     messages: list[dict[str, Any]],
     session_id: str,
     store: MemoryStore,
+    provider: LLMProvider,
 ) -> tuple[int, list[MemoryCandidate]]:
-    candidates = extract_memories(messages)
+    candidates = extract_memories(messages,provider)
     changed = store.upsert_many(candidates, source_session=session_id)
     return changed, candidates

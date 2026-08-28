@@ -1,4 +1,3 @@
-from app.llm import LLMResult, ToolCallRequest, ask_llm
 from app.tools.registry import ToolRegistry
 from app.tools.calculator import (
     CalculatorTool,
@@ -14,40 +13,104 @@ def test_agent_receives_tool_error(
     monkeypatch,
 ):
 
-    responses = [
-        LLMResult(
-            content="",
-            tool_calls=[
-                ToolCallRequest(
-                    id="call_error",
-                    name="calculator",
-                    arguments={
-                        "left": 10,
-                        "operator": "/",
-                        "right": 0,
-                    },
-                )
-            ],
-        ),
-        LLMResult(
-            content=(
-                "无法完成该计算，"
-                "因为除数不能为 0。"
+    responses=[
+            ProviderResponse(
+                content="",
+                tool_calls=[
+                    ToolCallRequest(
+                        id="call_1",
+                        name="calculator",
+                        arguments={
+                            "left": 12,
+                            "operator": "*",
+                            "right": 8,
+                        },
+                    )
+                ],
             ),
-            tool_calls=[],
-        ),
-    ]
+            ProviderResponse(
+                content="无法完成该计算，因为除数不能为 0。",
+                tool_calls=[],
+            ),
+        ]
+        
 
-    def fake_ask_llm(
-        messages,
-        tools=None,
-    ):
-        return responses.pop(0)
-
-    monkeypatch.setattr(
-        "app.agent.ask_llm",
-        fake_ask_llm,
+from app.providers import (
+    FakeProvider,
+    ProviderResponse,
+    ToolCallRequest,
+)
+def test_agent_loop_executes_tool():
+    provider = FakeProvider(
+        responses=[
+            ProviderResponse(
+                content="",
+                tool_calls=[
+                    ToolCallRequest(
+                        id="call_1",
+                        name="calculator",
+                        arguments={
+                            "left": 12,
+                            "operator": "*",
+                            "right": 8,
+                        },
+                    )
+                ],
+            ),
+            ProviderResponse(
+                content="12 × 8 = 96。",
+                tool_calls=[],
+            ),
+        ]
     )
+    provider_div_zero = FakeProvider(
+        responses=[
+            # 第一轮：LLM 决定调用 calculator
+            ProviderResponse(
+                content="",
+                tool_calls=[
+                    ToolCallRequest(
+                        id="call_2",
+                        name="calculator",
+                        arguments={
+                            "left": 10,
+                            "operator": "/",
+                            "right": 0,
+                        },
+                    )
+                ],
+            ),
+            # 第二轮：工具执行完后，LLM 生成最终回复
+            ProviderResponse(
+                content="除数不能为0，无法计算。",
+                tool_calls=[],
+            ),
+        ]
+    )
+
+
+    registry = ToolRegistry()
+    registry.register(CalculatorTool())
+
+    messages = create_conversation()
+
+    add_message(
+        messages,
+        role="user",
+        content="计算12乘8",
+    )
+
+    result = run_agent_turn(
+        messages=messages,
+        provider=provider,
+        tool_registry=registry,
+    )
+
+    assert result.final_content == "12 × 8 = 96。"
+    assert result.iterations == 2
+    assert len(result.tools_used) == 1
+    assert len(provider.calls) == 2
+
 
     registry = ToolRegistry()
 
@@ -65,7 +128,9 @@ def test_agent_receives_tool_error(
 
     result = run_agent_turn(
         messages,
+        provider_div_zero,
         tool_registry=registry,
+        
     )
 
     assert len(
@@ -92,5 +157,5 @@ def test_agent_receives_tool_error(
 
     assert (
         result.final_content
-        == "无法完成该计算，因为除数不能为 0。"
+        == "除数不能为0，无法计算。"
     )

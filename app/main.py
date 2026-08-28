@@ -33,6 +33,7 @@ from app.context import (
     build_runtime_context,
 )
 from app.skills import SkillLoader
+from app.providers import OpenAICompatibleProvider
 
 def parse_args() -> argparse.Namespace:
 
@@ -87,6 +88,7 @@ def main() -> None:
 
     args = parse_args()
     workspace = Path("workspace")
+    provider = OpenAICompatibleProvider.from_env()
     memory_store = MemoryStore(workspace=workspace)
     skill_loader = SkillLoader(workspace=workspace)
     session_manager = SessionManager(Path(args.sessions_dir))
@@ -106,13 +108,19 @@ def main() -> None:
     )
 
     print("nanobot-rebuild")
-    print("stage 11: skills")
-    print(f"session: {session.session_id}")
-    print("status : "+ ("RESTORED" if existed else "NEW"))
+    print("stage 12: provider abstraction")
+
+    print(f"session : {session.session_id}")
+    print(f"status  : {'RESTORED' if existed else 'NEW'}")
     print(f"messages: {len(messages)}")
+    print(f"provider: {provider.name}")
+    print(f"model   : {provider.model}")
+
+    print()
     print("命令:")
     print("  /session        查看当前 Session")
     print("  /sessions       查看已保存 Session")
+    print("  /provider       查看当前模型 Provider")
     print("  /tools          查看 Agent Tools")
     print("  /skills         查看可用 Skills")
     print("  /history        查看完整 Session History")
@@ -209,6 +217,7 @@ def main() -> None:
                     messages=session.messages,
                     session_id=session.session_id,
                     store=memory_store,
+                    provider=provider,
                 )
             except Exception as exc:
                 print(f"\nMemory consolidation failed: {exc}")
@@ -289,7 +298,7 @@ def main() -> None:
         add_message(messages, "user", user_message)
 
         try:
-            agent_result = run_agent_turn(messages, tool_registry,memory_store,skill_loader,context_policy)
+            agent_result = run_agent_turn(messages, provider,tool_registry,memory_store,skill_loader,context_policy)
             stats = agent_result.context_stats
 
             print(

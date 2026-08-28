@@ -2,7 +2,8 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-from app.llm import LLMResult, ToolCallRequest, ask_llm
+from app.providers import LLMProvider, ProviderResponse
+
 from app.tools.registry import ToolRegistry
 from app.context import (
     ContextPolicy,
@@ -38,7 +39,7 @@ class AgentRunResult:
     context_stats: ContextStats
 
 def build_assistant_tool_call_message(
-    result:LLMResult,
+    result:ProviderResponse,
 ) -> dict[str, Any]:
     """
     将我们的 LLMResult 转换为需要写回 messages
@@ -64,6 +65,7 @@ def build_assistant_tool_call_message(
 
 def run_agent_turn(
     messages: list[dict[str, Any]],
+    provider: LLMProvider,
     tool_registry: ToolRegistry,
     memory_store: MemoryStore | None = None,
     skill_loader: SkillLoader | None = None,
@@ -92,7 +94,11 @@ def run_agent_turn(
             )
         )
         last_context_stats = runtime_context.stats
-        result = ask_llm(runtime_context.messages, tools=tool_registry.get_definitions())
+        result = provider.complete(
+            messages=runtime_context.messages,
+            tools=tool_registry.get_definitions(),
+        )
+        # result = ask_llm(runtime_context.messages, tools=tool_registry.get_definitions())
         if result.tool_calls:
             assistant_tool_message = (build_assistant_tool_call_message(result))
             messages.append(assistant_tool_message)
