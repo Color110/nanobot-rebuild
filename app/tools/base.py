@@ -156,7 +156,7 @@ class BaseTool(ABC):
         return validated.model_dump()
 
     @abstractmethod
-    def execute(
+    async def execute(
         self,
         **kwargs: Any,
     ) -> str:

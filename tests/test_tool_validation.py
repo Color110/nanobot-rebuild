@@ -4,7 +4,9 @@ from app.tools.calculator import (
 from app.tools.registry import (
     ToolRegistry,
 )
-
+from app.tools.read_file import (
+    ReadTextFileTool,
+)
 
 def create_registry() -> ToolRegistry:
 
@@ -13,15 +15,14 @@ def create_registry() -> ToolRegistry:
     registry.register(
         CalculatorTool()
     )
-
     return registry
-
-
-def test_valid_tool_arguments():
+import pytest
+@pytest.mark.asyncio
+async def test_valid_tool_arguments():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="calculator",
         arguments={
             "left": 12,
@@ -34,11 +35,12 @@ def test_valid_tool_arguments():
     assert result.content == "96.0"
 
 
-def test_wrong_argument_type():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_wrong_argument_type():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="calculator",
         arguments={
             "left": "12",
@@ -55,11 +57,12 @@ def test_wrong_argument_type():
     )
 
 
-def test_missing_argument():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_missing_argument():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="calculator",
         arguments={
             "left": 12,
@@ -74,12 +77,12 @@ def test_missing_argument():
         == "VALIDATION_ERROR"
     )
 
-
-def test_invalid_operator():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_invalid_operator():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="calculator",
         arguments={
             "left": 12,
@@ -95,12 +98,12 @@ def test_invalid_operator():
         == "VALIDATION_ERROR"
     )
 
-
-def test_extra_argument():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_extra_argument():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="calculator",
         arguments={
             "left": 12,
@@ -118,11 +121,12 @@ def test_extra_argument():
     )
 
 
-def test_execution_error():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_execution_error():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="calculator",
         arguments={
             "left": 10,
@@ -144,11 +148,12 @@ def test_execution_error():
     )
 
 
-def test_unknown_tool():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_unknown_tool():
 
     registry = create_registry()
 
-    result = registry.execute(
+    result = await registry.execute(
         name="not_exists",
         arguments={},
     )
@@ -159,3 +164,29 @@ def test_unknown_tool():
         result.error_type
         == "UNKNOWN_TOOL"
     )
+
+async def test_registry_execute():
+    registry = ToolRegistry()
+    registry.register(CalculatorTool())
+
+    result = await registry.execute(
+        name="calculator",
+        arguments={
+            "left": 12,
+            "operator": "*",
+            "right": 8,
+        },
+    )
+
+    assert result.is_error is False
+    assert result.content == "96.0"
+
+async def test_read_text_file(tmp_path):
+    target = tmp_path / "hello.txt"
+    target.write_text("hello agent", encoding="utf-8")
+
+    tool = ReadTextFileTool(workspace=tmp_path)
+
+    output = await tool.execute(path="hello.txt")
+
+    assert output == "hello agent"

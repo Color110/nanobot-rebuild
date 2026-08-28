@@ -81,7 +81,7 @@ class CalculatorTool(BaseTool):
     def argument_model(self) -> type[BaseModel]:
         return CalculatorArguments
         
-    def execute(
+    async def execute(
         self,
         **kwargs: Any,
     ) -> str:

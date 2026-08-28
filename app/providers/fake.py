@@ -32,7 +32,7 @@ class FakeProvider(LLMProvider):
     def model(self) -> str:
         return self._model
 
-    def complete(
+    async def complete(
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,

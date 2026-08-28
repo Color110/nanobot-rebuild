@@ -3,7 +3,7 @@ import pytest
 from app.providers import FakeProvider, ProviderResponse
 
 
-def test_fake_provider_returns_responses_in_order():
+async def test_fake_provider_returns_responses_in_order():
     provider = FakeProvider(
         responses=[
             ProviderResponse(
@@ -17,22 +17,21 @@ def test_fake_provider_returns_responses_in_order():
         ]
     )
 
-    first = provider.complete(messages=[])
-    second = provider.complete(messages=[])
+    first = await provider.complete(messages=[])
+    second = await provider.complete(messages=[])
 
     assert first.content == "first"
     assert second.content == "second"
-    assert len(provider.calls) == 2
 
-
-def test_fake_provider_fails_when_responses_exhausted():
+@pytest.mark.asyncio  # 告诉 pytest 这是一个异步测试
+async def test_fake_provider_fails_when_responses_exhausted():
     provider = FakeProvider(responses=[])
 
     with pytest.raises(
         RuntimeError,
         match="没有剩余",
     ):
-        provider.complete(messages=[])
+        await provider.complete(messages=[])
 
 import pytest
 

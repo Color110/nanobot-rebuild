@@ -3,7 +3,7 @@ import os
 from typing import Any
 
 from openai import OpenAI, OpenAIError
-
+from openai import AsyncOpenAI
 from app.providers.base import (
     LLMProvider,
     ProviderError,
@@ -42,7 +42,7 @@ class OpenAICompatibleProvider(LLMProvider):
             raise ValueError("model 不能为空")
 
         self._model = model
-        self._client = OpenAI(
+        self._client = AsyncOpenAI(
             api_key=api_key,
             base_url=base_url or None,
         )
@@ -73,7 +73,7 @@ class OpenAICompatibleProvider(LLMProvider):
             model=model,
         )
 
-    def complete(
+    async def complete(
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,
@@ -87,7 +87,7 @@ class OpenAICompatibleProvider(LLMProvider):
             request["tools"] = tools
 
         try:
-            response = self._client.chat.completions.create(**request)
+            response = await self._client.chat.completions.create(**request)
         except OpenAIError as exc:
             raise ProviderError(
                 f"{self.name} 模型调用失败: {exc}"
@@ -100,7 +100,7 @@ class OpenAICompatibleProvider(LLMProvider):
             arguments = parse_tool_arguments(
                 tool_call.function.arguments
             )
-
+            
             tool_calls.append(
                 ToolCallRequest(
                     id=tool_call.id,

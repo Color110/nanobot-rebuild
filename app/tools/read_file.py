@@ -9,7 +9,7 @@ from pydantic import (
 )
 
 from app.tools.base import BaseTool
-
+import asyncio
 
 class ReadTextFileArguments(BaseModel):
 
@@ -60,16 +60,14 @@ class ReadTextFileTool(BaseTool):
 
         return ReadTextFileArguments
 
-    def execute(
+    async def execute(
         self,
         **kwargs: Any,
     ) -> str:
 
-        path = kwargs["path"]
+        path = Path(kwargs["path"])
 
-        target = (
-            self.workspace / path
-        ).resolve()
+        target = (self.workspace / path).resolve()
 
         if not target.is_relative_to(
             self.workspace
@@ -88,6 +86,7 @@ class ReadTextFileTool(BaseTool):
                 f"目标不是文件: {path}"
             )
 
-        return target.read_text(
-            encoding="utf-8"
+        return await asyncio.to_thread(
+            target.read_text,
+            encoding="utf-8",
         )

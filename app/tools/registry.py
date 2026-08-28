@@ -58,7 +58,7 @@ class ToolRegistry:
             for tool in self._tools.values()
         ]
 
-    def execute(
+    async def execute(
         self,
         name: str,
         arguments: dict[str, Any],
@@ -79,19 +79,12 @@ class ToolRegistry:
             )
         
         try:
-            validated_arguments = (
-                tool.validate_arguments(
-                    arguments
-                )
-            )
+            validated_arguments = tool.validate_arguments(arguments)
+            
         except ValidationError as exc:
 
             return ToolResult.error(
-                content=(
-                    self._format_validation_error(
-                        exc
-                    )
-                ),
+                content=self._format_validation_error(exc),
                 error_type="VALIDATION_ERROR",
             )
 
@@ -103,23 +96,15 @@ class ToolRegistry:
             )
 
         try:
-            output = tool.execute(
-                **validated_arguments
-            )
+            output = await tool.execute(**validated_arguments)
 
         except Exception as exc:
-
             return ToolResult.error(
-                content=(
-                    f"{type(exc).__name__}: "
-                    f"{exc}"
-                ),
+                content=f"{type(exc).__name__}: {exc}",
                 error_type="EXECUTION_ERROR",
             )
 
-        return ToolResult.success(
-            content=str(output)
-        )
+        return ToolResult.success(content=str(output))
 
     @staticmethod
     def _format_validation_error(

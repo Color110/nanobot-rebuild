@@ -34,6 +34,7 @@ from app.context import (
 )
 from app.skills import SkillLoader
 from app.providers import OpenAICompatibleProvider
+import asyncio
 
 def parse_args() -> argparse.Namespace:
 
@@ -82,9 +83,7 @@ def parse_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
-
-
-def main() -> None:
+async def main() -> None:
 
     args = parse_args()
     workspace = Path("workspace")
@@ -108,15 +107,12 @@ def main() -> None:
     )
 
     print("nanobot-rebuild")
-    print("stage 12: provider abstraction")
-
+    print("stage 13: async runtime")
     print(f"session : {session.session_id}")
     print(f"status  : {'RESTORED' if existed else 'NEW'}")
     print(f"messages: {len(messages)}")
     print(f"provider: {provider.name}")
     print(f"model   : {provider.model}")
-
-    print()
     print("命令:")
     print("  /session        查看当前 Session")
     print("  /sessions       查看已保存 Session")
@@ -132,7 +128,8 @@ def main() -> None:
     print("  /calc A OP B    人工调用计算器")
     print("  exit            退出程序")
     while True:
-        user_message = input("\nYou > ").strip()
+        raw_input = await asyncio.to_thread(input,"\nYou > ")
+        user_message = raw_input.strip()
 
         if not user_message:
             print("输入不能为空。")
@@ -213,7 +210,7 @@ def main() -> None:
             continue
         if user_message == "/memorize":
             try:
-                changed, candidates = consolidate_session_to_memory(
+                changed, candidates = await consolidate_session_to_memory(
                     messages=session.messages,
                     session_id=session.session_id,
                     store=memory_store,
@@ -293,12 +290,18 @@ def main() -> None:
 
             print("--------------")
             continue
+        if user_message == "/provider":
+            print("\n--- Provider ---")
+            print(f"name : {provider.name}")
+            print(f"model: {provider.model}")
+            print("----------------")
+            continue
             
         turn_start_index = len(messages)
         add_message(messages, "user", user_message)
 
         try:
-            agent_result = run_agent_turn(messages, provider,tool_registry,memory_store,skill_loader,context_policy)
+            agent_result =await  run_agent_turn(messages, provider,tool_registry,memory_store,skill_loader,context_policy)
             stats = agent_result.context_stats
 
             print(
@@ -349,4 +352,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

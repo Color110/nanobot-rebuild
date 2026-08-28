@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
-
+import asyncio
 
 @dataclass(frozen=True)
 class ToolCallRequest:
@@ -34,7 +34,7 @@ class LLMProvider(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def complete(
+    async def complete(
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,

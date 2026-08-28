@@ -202,7 +202,7 @@ def build_memory_transcript(messages: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def extract_memories(
+async def extract_memories(
     messages: list[dict[str, Any]],
     provider: LLMProvider,
 ) -> list[MemoryCandidate]:
@@ -242,7 +242,7 @@ def extract_memories(
         },
     ]
 
-    result = provider.complete(extraction_messages, tools=[MEMORY_SAVE_TOOL_SCHEMA])
+    result = await provider.complete(extraction_messages, tools=[MEMORY_SAVE_TOOL_SCHEMA])
 
     candidates: list[MemoryCandidate] = []
 
@@ -256,12 +256,12 @@ def extract_memories(
     return candidates
 
 
-def consolidate_session_to_memory(
+async def consolidate_session_to_memory(
     messages: list[dict[str, Any]],
     session_id: str,
     store: MemoryStore,
     provider: LLMProvider,
 ) -> tuple[int, list[MemoryCandidate]]:
-    candidates = extract_memories(messages,provider)
+    candidates = await extract_memories(messages,provider)
     changed = store.upsert_many(candidates, source_session=session_id)
     return changed, candidates

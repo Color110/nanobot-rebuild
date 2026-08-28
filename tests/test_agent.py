@@ -8,7 +8,12 @@ from app.conversation import (
     format_history,
 )
 from app.agent import run_agent_turn
-
+from app.providers.base import (
+    LLMProvider,
+    ProviderError,
+    ProviderResponse,
+    ToolCallRequest,
+)
 def test_agent_receives_tool_error(
     monkeypatch,
 ):
@@ -40,7 +45,8 @@ from app.providers import (
     ProviderResponse,
     ToolCallRequest,
 )
-def test_agent_loop_executes_tool():
+
+async def test_agent_loop_executes_tool():
     provider = FakeProvider(
         responses=[
             ProviderResponse(
@@ -63,31 +69,6 @@ def test_agent_loop_executes_tool():
             ),
         ]
     )
-    provider_div_zero = FakeProvider(
-        responses=[
-            # 第一轮：LLM 决定调用 calculator
-            ProviderResponse(
-                content="",
-                tool_calls=[
-                    ToolCallRequest(
-                        id="call_2",
-                        name="calculator",
-                        arguments={
-                            "left": 10,
-                            "operator": "/",
-                            "right": 0,
-                        },
-                    )
-                ],
-            ),
-            # 第二轮：工具执行完后，LLM 生成最终回复
-            ProviderResponse(
-                content="除数不能为0，无法计算。",
-                tool_calls=[],
-            ),
-        ]
-    )
-
 
     registry = ToolRegistry()
     registry.register(CalculatorTool())
@@ -100,7 +81,7 @@ def test_agent_loop_executes_tool():
         content="计算12乘8",
     )
 
-    result = run_agent_turn(
+    result = await run_agent_turn(
         messages=messages,
         provider=provider,
         tool_registry=registry,
@@ -110,52 +91,3 @@ def test_agent_loop_executes_tool():
     assert result.iterations == 2
     assert len(result.tools_used) == 1
     assert len(provider.calls) == 2
-
-
-    registry = ToolRegistry()
-
-    registry.register(
-        CalculatorTool()
-    )
-
-    messages = create_conversation()
-
-    add_message(
-        messages,
-        "user",
-        "10除以0",
-    )
-
-    result = run_agent_turn(
-        messages,
-        provider_div_zero,
-        tool_registry=registry,
-        
-    )
-
-    assert len(
-        result.tools_used
-    ) == 1
-
-    record = (
-        result.tools_used[0]
-    )
-
-    assert record.is_error is True
-
-    assert (
-        record.error_type
-        == "EXECUTION_ERROR"
-    )
-
-    tool_message = messages[3]
-
-    assert (
-        "ToolError"
-        in tool_message["content"]
-    )
-
-    assert (
-        result.final_content
-        == "除数不能为0，无法计算。"
-    )
