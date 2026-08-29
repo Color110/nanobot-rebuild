@@ -1,0 +1,29 @@
+base_url (OpenAI)	https://api.deepseek.com
+base_url (Anthropic)	https://api.deepseek.com/anthropic
+api_key	申请一个 API key
+model(1)	deepseek-v4-flash
+deepseek-v4-pro
+deepseek-v4-flash-vision-exp
+key sk-976c661dc41147388f214114baf7db6a
+
+export LLM_BASE_URL=https://api.deepseek.com
+export LLM_API_KEY=sk-976c661dc41147388f214114baf7db6a
+export LLM_MODEL=deepseek-v4-flash
+
+
+while(true):
+
+    result=ask_llm(messages,tool_calls);
+
+    if(result.tool_calls)
+        for tool_call in result.tool_calls
+
+            ans=to_execute()
+            messages.append(ans)
+        continue
+    content=result.content()
+    messages.append(content)
+    return 
+    
+    
+        

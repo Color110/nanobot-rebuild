@@ -1,8 +1,3 @@
 .venv/
 __pycache__/
-.pytest_cache/
 *.pyc
-.env
-text.txt
-runtime/
-workspace/memory/

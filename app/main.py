@@ -1,4 +1,5 @@
 import argparse
+import os
 
 from pathlib import Path
 
@@ -36,14 +37,16 @@ from app.providers import OpenAICompatibleProvider
 import asyncio
 from app.agent import AgentRunner
 from app.agent_loop import AgentLoop
+from app.rag.bootstrap import build_rag_runtime
+from app.rag.embeddings import (
+    FakeEmbeddingProvider,
+    OpenAICompatibleEmbeddingProvider,
+)
 
 def parse_args() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(
-        description=(
-            "nanobot-rebuild "
-            "Stage 8"
-        )
+        description="nanobot-rebuild asynchronous Agent Runtime",
     )
 
     parser.add_argument(
@@ -81,6 +84,27 @@ def parse_args() -> argparse.Namespace:
         default=1200,
         help="Skills 最大估算 Token Budget",
     )
+    parser.add_argument(
+        "--disable-rag",
+        action="store_true",
+        help="不加载知识库，也不注册 retrieve_knowledge Tool",
+    )
+    parser.add_argument(
+        "--embedding-provider",
+        choices=["fake", "openai"],
+        default=os.getenv("RAG_EMBEDDING_PROVIDER", "fake"),
+        help="RAG Embedding Provider；默认 fake，真实运行可选择 openai",
+    )
+    parser.add_argument(
+        "--rag-index",
+        default="workspace/rag/vector-index.json",
+        help="持久化向量索引路径",
+    )
+    parser.add_argument(
+        "--migrate-rag-index",
+        action="store_true",
+        help="Embedding Space 变化时重新生成全部向量",
+    )
 
     return parser.parse_args()
 
@@ -101,6 +125,19 @@ async def main() -> None:
     tool_registry = ToolRegistry()  
     tool_registry.register(CalculatorTool())
     tool_registry.register(ReadTextFileTool(workspace=workspace))
+    rag_runtime = None
+    if not args.disable_rag:
+        if args.embedding_provider == "openai":
+            embedding_provider = OpenAICompatibleEmbeddingProvider.from_env()
+        else:
+            embedding_provider = FakeEmbeddingProvider()
+        rag_runtime = await build_rag_runtime(
+            workspace=workspace,
+            embedding_provider=embedding_provider,
+            index_path=Path(args.rag_index),
+            migrate_embedding_space=args.migrate_rag_index,
+        )
+        tool_registry.register(rag_runtime.tool)
     context_policy = ContextPolicy(
         max_input_tokens=args.context_budget,
         memory_budget_tokens=args.memory_budget,
@@ -120,12 +157,18 @@ async def main() -> None:
         session_manager=session_manager,
     )
     print("nanobot-rebuild")
-    print("stage 14: runner / loop separation")
+    print("runtime : Agent Loop + Tool Calling + RAG")
     print(f"session : {session.session_id}")
     print(f"status  : {'RESTORED' if existed else 'NEW'}")
     print(f"messages: {len(messages)}")
     print(f"provider: {provider.name}")
     print(f"model   : {provider.model}")
+    if rag_runtime is not None:
+        print(
+            "rag     : "
+            f"{len(rag_runtime.indexer.index)} chunks, "
+            f"{rag_runtime.indexer.embedding_provider.space}"
+        )
     print("命令:")
     print("  /session        查看当前 Session")
     print("  /sessions       查看已保存 Session")
@@ -152,14 +195,6 @@ async def main() -> None:
         if user_message.lower() == "exit":
             print("Bye.")
             return
-
-        if user_message == "/session":
-            print(f"id       : {session.session_id}")
-            print(f"created  : {session.created_at}")
-            print(f"updated  : {session.updated_at}")
-            print(f"messages : {len(session.messages)}")
-            print("---------------")                       
-            continue
 
         if user_message == "/session":
             session = session_manager.get_or_create(args.session)
@@ -200,6 +235,7 @@ async def main() -> None:
                 result = calculate(left, operator, right)
             except (ValueError, ZeroDivisionError) as exc:
                 print(f"\nCalculator Error > {exc}")
+                continue
             print(
                 f"\nCalculator > "
                 f"{left:g} "
@@ -233,6 +269,11 @@ async def main() -> None:
                 )
             except Exception as exc:
                 print(f"\nMemory consolidation failed: {exc}")
+                continue
+            print(
+                f"Memory consolidation: {changed} changed, "
+                f"{len(candidates)} candidates"
+            )
             continue
         
         if user_message == "/memory-clear":
@@ -252,6 +293,24 @@ async def main() -> None:
                 )
             except ContextBudgetError as exc:
                 print(f"\nContext Error > {exc}")
+                continue
+            stats = context_result.stats
+            print("\n--- Runtime Context ---")
+            print(
+                f"tokens   : {stats.estimated_input_tokens}/"
+                f"{stats.max_input_tokens}"
+            )
+            print(
+                f"messages : {stats.selected_session_messages}/"
+                f"{stats.total_session_messages}"
+            )
+            print(
+                f"memory   : {stats.selected_memory_records}/"
+                f"{stats.total_memory_records}"
+            )
+            print(f"skills   : {', '.join(stats.active_skills) or '(none)'}")
+            print("-----------------------")
+            continue
             continue
 
         if user_message == "/skills":

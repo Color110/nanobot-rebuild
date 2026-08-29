@@ -1,0 +1,76 @@
+{
+  "session_id": "context-demo",
+  "created_at": "2026-08-26T10:38:39.444354+00:00",
+  "updated_at": "2026-08-26T11:01:29.504978+00:00",
+  "metadata": {},
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是 nanobot-rebuild 的 AI 助手。请准确、清晰地回答用户问题。当有合适的工具能够提供更可靠的结果时，优先使用工具。"
+    },
+    {
+      "role": "user",
+      "content": "请详细介绍function call容易出的面试题及其答案"
+    },
+    {
+      "role": "assistant",
+      "content": "这是 C++ 面试中的高频板块。下面按类别给你系统梳理\"函数调用（Function Call）\"相关的经典面试题与详细答案。\n\n---\n\n## 一、函数调用机制与栈帧\n\n### 1. 函数调用时，进程栈上发生了什么？请描述调用过程\n\n**答**：函数调用本质是压栈 + 跳转 + 执行 + 恢复的过程，典型流程（以 x86 32 位为例）：\n\n1. **参数压栈**：按调用约定（如 cdecl 从右往左）将实参压入栈。\n2. **返回地址入栈**：`call` 指令把下一条指令地址压栈。\n3. **保存调用者栈底**：`push ebp; mov ebp, esp`，建立新栈帧。\n4. **分配局部变量空间**：`sub esp, N`，esp 下移，为局部变量腾出空间。\n5. **执行函数体**，通过 `ebp + 偏移` 访问参数，`ebp - 偏移` 访问局部变量。\n6. **函数返回**：`mov esp, ebp; pop ebp; ret`，ret 弹出返回地址并跳回，随后由调用者（cdecl）或函数自身（stdcall）清理参数栈。\n\n**考点延伸**：为什么用 ebp 而不是直接 esp？因为 esp 在函数执行中会变（压栈局部变量），ebp 固定不变便于寻址。\n\n---\n\n### 2. 递归调用过多会导致什么？为什么？\n\n**答**：栈溢出（stack overflow）。每层递归都会分配独立栈帧（保存返回地址、局部变量、参数），层数过多会耗尽栈空间（默认通常 1~8MB）。可以通过 `ulimit -s` 调大，但根本解法是改用迭代或尾递归优化。\n\n---\n\n## 二、调用约定（Calling Convention）\n\n### 3. cdecl、stdcall、fastcall、thiscall 的区别？\n\n**答**（重点背下来）：\n\n| 约定 | 参数传递 | 栈清理 | 典型场景 |\n|---|---|---|---|\n| `cdecl`（C 默认） | 从右往左压栈 | **调用者**清理 | C/C++ 默认、printf 等变参函数必须用它 |\n| `stdcall` | 从右往左压栈 | **被调函数**清理 | Win32 API（如 `MessageBox`） |\n| `fastcall` | 前两个参数用寄存器（ECX/EDX），其余压栈 | 被调函数清理 | 编译器优化的快速调用 |\n| `thiscall` | 成员函数，this 指针经寄存器（ECX）传入 | 被调函数清理 | MSVC 下成员函数默认约定 |\n\n**考点延伸**：为什么变参函数（如 printf）不能用 stdcall？因为只有调用者知道实参个数，被调函数无法确定要清理多少字节。\n\n---\n\n## 三、函数重载与名字修饰\n\n### 4. C++ 函数重载在底层是怎么区分的？C 语言为什么不行？\n\n**答**：通过 **名字修饰（Name Mangling）**。编译器把函数名、参数类型、const 限定等信息编码进符号名，如：\n\n```cpp\nvoid foo(int);            // → _Z3fooi\nvoid foo(double);         // → _Z3food\nvoid foo(int, char);      // → _Z3fooice? \n```\n\n**考点延伸**：\n- 返回值不参与重载，因为单凭返回值无法区分 `int f()` 和 `double f()` 的调用。\n- 正是由于 C 不做 name mangling，C++ 调用 C 函数必须用 `extern \"C\"` 阻止修饰。\n- 面试常问：\"为什么 `extern \"C\"` 不能作用于重载函数？\"——因为重载依赖 mangling 区分，extern \"C\" 会使其失去区分能力。\n\n---\n\n## 四、虚函数与多态（最热考点）\n\n### 5. 虚函数调用（动态绑定）的底层机制？\n\n**答**：每个含虚函数的类有一个 **虚表（vtable）**，每个对象里存一个 **vptr（虚表指针）**，指向所属类虚表。调用 `p->vfunc()` 时实际是：\n\n```\np->vptr->vtable[索引]()\n```\n\n- 虚表在编译期生成，**存放在只读数据段**（.rodata），由虚函数地址数组构成，按声明顺序排列。\n- 对象头部的 vptr 在**构造函数中初始化**（由编译器插入代码），指向本类虚表。\n- 这样即使基类指针指向派生类对象，也能正确调用派生类版本。\n\n---\n\n### 6. 在构造函数/析构函数中调用虚函数，会发生动态绑定吗？\n\n**答**：**不会**，会发生静态绑定（调用当前类的版本）。\n\n原因：构造派生类对象时，先构造基类部分，此时 vptr 指向**基类虚表**，还没指向派生类虚表；析构则反向，先析构派生类部分，等执行到基类析构函数时 vptr 已被改回基类虚表。\n\n**经典陷阱题**：\n\n```cpp\nclass Base {\npublic:\n    Base() { f(); }\n    virtual void f() { cout << \"Base::f\"; }\n};\nclass Derived : public Base {\npublic:\n    Derived() {}\n    virtual void f() { cout << \"Derived::f\"; }\n};\nDerived d; // 输出 Base::f，而不是 Derived::f\n```\n\n---\n\n### 7. 虚函数的调用开销比普通函数大吗？大在哪里？\n\n**答**：主要开销：\n1. 多一次**间接寻址**（通过 vptr 找虚表再找函数地址），无法内联。\n2. 虚函数往往**无法内联**（除非编译器能静态推断实际类型）。\n3. 破坏指令缓存局部性。\n\n现代 CPU 分支预测器对常见多态场景预测很准，实际性能差距通常远小于人们想象。性能敏感场景可用 CRTP 等静态多态替代。\n\n---\n\n### 8. 为什么构造函数不能是虚函数？析构函数通常必须是虚函数？\n\n**答**：\n- **构造不能虚**：vptr 在构造函数中才被初始化，构造函数调用时对象尚未完成构造，没有虚表可寻址，逻辑上矛盾。\n- **析构应为虚**：当用基类指针 `delete` 派生类对象时，若析构非虚，则只调用基类析构，**派生类部分不会被释放，导致资源泄漏/未定义行为**。\n\n---\n\n## 五、参数传递\n\n### 9. 值传递、引用传递、指针传递的区别？\n\n**答**（核心：**拷贝 vs 别名**）：\n\n| 方式 | 是否拷贝 | 能否修改实参 | 性能影响 |\n|---|---|---|---|\n| 值传递 | 是（构造临时对象/拷贝） | 否 | 大对象开销大，但有移动语义兜底 |\n| 引用传递 | 否（别名） | 能（非 const） | 快，无拷贝 |\n| 指针传递 | 否（传地址值，本质也是值拷贝） | 能（通过解引用） | 快 |\n\n**考点延伸**：\n- 引用必须初始化且不可为空，指针可以为空——**引用更安全**，适合\"必不为空\"的参数。\n- 大对象用 `const T&` 传参，既是安全又是性能。\n- 指针传参改的是指针本身还是所指对象，常考：\n\n```cpp\nvoid f(int* p) { p = new int(10); }      // 改不了实参指针\nvoid g(int*& p) { p = new int(10); }     // 能改\n```\n\n---\n\n## 六、返回值与优化\n\n### 10. 返回局部变量时，拷贝了多少次？RVO / NRVO 是什么？\n\n**答**：现代编译器会做 **RVO（Return Value Optimization）** 和 **NRVO（Named Return Value Optimization）**：\n\n- RVO：直接返回临时对象时，函数在调用者栈上预先分配好返回对象空间，函数内直接在该空间构造，**省掉一次拷贝/移动**。\n- NRVO：返回具名局部变量时同理。\n\n```cpp\nstd::string foo() { return \"hello\"; }     // RVO\nstd::string bar() { std::string s; return s; } // NRVO\n```\n\n**考点延伸**：\n- C++17 起 RVO 是**强制要求**（对临时对象 prvalue），NRVO 仍是优化可选。\n- 移动语义出现后，即使无法 NRVO，返回值也会走 move 而非 copy。\n- 关闭优化（如 `-fno-elide-constructors`）可以看到多次构造，这是常考实验。\n\n---\n\n### 11. 为什么不能返回局部变量的引用或指针？\n\n**答**：局部变量在函数返回时**栈帧销毁**，返回的引用/指针是**悬垂引用（dangling reference）**，访问是未定义行为（UB）。\n\n```cpp\nint& f() { int x = 5; return x; }  // UB!\n```\n\n可返回：静态变量、堆内存（需自行管理）、成员变量、传入参数的引用。\n\n---\n\n## 七、函数指针与可调用对象\n\n### 12. 函数指针、lambda、std::function 的区别？\n\n**答**：\n\n| 类型 | 捕获状态 | 是否可内联 | 使用场景 |\n|---|---|---|---|\n| 函数指针 | 无状态 | 可 | C 风格回调 |\n| lambda | 可捕获（无捕获可转函数指针） | **可**（编译期类型） | 标准库算法等 |\n| std::function | 可捕获 | 通常不行（类型擦除，堆分配） | 需要统一类型存储/传递 |\n\n**考点延伸**：\n- 无捕获的 lambda 可以隐式转换为函数指针；有捕获的不行。\n- `std::function` 内部用**类型擦除（type erasure）**，一般有堆分配开销，性能比裸 lambda 差，但类型统一。\n- 函数指针大小固定（8 字节），`std::function` 通常 32~64 字节（含 SBO 小对象优化）。\n\n---\n\n### 13. 什么是回调函数？什么是\"函数签名不一致时的适配\"？\n\n**答**：回调是把函数地址作为参数传给调用方，由调用方在特定时机执行，常见于事件驱动、异步 IO。当函数签名不匹配时可用 lambda / `std::bind` / std::function 适配。\n\n---\n\n## 八、内联函数\n\n### 14. inline 函数和宏的区别？inline 一定会内联吗？\n\n**答**：\n- **宏**是预处理阶段文本替换，无类型检查、无法调试、不构成作用域。\n- **inline** 是给编译器的**建议**，编译期进行，有类型检查和调试信息。\n- `inline` **不一定**内联：编译器可忽略（循环/递归/取函数地址等情况）；相反不加 inline 的函数在 LTO 下也可能被内联。\n\n**考点延伸**：`inline` 另一个重要作用是允许函数定义在头文件中且多 TU 包含不违反 ODR（每个 TU 有一份，链接器去重）。\n\n---\n\n## 九、其他高频题\n\n### 15. main 函数执行之前和之后都发生了什么？\n\n**答**：\n- **main 之前**：操作系统加载程序 → 初始化运行时（CRT）→ 初始化全局/静态对象（调用它们的构造函数）→ 设置 std::cout 等 → 然后才进入 main。\n- **main 之后**：全局/静态对象析构 → atexit 注册的函数（逆序）→ 释放运行时资源。\n\n**考点延伸**：全局对象构造顺序跨翻译单元是**未定义**的，因此有\"初始化顺序崩溃\"（Static Initialization Order Fiasco）问题，可用 `static` 局部对象（懒初始化）规避。\n\n---\n\n### 16. 默认参数与函数重载会产生什么歧义？\n\n**答**：重载匹配时默认参数不参与函数签名，但调用处可能出现二义：\n\n```cpp\nvoid f(int x, int y = 0);\nvoid f(int x);        // 调用 f(1) 时两个都匹配 → 编译错误\n```\n\n另外默认参数和可变参数结合也是坑：`f(...)` 与带默认参数的 `f(int)` 在传 0 个实参时都可能匹配。\n\n---\n\n### 17. printf 这类可变参数函数是怎么实现的？\n\n**答**：通过 C 变参宏 `va_list / va_start / va_arg / va_end`，原理是**直接读取栈上连续存放的参数**：\n- `va_start` 使 va_list 指向第一个可变参数的位置（紧接在固定参数之后）。\n- `va_arg` 按给定类型从栈上取一个参数并推进指针。\n\n**陷阱**：可变参数没有类型安全，编译器无法检查类型是否匹配 `%d` 等格式符——所以 `printf(\"%d\", 3.14)` 是 UB，这也是 C++ 中建议用 `std::cout` / `std::format` 的原因。\n\n---\n\n### 18. 函数 try 块（function-try-block）是什么？\n\n**答**：把整个函数体（含**成员初始化列表**）包进 try-catch 的写法：\n\n```cpp\nC::C(int a) try : x(a) {\n    // 构造函数体\n} catch (...) {\n    // 注意：这里不能抛出新异常，否则会继续传播（C++11 后）\n}\n```\n\n主要用途：捕获**构造函数初始化列表**中抛出的异常（普通 try 无法覆盖初始化列表）。\n\n---\n\n### 19. 尾调用优化（Tail Call Optimization）是什么？\n\n**答**：当函数的**最后一个操作**是调用另一个函数（且当前帧的局部变量/参数不再被需要）时，编译器可复用当前栈帧，不新增栈帧，直接把返回值转给上层。这样递归深度不受栈限制：\n\n```cpp\nint fact(int n, int acc) {\n    if (n <= 1) return acc;\n    return fact(n - 1, n * acc);  // 尾调用，可优化为循环\n}\n```\n\n**注意**：C++ 标准**不保证** TCO，GCC/Clang 在 -O2 下对上述形式通常能做。若 C++ 有 guarantee 的尾调用，需 C++23 之后的 proposal（仍未落地）。\n\n---\n\n### 20. lambda 的本质是什么？它如何捕获局部变量？\n\n**答**：lambda 本质是**匿名函数对象**，编译器生成一个未命名类，`operator()` 为函数体。\n- `[=]` 值捕获：成员变量按值拷贝（类内含该副本）。\n- `[&]` 引用捕获：成员是引用。\n- 捕获发生在**创建 lambda 时**，与调用时机无关，因此引用捕获时若原变量先销毁则悬垂。\n- `[x]` 捕获初始化（C++14 起）可实现移动捕获：\n\n```cpp\nauto p = std::make_unique<int>(1);\nauto f = [p = std::move(p)] { return *p; };\n```\n\n---\n\n## 十、综合题（融合考点）\n\n### 21. 这段代码有几个构造函数调用？（考察 RVO + 移动语义）\n\n```cpp\nstd::string foo() { return std::string(\"hello\"); }\nstd::string s = foo();\n```\n\n**答**：C++17 下**只有 1 次**构造——RVO 强制生效，直接在 s 的空间构造。C++11/14 在 -O0 下可能看到：临时对象构造 + 移动构造（或省略成 1 次）。\n\n---\n\n### 22. 面试连环题：\"std::function 能存 lambda 吗？std::function 调用是虚函数调用吗？\"\n\n**答**：能存。`std::function` 内部不是虚表，而是**类型擦除 + 函数指针/手工分发**（常见实现：存储函数指针表 + 捕获对象指针），本质上也是一种间接调用，但**不是** vtable 虚调用。\n\n---\n\n### 23. 手写题：用函数指针实现一个简单的回调机制 / 用函数指针数组实现状态机\n\n**答**：函数指针数组实现有限状态机是经典题，常见解答是：\n\n```cpp\nvoid state_idle(int event);\nvoid state_run(int event);\nusing Handler = void(*)(int);\nHandler fsm[2] = { state_idle, state_run };\nint state = 0;\n// 事件到达：fsm[state](event);\n```\n\n---\n\n## 备考建议\n\n针对这块，建议你按以下优先级复习（按面试出现频率）：\n\n1. **虚函数机制 + 构造/析构中的虚调用**（必考）\n2. **调用约定 cdecl/stdcall**（必考，尤其服务端/跨平台）\n3. **值/引用/指针传参 + 引用返回陷阱**\n4. **RVO/NRVO + 移动语义**\n5. **extern \"C\" 与名字修饰**\n6. **lambda 捕获 + std::function 开销**\n7. **函数指针数组（手写题）**\n\n如果想继续深入，我可以帮你把上面任何一个题目展开成\"追问式\"的连环题，或者出一套自测题验证掌握程度。需要吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！很高兴见到你 😊\n\n我是你的 AI 助手，看到你在长期学习 C++ 服务端开发，这是个非常棒的方向。\n\n有什么我可以帮你的吗？比如：\n\n- **C++ 语法或标准库问题**（如 `std::vector`、智能指针、模板等）\n- **服务端技术**（epoll、io_uring、多线程、网络编程等）\n- **项目代码 review** 或调试思路\n- **学习路线规划**\n\n随时告诉我你的需求！"
+    },
+    {
+      "role": "user",
+      "content": "/context\u001b[D"
+    },
+    {
+      "role": "assistant",
+      "content": "看起来你想查看当前的上下文信息。让我先检查一下 workspace 中是否有相关的上下文文件：",
+      "tool_calls": [
+        {
+          "id": "call_00_TXORoCxLTcPGpfyTvvIz2646",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"context.md\"}"
+          }
+        },
+        {
+          "id": "call_01_KwrEyhwMozGuwxeTy1AA9733",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"CONTEXT.md\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_TXORoCxLTcPGpfyTvvIz2646",
+      "content": "ToolError[EXECUTION_ERROR]: FileNotFoundError: 文件不存在: context.md"
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_01_KwrEyhwMozGuwxeTy1AA9733",
+      "content": "ToolError[EXECUTION_ERROR]: FileNotFoundError: 文件不存在: CONTEXT.md"
+    },
+    {
+      "role": "assistant",
+      "content": "Workspace 中没有找到名为 `context.md` 或 `CONTEXT.md` 的文件。\n\n不过，我目前持有的关于你的上下文信息如下：\n\n## 当前上下文（来自长期记忆）\n\n| 项目 | 内容 |\n|------|------|\n| **姓名** | 张三 |\n| **语言偏好** | 技术问题解释以中文为主；涉及英文 API 名称（如 `std::vector`、`epoll`、`io_uring`、`RESTful` 等）时保留英文术语不翻译 |\n| **学习目标** | 长期学习 **C++ 服务端开发** |\n\n如果你是想：\n1. **加载某个特定的上下文文件** —— 请告诉我文件名或路径，我可以帮你读取；\n2. **开始新的学习/讨论话题** —— 直接提出你的问题即可，我们可以继续围绕 C++ 服务端开发展开；\n3. **其他用途** —— 请说明你的具体需求。\n\n请问你接下来想做什么？"
+    },
+    {
+      "role": "user",
+      "content": "/contex"
+    },
+    {
+      "role": "assistant",
+      "content": "我看到你输入了 `/contex`，但这条指令看起来不完整（可能是 `/context` 或别的命令被截断了）。\n\n请问你是想：\n\n1. **查看当前对话上下文** —— 回顾我们之前聊过的内容（比如 C++ 服务端开发的学习进度）？\n2. **清除/重置上下文** —— 开始一段全新的对话？\n3. 还是别的什么命令？\n\n如果方便的话，可以把完整命令补充一下，我好准确帮你处理 😊"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "session_id": "async-demo",
+  "created_at": "2026-08-28T09:27:00.129859+00:00",
+  "updated_at": "2026-08-28T09:28:43.020909+00:00",
+  "metadata": {},
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是 nanobot-rebuild 的 AI 助手。请准确、清晰地回答用户问题。当有合适的工具能够提供更可靠的结果时，优先使用工具。"
+    },
+    {
+      "role": "user",
+      "content": "TCP 和 UDP 有什么区别？"
+    },
+    {
+      "role": "assistant",
+      "content": "# TCP 与 UDP 的区别\n\n这是网络编程面试的必考题。下面从**核心区别**和**面试追问点**两个层面来梳理。\n\n## 一、核心区别对照表\n\n| 维度 | TCP | UDP |\n|------|-----|-----|\n| 连接性 | **面向连接**（需三次握手建立、四次挥手释放） | **无连接**（无需建立连接，直接发送） |\n| 可靠性 | **可靠传输**：确认应答（ACK）、超时重传、丢包重传 | **尽力而为**（best-effort）：不保证送达，丢包不重传 |\n| 有序性 | **保证有序**：接收端按序号重组 | **不保证有序**：可能乱序到达 |\n| 数据边界 | **字节流**（stream）：无边界，需应用层自行分包 | **数据报**（datagram）：有明确边界，一次一个报文 |\n| 流量控制 | 有（滑动窗口机制） | 无 |\n| 拥塞控制 | 有（慢启动、拥塞避免、快重传、快恢复） | 无 |\n| 传输方式 | 仅支持**单播** | 支持**单播、多播、广播** |\n| 报文头部 | 20 字节（无选项时） | 8 字节 |\n| 双工性 | 全双工 | 全双工 |\n| 开销 | 高（连接维护、状态机复杂） | 低（无连接状态） |\n\n## 二、面试追问点（高频）\n\n### 1. 既然 TCP 可靠，为什么还需要 UDP？\n- **实时性要求高**的场景：TCP 重传会带来延迟抖动，UDP 延迟低、无重传。\n- **头部开销小**：TCP 头 20 字节 vs UDP 头 8 字节。\n- **无连接状态**：服务端无需为每个客户端维护连接状态，可支撑大规模并发。\n- 典型场景：视频直播、语音通话、游戏、DNS 查询、QUIC（基于 UDP）。\n\n### 2. TCP 的\"可靠\"具体体现在哪？\n- 校验和（checksum）\n- 确认应答 + 超时重传\n- 序号机制（去重、排序）\n- 流量控制（滑动窗口）\n- 拥塞控制\n\n### 3. TCP 是字节流，UDP 是数据报，这句话怎么理解？\n- **TCP**：发送方连续写入，接收方按字节流读取，两次 write 的数据可能被一次 read 读到，也可能一次 write 被多次 read 读完 —— 所以应用层需要自己定义消息边界（如长度前缀、分隔符）。\n- **UDP**：一次 `sendto` 对应一次 `recvfrom`，报文边界由内核保证，**不会出现半个包或粘包**（但可能丢包、乱序）。\n\n### 4. UDP 应用层如何\"补可靠\"？\n- 自己实现确认、重传、序号（如 RUDP、KCP）。\n- 或者干脆容忍丢包（音视频场景）。\n\n### 5. 性能对比一句话总结\n> TCP 牺牲部分性能换取可靠性；UDP 以可能丢包为代价换取低延迟、低开销。\n\n## 三、答题加分技巧\n\n面试时可以补充一个**场景判断题**，例如：\n\n- 文件传输、网页浏览（HTTP/HTTPS）→ TCP\n- 视频通话、在线游戏 → UDP（或基于 UDP 的自研协议）\n- DNS 查询 → UDP（超过 512 字节才转 TCP）\n- HTTP/3 底层 → QUIC（基于 UDP）\n\n如果需要，我还可以继续展开**三次握手/四次挥手的状态变迁**、**滑动窗口与拥塞控制细节**等后续考点。"
+    },
+    {
+      "role": "user",
+      "content": "请精确计算938273乘以78291。"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_WIPt6iZP5I7cHqVyE32D1657",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 938273, \"operator\": \"*\", \"right\": 78291}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_WIPt6iZP5I7cHqVyE32D1657",
+      "content": "73458331443.0"
+    },
+    {
+      "role": "assistant",
+      "content": "计算完成：\n\n**938273 × 78291 = 73,458,331,443**\n\n验证一下分解过程：\n- 938273 × 78291 = 938273 × 78000 + 938273 × 291\n- 938273 × 78 × 1000 = 73,185,294,000\n- 938273 × 291 = 273,037,443\n- 两者相加 = 73,458,331,443 ✅"
+    },
+    {
+      "role": "user",
+      "content": "tool_calls[0]"
+    },
+    {
+      "role": "assistant",
+      "content": "看起来你想了解之前那次乘法计算所用的工具调用。我来详细说明一下：\n\n## 工具调用结构\n\n上次计算 `938273 × 78291` 时，我调用了 `calculator` 工具，参数如下：\n\n```json\n{\n  \"name\": \"calculator\",\n  \"arguments\": {\n    \"left\": 938273,      // 左操作数（被乘数）\n    \"operator\": \"*\",     // 运算符：乘法\n    \"right\": 78291       // 右操作数（乘数）\n  }\n}\n```\n\n## 为什么用工具而不是心算？\n\n1. **精确性**：大数乘法容易出错，工具保证结果准确\n2. **可验证**：结果 `73458331443` 由工具直接返回，可信度高\n3. **规范流程**：涉及数学计算时优先使用工具，避免自行心算\n\n## 工具定义说明\n\n`calculator` 工具支持四种运算符：\n\n| 运算符 | 含义 | 示例 |\n|--------|------|------|\n| `+` | 加法 | left: 5, right: 3 → 8 |\n| `-` | 减法 | left: 10, right: 4 → 6 |\n| `*` | 乘法 | left: 6, right: 7 → 42 |\n| `/` | 除法 | left: 20, right: 5 → 4 |\n\n---\n\n不过，如果你指的是**别的内容**（比如想让我展示某次具体的调用记录、或者想了解工具调用的其他细节），请说明具体需求，我再进一步解答。"
+    },
+    {
+      "role": "user",
+      "content": "calculator(...)"
+    },
+    {
+      "role": "assistant",
+      "content": "看起来你想调用 `calculator` 工具，但还没有提供具体的运算参数。\n\n`calculator` 工具需要三个参数才能执行：\n\n| 参数 | 类型 | 说明 |\n|------|------|------|\n| `left` | number | 左操作数 |\n| `operator` | string | 运算符：`+`、`-`、`*`、`/` |\n| `right` | number | 右操作数 |\n\n例如：\n```json\ncalculator(left=938273, operator=\"*\", right=78291)\n```\n\n请告诉我你想计算什么，比如：\n\n- **加法**：`calculator(123, \"+\", 456)`\n- **减法**：`calculator(100, \"-\", 37)`\n- **乘法**：`calculator(25, \"*\", 4)`\n- **除法**：`calculator(81, \"/\", 9)`\n\n直接给出表达式即可，我会调用工具为你精确计算。"
+    },
+    {
+      "role": "user",
+      "content": "请分别使用计算器精确计算以下两个互相独立的算式："
+    },
+    {
+      "role": "assistant",
+      "content": "您的消息似乎没有包含具体的算式内容，只看到了提示语，后面的两个算式可能没有发送成功。\n\n请补充以下信息，我就可以分别调用 `calculator` 工具为您精确计算：\n\n1. **第一个算式**（例如：`938273 × 78291`）\n2. **第二个算式**（例如：`123456 ÷ 789`）\n\n您可以直接以文本形式发送，例如：\n\n> 请计算：\n> 1. 938273 × 78291\n> 2. 1000000 − 456789\n\n收到后我会**分别**调用计算器工具，并给出两个独立的结果。"
+    },
+    {
+      "role": "user",
+      "content": "1. 123456 × 789"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_KbCrpgtws6MuOs37zLU16882",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 123456, \"operator\": \"*\", \"right\": 789}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_KbCrpgtws6MuOs37zLU16882",
+      "content": "97406784.0"
+    },
+    {
+      "role": "assistant",
+      "content": "**第一个算式计算结果：**\n\n**123456 × 789 = 97,406,784**\n\n---\n\n不过您之前提到有**两个**互相独立的算式，但这次只收到了第一个。请问第二个算式是什么？请发送过来，我会继续调用计算器精确计算。"
+    },
+    {
+      "role": "user",
+      "content": "2. 987654 × 321"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_ET_2O5xFzTWBcdK5JEwBY047076",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 987654, \"operator\": \"*\", \"right\": 321}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_ET_2O5xFzTWBcdK5JEwBY047076",
+      "content": "317036934.0"
+    },
+    {
+      "role": "assistant",
+      "content": "**第二个算式计算结果：**\n\n**987654 × 321 = 317,036,934**\n\n---\n\n## 两个算式结果汇总\n\n| 序号 | 算式 | 结果 |\n|------|------|------|\n| 1 | 123456 × 789 | **97,406,784** |\n| 2 | 987654 × 321 | **317,036,934** |\n\n两个算式均已通过 `calculator` 工具独立精确计算完成 ✅"
+    },
+    {
+      "role": "user",
+      "content": "两个计算彼此独立，可以同时调用工具。"
+    },
+    {
+      "role": "assistant",
+      "content": "您说得对，感谢指正！两个算式彼此独立、没有依赖关系，应当**在同一响应中同时发起两个工具调用**，而不是串行等待。我重新演示一下：",
+      "tool_calls": [
+        {
+          "id": "call_00_Gv7BLC935pygJiHl8ePe5432",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 123456, \"operator\": \"*\", \"right\": 789}"
+          }
+        },
+        {
+          "id": "call_01_cHOO2UfiL2tjr528tJHE1111",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 987654, \"operator\": \"*\", \"right\": 321}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_Gv7BLC935pygJiHl8ePe5432",
+      "content": "97406784.0"
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_01_cHOO2UfiL2tjr528tJHE1111",
+      "content": "317036934.0"
+    },
+    {
+      "role": "assistant",
+      "content": "✅ 两个独立的计算已在**同一个响应中并行调用**，结果如下：\n\n| 序号 | 算式 | 结果 |\n|------|------|------|\n| 1 | 123456 × 789 | **97,406,784** |\n| 2 | 987654 × 321 | **317,036,934** |\n\n**调用原则确认：**\n- 多个工具调用**彼此独立**（无数据依赖）时 → 同一响应中**同时发起**，提高效率\n- 存在依赖（后一个需要前一个的结果）时 → 才串行等待\n\n感谢您的提示，后续遇到独立任务我会默认并行处理。"
+    },
+    {
+      "role": "user",
+      "content": "$file-math 请读取 expression.txt 并执行。"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_67XS06heVdIvfP8UV8K47607",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"expression.txt\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_67XS06heVdIvfP8UV8K47607",
+      "content": "我不知道100+45的结果是什么，请计算出来后再乘以2把最终结果给我"
+    },
+    {
+      "role": "assistant",
+      "content": "已读取 `expression.txt`，内容要求：先计算 **100 + 45**，再将结果**乘以 2**。两步存在依赖关系（第二步依赖第一步的结果），因此需串行调用计算器。\n\n第一步，计算 100 + 45：",
+      "tool_calls": [
+        {
+          "id": "call_00_8LOhpwASEXLFPfMhFt2K7182",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 100, \"operator\": \"+\", \"right\": 45}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_8LOhpwASEXLFPfMhFt2K7182",
+      "content": "145.0"
+    },
+    {
+      "role": "assistant",
+      "content": "第一步结果为 **145**。第二步，将其乘以 2：",
+      "tool_calls": [
+        {
+          "id": "call_00_JyKNGAffkAktGm8B9bjF0467",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 145, \"operator\": \"*\", \"right\": 2}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_JyKNGAffkAktGm8B9bjF0467",
+      "content": "290.0"
+    },
+    {
+      "role": "assistant",
+      "content": "✅ 按 `expression.txt` 的要求执行完毕：\n\n| 步骤 | 运算 | 结果 |\n|------|------|------|\n| 第一步 | 100 + 45 | 145 |\n| 第二步 | 145 × 2 | **290** |\n\n**最终结果：290**\n\n两个步骤存在依赖关系，所以采用串行方式：先算出 100 + 45 = 145，再乘以 2 得到最终结果 290。"
+    }
+  ]
+}

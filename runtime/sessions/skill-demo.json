@@ -1,0 +1,220 @@
+{
+  "session_id": "skill-demo",
+  "created_at": "2026-08-27T08:33:51.439564+00:00",
+  "updated_at": "2026-08-27T09:39:16.552522+00:00",
+  "metadata": {},
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是 nanobot-rebuild 的 AI 助手。请准确、清晰地回答用户问题。当有合适的工具能够提供更可靠的结果时，优先使用工具。"
+    },
+    {
+      "role": "user",
+      "content": "请读取 expression.txt，并按照里面的数学任务可靠执行，不要自行猜测结果。"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_oZgrTotU5R9QZqGH4Edc1292",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"skills/file-math/SKILL.md\"}"
+          }
+        },
+        {
+          "id": "call_01_iHyMIcjF8z7TaEYwyXtw2305",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"expression.txt\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_oZgrTotU5R9QZqGH4Edc1292",
+      "content": "---\nname: file-math\ndescription: 读取 workspace 文本文件中的数学任务，并通过 read_text_file 和 calculator 可靠完成计算。\nalways: false\n---\n\n# File Math\n\n这个 Skill 用于“从本地文本文件读取数学任务并执行”的场景。\n\n## Procedure\n\n当用户要求根据某个 workspace 文本文件完成计算时：\n\n1. 先使用 `read_text_file` 读取用户指定的文件。\n2. 不要根据文件名猜测内容，必须以真实 Tool Result 为准。\n3. 如果文件内容包含需要精确执行的加、减、乘、除运算，使用 `calculator`。\n4. 不要让语言模型自行心算可以由 `calculator` 完成的运算。\n5. Calculator 返回结果后，再由 LLM 组织最终自然语言回答。\n\n## Error handling\n\n如果文件不存在，不要猜测文件内容，应向用户说明读取失败。\n\n如果 Calculator 返回 Tool Error，应根据真实错误解释失败原因，不要伪造结果。"
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_01_iHyMIcjF8z7TaEYwyXtw2305",
+      "content": "我不知道100+45的结果是什么，请计算出来后再乘以2把最终结果给我"
+    },
+    {
+      "role": "assistant",
+      "content": "已读取 `expression.txt`，任务内容是：**计算 100+45 的结果，再乘以 2**。\n\n先执行第一步加法：",
+      "tool_calls": [
+        {
+          "id": "call_00_kzIc8gl5mDje87zZuaiX6628",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 100, \"operator\": \"+\", \"right\": 45}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_kzIc8gl5mDje87zZuaiX6628",
+      "content": "145.0"
+    },
+    {
+      "role": "assistant",
+      "content": "100 + 45 = 145，接着乘以 2：",
+      "tool_calls": [
+        {
+          "id": "call_00_SowL6i5Q6otXyndoFI9b8401",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 145, \"operator\": \"*\", \"right\": 2}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_SowL6i5Q6otXyndoFI9b8401",
+      "content": "290.0"
+    },
+    {
+      "role": "assistant",
+      "content": "计算完成 ✅\n\n根据 `expression.txt` 中的任务：\n\n1. **100 + 45 = 145**\n2. **145 × 2 = 290**\n\n**最终结果：290**"
+    },
+    {
+      "role": "user",
+      "content": "请读取 expression.txt，并按照里面的数学任务可靠执行，不要自行猜测结果。file-math"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_WJnxwCk3PuO6AsADTX4Q1741",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"expression.txt\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_WJnxwCk3PuO6AsADTX4Q1741",
+      "content": "我不知道100+45的结果是什么，请计算出来后再乘以2把最终结果给我"
+    },
+    {
+      "role": "assistant",
+      "content": "已读取 `expression.txt`，任务内容与之前一致：**先计算 100+45，再乘以 2**。\n\n按步骤执行，先做加法：",
+      "tool_calls": [
+        {
+          "id": "call_00_hmdTqVf8QfpjpADlCuKy8333",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 100, \"operator\": \"+\", \"right\": 45}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_hmdTqVf8QfpjpADlCuKy8333",
+      "content": "145.0"
+    },
+    {
+      "role": "assistant",
+      "content": "100 + 45 = 145，继续乘以 2：",
+      "tool_calls": [
+        {
+          "id": "call_00_ET_I8Y6JjMR6A6zEDddd7FL5742",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 145, \"operator\": \"*\", \"right\": 2}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_ET_I8Y6JjMR6A6zEDddd7FL5742",
+      "content": "290.0"
+    },
+    {
+      "role": "assistant",
+      "content": "计算完成 ✅（file-math 流程）\n\n根据 `expression.txt` 中的任务：\n\n1. **100 + 45 = 145**\n2. **145 × 2 = 290**\n\n**最终结果：290**"
+    },
+    {
+      "role": "user",
+      "content": "$file-math"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_00_haJvSJyTbvACxdbPCWHS4951",
+          "type": "function",
+          "function": {
+            "name": "read_text_file",
+            "arguments": "{\"path\": \"expression.txt\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_haJvSJyTbvACxdbPCWHS4951",
+      "content": "我不知道100+45的结果是什么，请计算出来后再乘以2把最终结果给我"
+    },
+    {
+      "role": "assistant",
+      "content": "已读取 `expression.txt`，任务为：**先计算 100+45，再乘以 2**。开始执行：",
+      "tool_calls": [
+        {
+          "id": "call_00_dH09zfPILpMITzFi6S6g1401",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 100, \"operator\": \"+\", \"right\": 45}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_dH09zfPILpMITzFi6S6g1401",
+      "content": "145.0"
+    },
+    {
+      "role": "assistant",
+      "content": "100 + 45 = 145，继续乘以 2：",
+      "tool_calls": [
+        {
+          "id": "call_00_ET_xAM4pc44nAgOs1811AfZ5439",
+          "type": "function",
+          "function": {
+            "name": "calculator",
+            "arguments": "{\"left\": 145, \"operator\": \"*\", \"right\": 2}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_ET_xAM4pc44nAgOs1811AfZ5439",
+      "content": "290.0"
+    },
+    {
+      "role": "assistant",
+      "content": "计算完成 ✅（file-math）\n\n根据 `expression.txt` 中的任务：\n\n1. **100 + 45 = 145**\n2. **145 × 2 = 290**\n\n**最终结果：290**"
+    }
+  ]
+}

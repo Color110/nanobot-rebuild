@@ -1,0 +1,9 @@
+[
+  {
+    "key": "user.name",
+    "value": "张三",
+    "source_session": "runner-loop-demo",
+    "created_at": "2026-08-28T10:25:17.089563+00:00",
+    "updated_at": "2026-08-28T10:25:17.089563+00:00"
+  }
+]

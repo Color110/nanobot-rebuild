@@ -1,0 +1,20 @@
+{
+  "session_id": "new-chat",
+  "created_at": "2026-08-26T03:33:05.610421+00:00",
+  "updated_at": "2026-08-26T03:33:15.223371+00:00",
+  "metadata": {},
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是 nanobot-rebuild 的 AI 助手。请准确、清晰地回答用户问题。当有合适的工具能够提供更可靠的结果时，优先使用工具。"
+    },
+    {
+      "role": "user",
+      "content": "我叫什么？"
+    },
+    {
+      "role": "assistant",
+      "content": "我还不知道您的名字。这是我们对话的开始，您还没有告诉我您的姓名。如果您愿意告诉我，我很乐意记住并称呼您！😊"
+    }
+  ]
+}

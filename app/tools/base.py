@@ -1,34 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Any, Protocol
-from pydantic import BaseModel
-from dataclasses import dataclass
-
-@dataclass(frozen=True)
-class ToolResult:
-    """
-    Tool 的 JSON Schema。
-    """
-    content: str
-    is_error: bool = False
-    error_type: str | None = None
-
-    @classmethod
-    def success(cls,content:str) -> "ToolResult":
-        return cls(content=content,is_error=False,error_type=None)
-    
-    @classmethod
-    def error(cls,content:str,error_type:str) -> "ToolResult":
-        return cls(content=content,is_error=True,error_type=error_type)
-    
-    def to_llm_content(self) -> str:
-        """
-        将 ToolResult 转换为 LLM 消息的 content。
-        """
-        if not self.is_error:
-            return self.content
-        return f"ToolError[{self.error_type}]: {self.content}"
-
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
