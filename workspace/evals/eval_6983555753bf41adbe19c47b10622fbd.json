@@ -1,0 +1,349 @@
+{
+  "suite_id": "eval_6983555753bf41adbe19c47b10622fbd",
+  "created_at": "2026-09-27T07:47:06.109560+00:00",
+  "results": [
+    {
+      "run_id": "run_47d75281680f49e490bac98b7c987018",
+      "case_id": "planner_retry_regression",
+      "mode": "orchestrated",
+      "repeat_index": 1,
+      "tags": [
+        "planner",
+        "structured_output",
+        "regression"
+      ],
+      "passed": true,
+      "correctness_pass": null,
+      "reliability_pass": true,
+      "efficiency_pass": true,
+      "execution_succeeded": true,
+      "final_content": "## 检索结果说明\n\n知识库检索未命中任何与「同步直连 vs broker 解耦」相关的证据——两次检索均只返回同一条无关内部事实（source: private_facts.md, chunk_id: chunk_86fce6c114a8804000732807fc2da3539dda496a0298da8ba27ad2a51ed7ce33，内容为 nanobot-rebuild 部署代号 Aurora-731，与本题无关）。\n\n因此以下对比**不含任何知识库/内部事实引用**，仅是基于通用分布式系统工程原理的分析。若需带内部证据的版本，需要补充相关文档。\n\n---\n\n## 同步直连调用 vs 通过 Broker 解耦：工程维度对比\n\n| 维度 | 同步直连调用 | 通过 Broker 解耦 |\n|---|---|---|\n| **耦合度** | 高：调用方必须知道被调方地址/接口，双方生命周期强绑定，接口变更需同步发布 | 低：只依赖消息契约（topic/schema），生产者与消费者时间与空间上解耦，可独立演进 |\n| **可靠性与投递语义** | 同步调用失败即整链失败，通常无内置重投；可靠性依赖调用方手动重试 | Broker 通常提供持久化、ACK、至少一次/至多一次/恰好一次等可配置投递语义，天然支持重投 |\n| **可扩展性与削峰** | 需同步扩容后端；突发流量直接打穿下游，无缓冲 | 队列作为缓冲区，可用积压削峰；消费者可水平扩展按需消费，扩容解耦 |\n| **故障隔离** | 差：下游故障沿调用链同步传播，易级联失败/雪崩 | 较好：下游宕机时消息在队列堆积，上游不受阻；恢复后继续消费（受积压/时效约束） |\n| **端到端延迟** | 低：一次网络往返即得结果 | 更高：多一次 broker 中转 + 排队/批处理，端到端延迟上升且受积压影响 |\n| **运维与可观测性复杂度** | 较低：链路直观，但跨服务追踪仍需治理 | 更高：需运维 broker 集群、监控积压/消费延迟、处理死信/重平衡，可观测性更复杂 |\n| **一致性/重试与事务** | 调用内一致性靠本地事务；跨服务一致性困难，重试易产生重复副作用 | 重试内建但需处理重复消费（幂等）；跨服务一致性需配合事务消息/Outbox/补偿，事务边界更复杂 |\n\n---\n\n## 结论\n\n两者是**互斥的工程取舍，而非优劣关系**：\n\n- **要强实时、结果即时可得、链路简单** → 选同步直连（代价：耦合高、抗突发与故障隔离弱）。\n- **要解耦、削峰、故障隔离、可水平扩展、可重投** → 选 Broker 解耦（代价：延迟更高、运维与一致性/幂等治理更复杂）。\n\n**实践建议**：核心在线查询走同步直连；异步、可缓冲、可最终一致的场景走 Broker。二者常组合使用（同步入口 + 异步解耦下游），并用幂等消费、死信队列、积压监控来对冲解耦带来的可靠性与运维成本。\n\n> 注：上表为通用工程原理性对比，未引用内部证据；如需落到具体系统（如项目选用的 MQ、SLA 数值），请提供对应文档以便带引用重做。",
+      "workflow_id": "wf_5f2ff83d520749229431db94a088c32d",
+      "trace_id": "trace_ecbdc8d1696840f4bcaf94e94b0f4820",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 10603.769458830357,
+      "llm_calls": 3,
+      "tool_calls": 2,
+      "tool_names": [
+        "retrieve_knowledge",
+        "retrieve_knowledge"
+      ],
+      "successful_tool_calls": 2,
+      "successful_tool_names": [
+        "retrieve_knowledge",
+        "retrieve_knowledge"
+      ],
+      "tool_error_count": 0,
+      "planner_attempts": 1,
+      "planner_retries": 0,
+      "input_tokens": 3378,
+      "output_tokens": 1745,
+      "total_tokens": 5123,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 1,
+      "task_success_count": 1,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=0 <= 0",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=2 <= 4",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "planner_retry_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "planner_retries=0 <= 1",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "total_tokens=5123 <= 12000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "10603.8ms <= 22000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_8217a630b407436dba79ba5196eef63c",
+      "case_id": "planner_retry_regression",
+      "mode": "orchestrated",
+      "repeat_index": 2,
+      "tags": [
+        "planner",
+        "structured_output",
+        "regression"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": true,
+      "efficiency_pass": false,
+      "execution_succeeded": true,
+      "final_content": "以下为**性质性工程对比**。未提供具体吞吐、延迟、SLA、消息量等基准数据，因此不给出具体数字，只做方向性判断。\n\n> 定义：  \n> **同步直连**：调用方通过 RPC/HTTP 等方式直接调用被调方，并阻塞等待结果。  \n> **Broker 解耦**：生产者把消息发给消息队列/事件总线，消费者异步拉取或推送消费。\n\n| 维度 | 同步直连 | 通过 Broker 解耦 | 工程含义 |\n|---|---|---|---|\n| 时序耦合 | 强耦合：调用方必须等待被调方响应或超时 | 弱耦合：生产者和消费者不必同时在线 | 直连适合请求-响应；Broker 适合事件、任务、长流程 |\n| 可用性与故障隔离 | 被调方宕机会直接传导为调用方超时、报错、线程池耗尽，可能级联失败 | 消费者宕机时消息可堆积，生产者短时不受影响；但 Broker 本身成为关键依赖 | Broker 隔离更好，但把风险集中到 Broker；直连需熔断、降级、隔离舱 |\n| 吞吐与背压/削峰 | 吞吐受最慢服务限制，背压立即传导给调用方，峰值直接打到被调方 | Broker 可缓冲、削峰、异步消费；消费者按能力消费，通过 lag 体现背压 | Broker 更适合突发流量，但可能掩盖过载，需要监控堆积和保留策略 |\n| 重试与投递语义 | 重试通常在调用方内存中完成，次数有限；超时语义模糊，易重复 | Broker 支持持久化、ack、重投、DLQ、重放；常见 at-least-once，exactly-once 依赖幂等/事务 | 直连要接口幂等；Broker 要处理重复、顺序、死信和重放 |\n| 端到端延迟 | 通常更低、更可预测：一次网络调用加处理时间 | 多一次 Broker 跳转、排队、批量、调度，延迟更高且受堆积影响 | 交互式低延迟优先直连；后台/批量可接受 Broker |\n| 运维与排障 | 拓扑简单，链路直观；但需处理连接池、超时、级联故障 | 多出 Broker 集群、topic、partition、consumer group、offset、lag、ACL 等 | Broker 排障更复杂，异步链路更难追踪；需完善可观测性 |\n| 版本/发布耦合 | 接口/Schema 强耦合，调用方与被调方通常需兼容发布或协调上线 | 生产者和消费者可独立发布，但消息 Schema 仍需兼容演进 | Broker 降低发布时序耦合，不消除契约耦合 |\n| 可扩展性 | 主要扩展被调方；同步扇出成本高，连接和线程资源受限 | 可通过 partition、consumer group 独立扩展生产/消费；天然支持多消费者扇出 | Broker 更适合水平扩展和事件广播，但受分区数、顺序键、rebalance 限制 |\n\n## 简洁结论\n\n**应优先选同步直连：**\n- 需要即时响应，面向用户交互或强一致读写。\n- 调用链短、依赖稳定、调用量可控，且被调方高可用。\n- 故障可通过超时、熔断、降级、重试在调用方处理。\n- 接口契约稳定、消费者少，团队更希望低延迟和简单排障。\n- 不需要削峰、重放、审计或多消费者扇出。\n\n**应优先选 Broker 解耦：**\n- 业务本质是异步：通知、事件、后台任务、长流程、数据管道。\n- 需要削峰填谷、背压缓冲、生产者与消费者独立扩缩容。\n- 需要故障隔离：一方短时宕机不直接拖垮另一方。\n- 需要多消费者、事件广播、重放、审计、DLQ、至少一次投递。\n- 能接受最终一致性和更高/更波动的端到端延迟。\n- 需要生产与消费独立发布，通过 Schema 兼容演进降低发布耦合。\n\n**混合实践通常最优：**\n- 用户关键路径用同步直连保证体验和一致性。\n- 副作用、通知、分析、补偿、长任务通过 Broker 异步化。\n- 无论哪种，都要补齐：幂等键、超时/熔断、重试上限、DLQ、事务发件箱/收件箱、链路追踪与 lag 监控。\n\n一句话：**要“立刻知道结果、链路短且稳定”选同步直连；要“异步、削峰、隔离、广播、可重放、独立扩缩容”选 Broker 解耦。** Broker 不是消除耦合，而是把时序耦合换成消息契约、最终一致性和更重的运维复杂度。",
+      "workflow_id": "wf_894c1a6a5a2f46a2944e4c335dfc8fbd",
+      "trace_id": "trace_608ea8a45ecf40ff8351f607a6ebc739",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 22061.80458283052,
+      "llm_calls": 2,
+      "tool_calls": 0,
+      "tool_names": [],
+      "successful_tool_calls": 0,
+      "successful_tool_names": [],
+      "tool_error_count": 0,
+      "planner_attempts": 1,
+      "planner_retries": 0,
+      "input_tokens": 1617,
+      "output_tokens": 3806,
+      "total_tokens": 5423,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 1,
+      "task_success_count": 1,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=0 <= 0",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=0 <= 4",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "planner_retry_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "planner_retries=0 <= 1",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "total_tokens=5423 <= 12000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "22061.8ms > 22000.0ms",
+          "failure_category": "PERFORMANCE"
+        }
+      ],
+      "failure_category": "PERFORMANCE",
+      "failure_detail": "22061.8ms > 22000.0ms",
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_76ca931eb2d442d18ba6c578d82035b3",
+      "case_id": "planner_retry_regression",
+      "mode": "orchestrated",
+      "repeat_index": 3,
+      "tags": [
+        "planner",
+        "structured_output",
+        "regression"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": true,
+      "efficiency_pass": false,
+      "execution_succeeded": true,
+      "final_content": "## 结论\n\n**定性**：两者不是优劣关系，而是「耦合换简单低延迟」与「多一层基础设施换解耦/削峰/吞吐」的取舍。\n\n**同步直连 — 适用**：需即时返回业务结果、低延迟优先、强顺序（单调用链天然保序）、运维对象敏感（组件少）的场景。\n**主要代价**：接口强耦合（须知晓对端地址、签名、数据结构）；调用瞬间被调方必须在线；故障沿调用链级联、无天然缓冲；无内建持久化与重放；吞吐受最慢被调方与同步并发度约束，峰值直达后端。\n\n**Broker 解耦 — 适用**：后端需削峰或可离线、高吞吐可批量、多消费者/广播、需要持久化与重放的场景。\n**主要代价**：多一跳（含排队/落盘）使端到端延迟上升、积压时尾延迟显著上升；broker 自身成为关键可用性依赖，其可用性收益**以 broker 高可用为前提**；引入有状态组件使运维面扩大（副本、磁盘、lag 监控、分区规划）；分区数限制 consumer 并行上限且再均衡会短暂暂停消费；顺序仅保证分区内；过载由「立刻失败」转为「延迟兑现」，缺 lag 告警与容量治理时会以容量耗尽形式爆发。\n\n**一句话权衡**：直连把复杂度留在服务接口契约上，broker 把复杂度转移到 message schema 治理与一层有状态中间件上——选择取决于对延迟、可用性语义、吞吐与运维成本的优先级排序。\n\n---\n**证据说明**：t1 未在内部知识库命中相关证据（唯一命中为无关演示事实），上述内容全部来自通用分布式系统/消息中间件工程知识，不构成内部来源支撑的事实结论，且会随具体 broker 实现与部署配置变化。",
+      "workflow_id": "wf_2c943d826cb74ad297197eb541e3fb1a",
+      "trace_id": "trace_dc78f3faa5e846c4a18e329dd71e5da0",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 23378.66973411292,
+      "llm_calls": 4,
+      "tool_calls": 1,
+      "tool_names": [
+        "retrieve_knowledge"
+      ],
+      "successful_tool_calls": 1,
+      "successful_tool_names": [
+        "retrieve_knowledge"
+      ],
+      "tool_error_count": 0,
+      "planner_attempts": 1,
+      "planner_retries": 0,
+      "input_tokens": 8231,
+      "output_tokens": 4365,
+      "total_tokens": 12596,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 2,
+      "task_success_count": 2,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=0 <= 0",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=1 <= 4",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "planner_retry_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "planner_retries=0 <= 1",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "total_tokens=12596 > 12000",
+          "failure_category": "PERFORMANCE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "23378.7ms > 22000.0ms",
+          "failure_category": "PERFORMANCE"
+        }
+      ],
+      "failure_category": "PERFORMANCE",
+      "failure_detail": "total_tokens=12596 > 12000",
+      "error_type": null,
+      "error_message": null
+    }
+  ],
+  "by_mode": [
+    {
+      "mode": "orchestrated",
+      "runs": 3,
+      "passed": 1,
+      "pass_rate": 0.3333333333333333,
+      "correctness_pass_rate": null,
+      "reliability_pass_rate": 1.0,
+      "efficiency_pass_rate": 0.3333333333333333,
+      "execution_success_rate": 1.0,
+      "workflow_success_rate": 1.0,
+      "task_success_rate": 1.0,
+      "avg_wall_latency_ms": 18681.414591924597,
+      "p50_wall_latency_ms": 22061.80458283052,
+      "p95_wall_latency_ms": 23246.98321898468,
+      "avg_tool_calls": 1.0,
+      "avg_tool_errors": 0.0,
+      "avg_planner_attempts": 1.0,
+      "avg_planner_retries": 0.0,
+      "planner_retry_rate": 0.0,
+      "avg_total_tokens": 7714.0,
+      "avg_estimated_cost": null
+    }
+  ],
+  "failure_counts": {
+    "PERFORMANCE": 2
+  }
+}

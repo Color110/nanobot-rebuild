@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import Any
-from abc import ABC, abstractmethod
 
 from pydantic import (
     BaseModel,
@@ -8,7 +7,7 @@ from pydantic import (
     Field,
 )
 
-from app.tools.base import BaseTool
+from app.tools.base import PydanticTool
 import asyncio
 
 class ReadTextFileArguments(BaseModel):
@@ -27,7 +26,7 @@ class ReadTextFileArguments(BaseModel):
     )
 
 
-class ReadTextFileTool(BaseTool):
+class ReadTextFileTool(PydanticTool):
 
     def __init__(
         self,

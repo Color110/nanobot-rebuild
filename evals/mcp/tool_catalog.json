@@ -1,0 +1,257 @@
+[
+  {
+    "name": "mcp__filesystem__read_file",
+    "server_name": "filesystem",
+    "remote_name": "read_file",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "读取指定路径的文本文件内容。用于用户明确要求查看某个文件内容时。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__filesystem__search_files",
+    "server_name": "filesystem",
+    "remote_name": "search_files",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "按关键词搜索工作区文件名或文本内容。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__filesystem__delete_file",
+    "server_name": "filesystem",
+    "remote_name": "delete_file",
+    "risk": "HIGH_RISK",
+    "confirmation_required": true,
+    "description": "删除指定文件。属于高风险有副作用操作，执行前必须经过 Host/Workflow 用户确认。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__github__search_code",
+    "server_name": "github",
+    "remote_name": "search_code",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "在指定 GitHub 仓库中搜索代码。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo",
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__github__get_issue",
+    "server_name": "github",
+    "remote_name": "get_issue",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "读取指定 GitHub 仓库中的 Issue。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "issue_number": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "repo",
+        "issue_number"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__github__create_issue",
+    "server_name": "github",
+    "remote_name": "create_issue",
+    "risk": "HIGH_RISK",
+    "confirmation_required": true,
+    "description": "在指定 GitHub 仓库创建 Issue。属于写操作，执行前必须用户确认。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo",
+        "title",
+        "body"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__database__query_customer",
+    "server_name": "database",
+    "remote_name": "query_customer",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "按客户编号查询客户记录。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__database__search_orders",
+    "server_name": "database",
+    "remote_name": "search_orders",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "按关键词搜索订单。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "keyword"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__database__update_customer",
+    "server_name": "database",
+    "remote_name": "update_customer",
+    "risk": "HIGH_RISK",
+    "confirmation_required": true,
+    "description": "修改客户字段。属于有副作用写操作，执行前必须用户确认。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "field",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__mail__search_mail",
+    "server_name": "mail",
+    "remote_name": "search_mail",
+    "risk": "READ_ONLY",
+    "confirmation_required": false,
+    "description": "按关键词搜索邮件。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "mcp__mail__send_email",
+    "server_name": "mail",
+    "remote_name": "send_email",
+    "risk": "HIGH_RISK",
+    "confirmation_required": true,
+    "description": "发送邮件。属于高风险外部副作用操作，执行前必须用户确认。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "to",
+        "subject",
+        "body"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

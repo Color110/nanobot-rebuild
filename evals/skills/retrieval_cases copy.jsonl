@@ -1,0 +1,385 @@
+平衡未保留，
+{"id": "code_review_001", "query": "帮我检查这段代码有没有线程安全问题", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "code_review_002", "query": "看看这段服务端代码有没有问题，但暂时不要修改", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "bug_fix_001", "query": "这段代码运行时出现空指针异常，帮我修掉", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bug_fix_002", "query": "我已经确认这里有并发 Bug，请直接修改代码并验证修复结果", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "file_math_001", "query": "读取 expression.txt，然后把文件里的数学表达式算出来", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "file_math_002", "query": "打开 report.txt，里面记录了一组计算步骤，请按照里面的步骤得到最终数值", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_summary_001", "query": "读取 report.txt 并总结里面的主要内容", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "file_summary_002", "query": "看看这个文本文件主要讲了什么，提炼重点，不需要做里面出现的计算", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "knowledge_qa_001", "query": "从知识库中查一下 AgentRunner 的主要职责是什么", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "knowledge_qa_002", "query": "根据已有资料告诉我 Commit-on-success 解决什么问题，不需要比较不同方案", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_compare_001", "query": "检索资料并比较 BM25 和向量检索各自适合什么场景", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "knowledge_compare_002", "query": "从知识库找出两种实现方案，并分析它们在性能和复杂度上的差异", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "code_review_003", "query": "帮我看看这个函数的命名和结构是否合理", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "code_review_004", "query": "审查一下这段代码的可读性，有没有可以改进的地方", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "code_review_006", "query": "帮我 review 一下这个 PR 的改动，只看不改", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "code_review_007", "query": "检查一下这段代码的异常处理是否完善", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "code_review_008", "query": "这段代码的性能有没有可以优化的地方，先给出建议不要直接改", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "code_review_009", "query": "帮我看看这个模块的依赖关系是否合理", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "code_review_010", "query": "审查这段异步代码，看看有没有竞态条件", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "code_review_011", "query": "这段代码的错误处理逻辑是否覆盖了所有边界情况", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "code_review_012", "query": "帮我检查这个类的接口设计是否符合单一职责原则", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "code_review_013", "query": "这段代码有没有资源泄漏的风险，比如未关闭的连接或文件句柄", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "code_review_014", "query": "审查这段代码的日志记录是否足够用于线上排查", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "code_review_015", "query": "帮我看看这个算法的时间复杂度是否合理，有没有更优方案", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "code_review_016", "query": "审查这个微服务的整体架构设计，看看有没有耦合过紧的问题", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "code_review_017", "query": "这段并发代码在多核环境下是否安全，请从内存模型角度分析", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "code_review_018", "query": "帮我全面审查这个模块的安全性，包括输入校验、权限控制和数据脱敏", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "code_review_019", "query": "这段代码在大规模数据下会不会有内存溢出风险，请分析其空间复杂度", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "code_review_020", "query": "审查这个分布式事务的实现，看看有没有数据不一致的可能", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "code_review_021", "query": "帮我检查这段代码是否符合项目的编码规范，包括命名、格式和注释", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "code_review_022", "query": "这段代码的单元测试覆盖是否充分，有没有遗漏的分支", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "bug_fix_003", "query": "这段代码报错了，帮我看看是什么原因", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bug_fix_004", "query": "运行时报了 TypeError，帮我修一下", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bug_fix_005", "query": "这个函数返回值不对，帮我调试一下", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bug_fix_006", "query": "页面加载后按钮点击没反应，帮我排查一下", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bug_fix_007", "query": "这段代码在输入为空时会崩溃，帮我加上防御性处理", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bug_fix_008", "query": "日志里出现了这个异常堆栈，帮我定位根因并修复", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bug_fix_009", "query": "这个接口偶尔超时，帮我分析可能的原因并给出修复方案", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bug_fix_010", "query": "数据库查询结果和预期不一致，帮我排查 SQL 逻辑", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bug_fix_011", "query": "这段代码在特定输入下会产生死循环，帮我修复", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bug_fix_012", "query": "这个定时任务有时不执行，帮我排查调度逻辑的问题", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bug_fix_013", "query": "这段代码在并发请求下偶尔返回错误数据，帮我定位竞态问题", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bug_fix_015", "query": "这个接口在高并发下偶发 500 错误，日志里有这个堆栈，帮我修复", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "bug_fix_016", "query": "分布式锁偶尔失效导致重复执行，帮我分析原因并修复", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "bug_fix_017", "query": "这段代码在跨时区场景下日期计算错误，帮我定位并修复", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "bug_fix_018", "query": "消息队列消费偶尔丢消息，帮我排查消费逻辑的可靠性问题", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "bug_fix_019", "query": "这个缓存和数据库之间数据不一致，帮我分析原因并修复", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "bug_fix_020", "query": "这段代码在特定 GC 时机下会触发 ConcurrentModificationException，帮我修复", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "bug_fix_022", "query": "这个事务在部分失败时没有正确回滚，帮我排查并修复", "expected_skill": "bug-fix", "difficulty": "hard"}
+{"id": "file_math_003", "query": "打开 calc.txt，把里面的加减法算出来", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "file_math_004", "query": "读取 data.txt 里的数字，帮我求和", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "file_math_005", "query": "文件里有一组价格，帮我算总价", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "file_math_006", "query": "读取 numbers.txt，计算平均值", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "file_math_007", "query": "打开这个文件，把里面的除法运算执行一下", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "file_math_008", "query": "读取 expenses.txt，按类别分别汇总金额", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_009", "query": "文件里有多组数据，帮我分别计算每组的总和和平均值", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_010", "query": "读取 config.txt 里的参数，按照公式计算结果", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_011", "query": "文件里记录了一系列交易，帮我计算净收益", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_012", "query": "读取这个文件，把里面的百分比换算成实际数值", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_013", "query": "文件里有多步计算，请按顺序执行并给出每步的中间结果", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_014", "query": "读取 sales.txt，按月份计算增长率", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "file_math_015", "query": "文件里有一组实验数据，帮我计算标准差和方差", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_math_016", "query": "读取这个文件里的矩阵数据，帮我做矩阵乘法", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_math_017", "query": "文件里有多组嵌套公式，请按依赖关系逐步计算最终结果", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_math_018", "query": "读取这个文件，按照里面的复利公式计算每年的本息", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_math_020", "query": "读取这个文件里的多项式系数，帮我求根", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_math_021", "query": "文件里有多组带条件的计算规则，请根据条件分别执行对应运算", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_math_022", "query": "读取这个文件，里面的计算涉及多个变量和交叉引用，请解析依赖关系后按正确顺序计算", "expected_skill": "file-math", "difficulty": "hard"}
+{"id": "file_summary_003", "query": "帮我看看这个文件讲了什么", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "file_summary_004", "query": "总结一下这个文档的核心内容", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "file_summary_005", "query": "这个文件主要说了哪几件事", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "file_summary_006", "query": "帮我提炼一下这个文件的要点", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "file_summary_007", "query": "读一下这个文件，给我一段简短的概述", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "file_summary_008", "query": "这个会议纪要里有哪些决议和待办事项", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "file_summary_009", "query": "帮我总结这个技术文档的关键设计决策", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "file_summary_010", "query": "这个文件里有哪些重要的时间节点和里程碑", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "file_summary_011", "query": "帮我提炼这个需求文档的功能点", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "file_summary_012", "query": "这个日志文件里有哪些关键事件，帮我梳理时间线", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "file_summary_013", "query": "帮我总结这个文件中的风险点和注意事项", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "file_summary_014", "query": "这个文件里提到了哪些人物和他们各自的职责", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "file_summary_015", "query": "帮我总结这份长篇报告的核心论点、支撑论据和最终结论", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "file_summary_016", "query": "这个文件包含多个章节，请分别总结每个章节的要点并给出整体概览", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "file_summary_017", "query": "帮我从这份合同文件中提取所有关键条款和约束条件", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "file_summary_018", "query": "这个文件里有多个方案的描述，帮我总结每个方案的优劣", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "file_summary_019", "query": "帮我从这份调研报告中提炼出数据结论和趋势判断", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "file_summary_020", "query": "这个文件内容很长，请分层级总结：先给一句话概括，再给段落级要点，最后给详细摘要", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "file_summary_021", "query": "帮我从这份代码文档中提取所有公开接口及其用途说明", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "file_summary_022", "query": "这个文件混合了背景、方案和执行计划，请分别提炼各部分的核心信息", "expected_skill": "file-summary", "difficulty": "hard"}
+{"id": "knowledge_qa_003", "query": "AgentRunner 的启动流程是怎样的", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "knowledge_qa_004", "query": "什么是向量检索", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "knowledge_qa_005", "query": "RAG 的全称是什么，它的基本原理是什么", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "knowledge_qa_006", "query": "SkillVectorIndex 的作用是什么", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "knowledge_qa_007", "query": "什么是余弦相似度", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "knowledge_qa_008", "query": "EmbeddingProvider 接口有哪些方法", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_009", "query": "根据文档说明一下 HNSW 索引的构建过程", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_010", "query": "知识库中关于 top_k 参数的默认值和使用限制是什么", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_011", "query": "根据已有资料解释一下为什么需要对向量做归一化", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_012", "query": "文档中关于 Skill 的 upsert 语义是怎么定义的", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_013", "query": "根据知识库说明 FakeEmbeddingProvider 和真实 Embedding 的区别", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_014", "query": "知识库中关于召回率 Recall@K 的计算公式是什么", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "knowledge_qa_015", "query": "根据文档详细解释 MRR 指标的计算方法和适用场景", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_qa_017", "query": "根据已有资料说明混合检索中向量检索和标量过滤的执行顺序及原因", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_qa_018", "query": "文档中关于分布式向量数据库的一致性保证是怎么说的", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_qa_019", "query": "根据知识库解释量化压缩对召回率的影响，并给出具体数据", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_qa_020", "query": "知识库中关于 Skill 热更新机制的完整流程是什么", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_qa_021", "query": "根据文档说明在什么条件下应该从暴力搜索切换到 ANN 索引", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_qa_022", "query": "知识库中关于 embedding 维度选择对检索精度和性能的影响是怎么分析的", "expected_skill": "knowledge-qa", "difficulty": "hard"}
+{"id": "knowledge_compare_003", "query": "比较一下 FAISS 和 ChromaDB 的优缺点", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "knowledge_compare_004", "query": "Milvus 和 Qdrant 哪个更适合中小规模部署", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "knowledge_compare_005", "query": "对比一下 HNSW 和 IVF 两种索引结构的区别", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "knowledge_compare_006", "query": "pgvector 和专用向量数据库各有什么优劣", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "knowledge_compare_007", "query": "对比一下余弦相似度和欧氏距离在向量检索中的适用场景", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "knowledge_compare_008", "query": "比较一下 OpenAI embedding 和 BGE 模型在中文场景下的表现", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_009", "query": "从延迟和召回率两个维度对比暴力搜索和 ANN 检索", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_010", "query": "比较一下全托管向量数据库和自建向量数据库的运维成本", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_011", "query": "对比一下稀疏向量和稠密向量在检索效果上的差异", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_012", "query": "比较一下 PQ 量化和 SQ 量化在压缩率和精度上的取舍", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_013", "query": "从扩展性角度对比 Milvus 和 Weaviate 的分布式架构", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_014", "query": "比较一下 RAG 中先过滤后检索和先检索后过滤两种策略的优劣", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "knowledge_compare_015", "query": "从一致性模型、容错机制和扩容方式三个维度详细对比 Milvus 和 Qdrant", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "knowledge_compare_016", "query": "比较一下 DiskANN、HNSW 和 IVF-PQ 在十亿级数据下的内存占用、查询延迟和召回率", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "knowledge_compare_018", "query": "比较一下不同 embedding 模型在零样本、少样本和微调场景下的检索效果差异", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "knowledge_compare_019", "query": "对比一下同步写入和异步写入在向量数据库中的吞吐量、延迟和数据一致性表现", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "knowledge_compare_021", "query": "比较一下 pgvector、Milvus 和 Qdrant 在混合检索场景下的查询计划生成和执行效率", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "knowledge_compare_022", "query": "从成本、性能、运维复杂度和生态成熟度四个维度全面对比自建 Milvus 集群和使用 Pinecone 全托管服务", "expected_skill": "knowledge-compare", "difficulty": "hard"}
+{"id": "cg-e01", "query": "帮我用Python写一个读取CSV文件的函数", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-e02", "query": "生成一个Java冒泡排序算法", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-e03", "query": "写一个React组件显示用户列表", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-e04", "query": "用Go实现一个简单的HTTP服务器", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-e05", "query": "编写一个正则表达式验证邮箱格式的代码", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-m01", "query": "我需要一个能处理分页查询的服务层方法，支持动态过滤条件", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-m02", "query": "实现一个带缓存和过期时间的键值存储，支持并发安全", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-m03", "query": "创建一个异步任务队列，支持优先级和重试机制", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-m04", "query": "写一个WebSocket聊天室后端，支持房间管理和消息广播", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-h01", "query": "我在做一个分布式爬虫系统，需要一个能自动去重、限速、支持断点续传的调度器核心模块", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cg-h02", "query": "帮我实现一个基于Raft共识算法的简化版KV存储引擎，要支持Leader选举和日志复制", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cg-h03", "query": "需要一个插件化架构的核心框架，支持热加载、依赖注入和生命周期管理，用TypeScript写", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cr-e01", "query": "把这段长函数拆分成几个小函数", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-e02", "query": "重构这段代码，去掉重复的逻辑", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-e03", "query": "给这段代码应用策略模式", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-e04", "query": "优化这段代码的变量命名和结构", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-e05", "query": "把这个if-else链重构成多态", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-m01", "query": "这个类的职责太多了，帮我按单一职责原则拆分一下", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-m02", "query": "这段数据处理流程耦合度太高，能不能解耦成独立的pipeline阶段", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-m03", "query": "把这些散落在各处的配置读取逻辑统一收口到一个配置管理器里", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-m04", "query": "当前的回调地狱太严重了，帮我重构成Promise链或者async/await", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-h01", "query": "这个遗留系统的核心模块有3000行，混合了业务逻辑、数据访问和UI渲染，需要在不改变外部接口的前提下逐步拆分为分层架构", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "cr-h02", "query": "现有代码大量使用了全局状态和隐式依赖，导致测试困难，希望重构为依赖注入的方式同时保持向后兼容", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "cr-h03", "query": "这套同步处理的批处理系统需要重构为事件驱动架构，要求迁移过程中业务不能中断，且新旧系统能并行运行一段时间", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "tg-e01", "query": "给这个函数生成单元测试", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-e02", "query": "帮我写这个API接口的测试用例", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-e03", "query": "生成这个工具类的测试代码", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-e04", "query": "给这段登录逻辑写测试", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-e05", "query": "为这个排序算法编写测试", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-m01", "query": "这个支付模块涉及多个外部依赖，帮我生成带mock的集成测试", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-m02", "query": "给这个状态机生成覆盖所有状态转换路径的测试用例", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-m03", "query": "这个并发安全的计数器需要压力测试和竞态条件测试", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-m04", "query": "为这个REST API生成包含正常、边界和异常场景的完整测试套件", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-h01", "query": "这个分布式锁的实现需要验证在网络分区、节点重启、时钟偏移等异常情况下的正确性，帮我设计并生成对应的混沌测试", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "tg-h02", "query": "我有一个复杂的表单验证逻辑，涉及字段联动、异步校验和动态规则，需要生成能覆盖所有组合路径的参数化测试", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "tg-h03", "query": "这个编译器前端有多个解析阶段，需要生成属性测试来验证解析器的soundness和completeness，自动构造随机但合法的输入", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "dg-e01", "query": "给这个函数加上docstring注释", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-e02", "query": "生成这个项目的README文件", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-e03", "query": "帮我把这些API接口整理成文档", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-e05", "query": "生成这份代码的使用说明文档", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-m01", "query": "把这个微服务的所有接口生成OpenAPI规范的文档", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-m02", "query": "根据这些源码生成一份架构设计文档，包含模块关系和数据流图", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-m03", "query": "为这个SDK生成开发者指南，包含快速开始、API参考和常见问题", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-m04", "query": "把这些散落的代码注释整理成一份完整的技术规格说明书", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-h01", "query": "这个遗留系统没有任何文档，需要从代码中逆向生成完整的系统设计文档，包括数据模型、业务流程、部署架构和历史决策记录", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "dg-h02", "query": "为一个包含20个微服务的平台生成统一的API文档门户，需要自动聚合各服务的接口定义并处理版本差异和跨服务引用", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "dg-h03", "query": "根据这套框架的源码和变更历史，生成一份面向新入职工程师的内部培训文档，需要提炼核心概念、设计哲学和常见陷阱", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "sq-e01", "query": "写一个查询所有活跃用户的SQL", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-e02", "query": "帮我写一个LEFT JOIN关联订单表和用户表的查询", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-e03", "query": "生成一个按月份统计销售额的SQL", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-e05", "query": "帮我写一个创建带主键和索引的表的DDL", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-m01", "query": "查询每个部门薪资排名前3的员工，需要用窗口函数", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-m02", "query": "这条SQL跑得很慢，帮我分析一下执行计划并优化", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-m03", "query": "写一个递归CTE查询组织架构的完整层级关系", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-m04", "query": "需要把两个库的数据做增量同步，帮我写MERGE语句", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-h01", "query": "有一个十亿级流水表需要做实时多维分析，当前查询超时，需要在不改表结构的前提下通过物化视图、分区裁剪和查询改写将P99延迟降到秒级", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "sq-h02", "query": "设计一套支持多租户数据隔离的schema，要求兼顾查询性能、跨租户报表能力和GDPR合规的数据删除需求", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "sq-h03", "query": "需要将Oracle的存储过程迁移到PostgreSQL，涉及自定义类型、游标、异常处理和包结构，要保持业务逻辑等价", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "dt-e01", "query": "把这个JSON文件转换成CSV格式", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-e02", "query": "清洗这份数据，去掉空值和重复行", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-e03", "query": "把日期字段从时间戳转成yyyy-MM-dd格式", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-e04", "query": "合并这两个Excel文件的数据", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-e05", "query": "把这份数据的列名从中文改成英文", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-m01", "query": "从多个API拉取数据后做字段映射和去重，输出到数据库", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-m02", "query": "这份日志数据需要解析非结构化文本并提取关键字段存入结构化表", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-m03", "query": "构建一个增量ETL管道，每天只同步变更数据并处理迟到数据", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-m04", "query": "把嵌套的JSON数组展平成宽表格式，处理多层嵌套和缺失字段", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-h01", "query": "需要整合来自MySQL、MongoDB、Kafka和S3四个异构数据源的数据，统一schema后写入ClickHouse，要求支持schema演进和回溯重跑", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "dt-h02", "query": "设计一套数据质量监控框架嵌入ETL管道，能自动检测数据漂移、完整性缺失和异常分布，并在发现问题时阻断下游", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "dt-h03", "query": "将一套基于Spark批处理的TB级ETL任务改造为流批一体架构，要求切换期间数据零丢失且结果完全一致", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "ai-e01", "query": "帮我写一个调用天气API的代码", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-e02", "query": "对接短信发送接口，封装一个发送验证码的方法", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-e03", "query": "写一个带API Key鉴权的HTTP请求封装", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-e04", "query": "帮我调用GitHub API获取仓库信息", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-m01", "query": "对接OAuth2.0授权码流程，实现token刷新和自动续期", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-m02", "query": "封装一个支持重试、熔断和限流的HTTP客户端", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-m03", "query": "对接微信支付回调接口，处理签名验证和幂等性", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-m04", "query": "设计一个RESTful API的版本管理策略并实现向后兼容", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-h01", "query": "需要对接一个没有文档的遗留SOAP服务，只有WSDL文件和几个示例报文，要逆向推断出完整的接口契约并封装成现代化的gRPC网关", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "ai-h02", "query": "构建一个API网关层，统一管理30+个微服务的鉴权、限流、灰度路由和协议转换，要求支持动态配置热更新且不影响在线流量", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "ai-h03", "query": "对接多家银行的开放银行API，各家鉴权方式、数据格式和错误码完全不同，需要设计一套抽象适配层屏蔽差异并支持新银行的快速接入", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "po-e01", "query": "这个函数太慢了，帮我优化一下", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-e02", "query": "这个页面加载很慢，怎么优化", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-e04", "query": "这个查询太耗内存了，怎么改", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-e05", "query": "加个缓存提升这个接口的响应速度", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-m01", "query": "这个API的P99延迟从100ms劣化到了800ms，帮我定位瓶颈", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-m02", "query": "服务启动后内存持续增长不释放，怀疑有内存泄漏，帮我分析", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-m03", "query": "数据库连接池频繁耗尽，如何调优连接池参数和查询并发", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-m04", "query": "这个批量导入任务跑了4小时，需要通过并行化和批处理优化到30分钟内", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-h01", "query": "高并发场景下GC暂停导致请求毛刺严重，需要在不更换JVM的前提下通过对象池、堆外内存和GC调参将P99 GC暂停控制在10ms以内", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "po-h02", "query": "一个单机QPS 5万的推荐服务需要扩展到支撑50万QPS，预算有限不能简单加机器，需要从算法复杂度、数据结构、缓存层级和序列化协议多维度优化", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "po-h03", "query": "分布式系统中跨多个服务的链路延迟不稳定，需要建立端到端的性能基线，识别长尾请求的根因并提出系统性优化方案", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "la-e01", "query": "帮我看看这段报错日志是什么意思", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-e02", "query": "这个NullPointerException的堆栈信息怎么解读", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-e03", "query": "日志里出现了OOM，帮我分析一下", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-e04", "query": "这段日志里的WARN级别信息需要关注吗", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-e05", "query": "帮我从这段日志中找到关键的错误信息", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-m01", "query": "服务每隔几小时就重启一次，日志里没有明显ERROR，帮我从INFO日志中找线索", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-m02", "query": "多个服务的日志分散在不同机器上，帮我关联分析一次请求的完整链路日志", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-m03", "query": "日志量太大无法人工排查，帮我设计一套日志告警规则和关键指标提取方案", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-m04", "query": "这个间歇性的超时问题只在生产环境出现，测试环境复现不了，帮我从日志中分析可能的触发条件", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-h01", "query": "一个分布式事务在极端情况下出现数据不一致，需要从十几个服务的海量日志中还原事件时序，定位是哪个环节的补偿逻辑出了问题", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "la-h02", "query": "系统在特定负载模式下出现级联故障，日志中充满了噪声和误导信息，需要从混乱的日志中提取真正的根因信号并区分症状与病因", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "la-h03", "query": "安全团队报告疑似入侵行为，需要从Web日志、系统日志和网络流量日志中交叉关联，重建攻击者的完整操作链并评估影响范围", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "sa-e01", "query": "检查这段代码有没有SQL注入风险", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-e02", "query": "这段拼接HTML的代码有XSS漏洞吗", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-e04", "query": "这个接口缺少CSRF防护，帮我加上", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-e05", "query": "检查代码里有没有硬编码的密钥或密码", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-m01", "query": "审计这个JWT认证实现，检查签名算法、token过期和刷新机制是否安全", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-m02", "query": "检查这个文件上传功能是否存在路径遍历和恶意文件执行风险", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-m03", "query": "审计这个RBAC权限模型的实现，检查是否存在越权和权限绕过漏洞", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-m04", "query": "检查项目的npm依赖是否有已知CVE漏洞并给出升级建议", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-h01", "query": "对一个金融交易系统进行全面安全审计，需要覆盖OWASP Top 10、业务逻辑漏洞、加密实现正确性和合规要求，并出具分级修复报告", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "sa-h02", "query": "审计一个多租户SaaS平台的数据隔离机制，需要验证在所有API路径、数据库查询和缓存访问中都不存在租户数据泄露的可能", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "sa-h03", "query": "对一个使用微服务和消息队列的复杂系统进行威胁建模，识别信任边界、攻击面和纵深防御缺口，并提出架构级安全改进方案", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "cg-e06", "query": "用Python写一个文件批量重命名的脚本", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-e08", "query": "用Rust写一个命令行参数解析器", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-e09", "query": "写一个Python装饰器来记录函数执行时间", "expected_skill": "code-generation", "difficulty": "easy"}
+{"id": "cg-m05", "query": "实现一个支持断点续传的大文件上传客户端", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-m06", "query": "写一个带权限控制和速率限制的API中间件", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-m07", "query": "实现一个基于事件总线的模块间通信框架", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-h04", "query": "实现一个高性能的LSM-Tree存储引擎，支持WAL、MemTable、SSTable和Compaction", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cg-h05", "query": "用Rust写一个支持WASM插件的沙箱运行时，需要内存隔离和资源配额管理", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cg-h06", "query": "实现一个简化版的Kubernetes调度器，支持亲和性、污点容忍和资源约束调度", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cr-e06", "query": "把这些全局变量重构成依赖注入的方式", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-e08", "query": "给这段代码的魔法数字提取为常量", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-e09", "query": "把这个过长的函数拆分成职责清晰的子函数", "expected_skill": "code-refactor", "difficulty": "easy"}
+{"id": "cr-m05", "query": "把这组Service类中的业务逻辑和数据访问分离开", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-m06", "query": "将这段过程式代码重构为面向对象设计", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-m07", "query": "把这个硬编码的配置系统重构为支持多环境的动态配置", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-h04", "query": "这个单体应用的认证模块与业务代码深度耦合，需要抽离为独立的认证中间件并保持所有接口向后兼容", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "cr-h05", "query": "把基于MySQL直连的30个API端点重构为Repository模式，同时引入缓存层，保证迁移过程中API契约不变", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "cr-h06", "query": "将一套基于jQuery的2万行前端代码逐步迁移到React Hooks架构，要求新旧组件共存且不影响现有功能", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "tg-e07", "query": "帮我给这个数据校验函数写测试", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-e08", "query": "给这个文件解析器生成测试用例", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-e09", "query": "帮我给这个缓存模块写边界测试", "expected_skill": "test-generation", "difficulty": "easy"}
+{"id": "tg-m05", "query": "给这个数据库CRUD层生成包含事务回滚验证的测试", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-m06", "query": "为这个GraphQL resolver生成覆盖嵌套查询和分页的测试", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-m07", "query": "给这个事件溯源模块生成包含事件重放和快照恢复的测试", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-h04", "query": "这个分布式一致性哈希环的实现需要测试节点加入、离开和再平衡时的数据迁移正确性", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "tg-h05", "query": "为一个Raft实现生成Fuzz测试用例，自动构造各种异常消息序列来验证状态机安全性", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "tg-h06", "query": "这个CRDT数据结构需要生成基于属性的测试来验证交换律、结合律和幂等性", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "dg-e06", "query": "根据Git提交历史生成CHANGELOG文档", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-e07", "query": "给这个CLI工具生成命令帮助文档", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-e08", "query": "帮我把这些TypeScript类型定义整理成接口文档", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-e09", "query": "给这个配置文件生成每个字段的说明文档", "expected_skill": "doc-generation", "difficulty": "easy"}
+{"id": "dg-m05", "query": "为这个Python SDK生成包含快速上手和进阶用法的开发者文档", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-m06", "query": "根据数据库DDL生成数据字典文档，包含表关系ER图描述", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-m07", "query": "把这些Terraform配置生成基础设施文档，包含资源拓扑和依赖关系", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-h04", "query": "逆向分析这个编译器的源码，生成包含指令集架构、优化Pass和代码生成流水线的完整技术文档", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "dg-h05", "query": "为一个有200+微服务的平台生成统一API网关文档，需要自动发现服务、聚合接口和处理鉴权说明", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "dg-h06", "query": "根据Kubernetes operator的源码和Helm chart生成运维手册，涵盖部署、升级、故障排查和灾难恢复", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "sq-e06", "query": "写一个查询最近7天每天新增用户数的SQL", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-e07", "query": "帮我写一个把成绩从百分制转换为等级制的UPDATE语句", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-e08", "query": "写一个按部门分组统计平均工资的查询", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-e09", "query": "写一个查找从未下过订单的客户的SQL", "expected_skill": "sql-query", "difficulty": "easy"}
+{"id": "sq-m05", "query": "写一个计算用户留存率的SQL，需要按注册月份分组统计次月到第12月的留存", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-m06", "query": "帮我写一个行列转换的PIVOT查询，把月度销售数据转成横向展示", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-m07", "query": "这条涉及5表JOIN的慢查询如何重写以减少临时表使用", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-h04", "query": "设计一个时间序列数据的分区+分区索引方案，需要支持按租户和时间范围的高效查询和自动过期清理", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "sq-h05", "query": "将一套使用临时表和游标的SQL Server ETL脚本改写为PostgreSQL的CTE和窗口函数，保持结果集完全一致", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "sq-h06", "query": "为一个实时数仓设计增量物化视图方案，需要在基表高频写入时保证视图查询延迟在亚秒级且数据最终一致", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "dt-e06", "query": "把这个XML文件转换成JSON格式", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-e07", "query": "把这份CSV数据的金额列从字符串转成浮点数并保留两位小数", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-e08", "query": "把多个TXT文件的内容合并成一个CSV", "expected_skill": "data-transform", "difficulty": "easy"}
+{"id": "dt-m05", "query": "把多个数据源的CSV按外键关联后做宽表拼接，处理缺失匹配和一对多情况", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-m06", "query": "将这份非标准JSON日志转换为Parquet格式并按天分区存储", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-m07", "query": "构建一个数据脱敏管道，对手机号、身份证、姓名等敏感字段做可逆和不可逆脱敏", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-h04", "query": "构建一个支持Schema Registry的Kafka数据管道，自动处理上游Schema变更的兼容性检测和下游适配", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "dt-h05", "query": "设计一个数据血缘追踪系统，能自动从SQL、Spark和Airflow任务中提取列级血缘关系", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "dt-h06", "query": "将一套基于Airflow+Spark的T+1批处理数据仓库改造为基于Flink的实时数仓，保证指标计算语义一致", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "ai-e06", "query": "帮我写一个调用OpenAI API的Python封装", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-e07", "query": "写一个带Bearer Token鉴权的REST客户端", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-e08", "query": "帮我封装一个调用地图地理编码API的工具函数", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-e09", "query": "写一个从REST API下载文件并保存到本地的脚本", "expected_skill": "api-integration", "difficulty": "easy"}
+{"id": "ai-m05", "query": "实现一个支持批量请求合并和结果分发的API客户端", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-m06", "query": "对接一个需要HMAC签名的API，实现请求签名和响应验签", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-m07", "query": "封装一个支持SSE流式响应的API客户端，处理断线重连和事件解析", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-h04", "query": "构建一个多协议适配层，统一封装REST、GraphQL和gRPC调用并提供一致的接口抽象", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "ai-h05", "query": "设计一个支持OAuth2.1 + mTLS双向认证的API网关，集成证书管理和自动续期", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "ai-h06", "query": "构建一个跨云API编排引擎，能协调AWS、Azure和GCP的API完成一个跨云业务流程并保证事务一致性", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "po-e06", "query": "这个前端bundle体积太大了，帮我分析并优化打包", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-e07", "query": "这个循环里每次都在创建新对象，帮我减少GC压力", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-e08", "query": "这个正则匹配在长文本上很慢，帮我优化", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-e09", "query": "这个JSON序列化在大数据量下很慢，帮我换成更快的方案", "expected_skill": "performance-optimize", "difficulty": "easy"}
+{"id": "po-m05", "query": "这个Java服务的Young GC频繁导致P99延迟抖动，帮我分析堆配置和对象分配模式", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-m06", "query": "这个Python数据分析脚本处理100万行数据需要20分钟，需要优化到2分钟以内", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-m07", "query": "Redis大Key导致集群不均衡，需要分析热Key分布并设计拆分方案", "expected_skill": "performance-optimize", "difficulty": "medium"}
+{"id": "po-h04", "query": "一个Go微服务的goroutine数量在高并发下暴涨到10万+，导致调度延迟飙升，需要设计协程池和背压机制", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "po-h05", "query": "一个向量检索引擎在十亿级数据下召回率达标但QPS只有目标的1/5，需要从索引结构、SIMD优化和批处理多维度提速", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "po-h06", "query": "一个实时流处理管道的端到端延迟从500ms劣化到5秒，需要排查反压、水印和checkpoint对吞吐的影响", "expected_skill": "performance-optimize", "difficulty": "hard"}
+{"id": "la-e06", "query": "这段Nginx的502错误日志帮我解读一下", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-e07", "query": "MySQL慢查询日志里有几条超过10秒的查询，帮我看看", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-e08", "query": "这段Docker容器启动失败的日志帮我分析一下原因", "expected_skill": "log-analysis", "difficulty": "easy"}
+{"id": "la-m05", "query": "Kafka消费者组频繁rebalance，帮我从消费者日志中分析原因和触发条件", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-m06", "query": "K8s Pod反复CrashLoopBackOff，帮我关联容器日志和事件找到根因", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-m07", "query": "Nginx访问日志中出现了大量499状态码，帮我分析是客户端超时还是后端处理过慢", "expected_skill": "log-analysis", "difficulty": "medium"}
+{"id": "la-h04", "query": "一个金融交易系统出现偶发的价格偏差，需要从交易引擎、行情网关和风控系统的日志中还原毫秒级时序并定位竞态窗口", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "la-h05", "query": "大规模K8s集群中多个服务同时出现间歇性超时，需要从数百个Pod的日志中识别级联故障的传播路径和初始故障点", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "la-h06", "query": "安全团队报告疑似APT入侵，需要从Web访问日志、SSH审计日志和DNS查询日志中交叉关联重建攻击者横向移动路径", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "sa-e06", "query": "检查这段代码是否存在SSRF漏洞", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-e07", "query": "这段反序列化代码有安全风险吗", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-e08", "query": "帮我检查这段代码中API密钥是否暴露在了日志中", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-e09", "query": "这段文件下载代码有没有路径遍历的风险", "expected_skill": "security-audit", "difficulty": "easy"}
+{"id": "sa-m05", "query": "审计这个OAuth2回调处理逻辑，检查state参数验证和token交换的安全性", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-m06", "query": "检查这个邮件发送功能是否存在模板注入和头部伪造风险", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-m07", "query": "审计这个WebSocket连接的认证机制，检查是否存在劫持和消息伪造风险", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-h04", "query": "对一个区块链智能合约进行安全审计，需要覆盖重入攻击、整数溢出、闪电贷和预言机操纵等DeFi特有攻击向量", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "sa-h05", "query": "审计一个零知识证明系统的电路约束实现，检查是否存在约束不足导致的证明伪造和可信设置泄露风险", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "sa-h06", "query": "对一套跨链桥协议进行安全审计，涵盖签名验证、重放攻击、流动性池操控和治理攻击等维度", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "ai-v2-m01", "query": "接入第三方退款 API，需要封装请求签名、幂等键、错误码映射和重试逻辑", "expected_skill": "api-integration", "difficulty": "medium"}
+{"id": "ai-v2-h01", "query": "供应商正在从 v1 API 迁移到 v2，我需要同时兼容两个版本，在灰度期间做双路调用、结果比对和自动回退", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "ai-v2-h02", "query": "对接一个事件驱动 SaaS 平台，既要处理 OAuth 授权、分页和限流，又要可靠消费 Webhook，并把不同接口错误统一映射到内部协议", "expected_skill": "api-integration", "difficulty": "hard"}
+{"id": "bf-v2-e01", "query": "点击保存一次却总会创建两条重复记录，帮我定位原因并修复", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bf-v2-e02", "query": "这个函数传入合法参数时却返回 None，帮我找出问题并修好", "expected_skill": "bug-fix", "difficulty": "easy"}
+{"id": "bf-v2-m01", "query": "文件上传在中文文件名场景下会触发编码异常，帮我复现问题、定位原因并修复", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "bf-v2-m02", "query": "异步扣款任务偶尔会执行两次导致重复扣费，帮我定位逻辑缺陷并修复", "expected_skill": "bug-fix", "difficulty": "medium"}
+{"id": "cg-v2-m01", "query": "实现一个本地任务调度器，支持 cron 表达式、任务暂停恢复和失败重试", "expected_skill": "code-generation", "difficulty": "medium"}
+{"id": "cg-v2-h01", "query": "从零实现一个轻量 Actor 消息运行时，需要支持 actor 注册、异步邮箱、监督重启和消息超时", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cg-v2-h02", "query": "实现一个可插拔规则引擎，支持规则 AST、优先级、运行时热加载和受限表达式执行", "expected_skill": "code-generation", "difficulty": "hard"}
+{"id": "cr-v2-m01", "query": "现有权限判断散落在十几个 if-else 中，帮我重构成策略对象并保持现有接口行为不变", "expected_skill": "code-refactor", "difficulty": "medium"}
+{"id": "cr-v2-h01", "query": "把一个大量依赖继承的旧模块逐步重构为组合式设计，要求外部 API 和序列化格式保持兼容", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "cr-v2-h02", "query": "现有核心服务同时负责协议解析、业务规则和持久化，帮我在不中断线上流量的前提下渐进拆分这些职责", "expected_skill": "code-refactor", "difficulty": "hard"}
+{"id": "review-v2-e01", "query": "帮我检查这个函数对空值和边界输入的处理是否合理，只给审查意见不要修改", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "review-v2-e02", "query": "评审一下这个类的公共接口设计是否清晰、职责是否明确，先不要重构", "expected_skill": "code-review", "difficulty": "easy"}
+{"id": "review-v2-m01", "query": "审查这个线程池的使用方式是否可能导致死锁或任务饥饿，只分析风险不要改代码", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "review-v2-m02", "query": "帮我 review 这个缓存失效实现，看看是否可能返回过期数据，只给问题清单和建议", "expected_skill": "code-review", "difficulty": "medium"}
+{"id": "review-v2-h01", "query": "审查这个消息消费模块的幂等实现，分析重复投递、重试和部分失败时是否可能破坏正确性，但不要直接修改", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "review-v2-h02", "query": "review 这个 Outbox 事务消息实现，重点检查本地事务、消息发布和重试之间的一致性边界，只出审查报告", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "review-v2-h03", "query": "审查这个插件系统的生命周期管理，检查加载、卸载、异常退出时的资源所有权和清理逻辑是否可靠，只做分析", "expected_skill": "code-review", "difficulty": "hard"}
+{"id": "dt-v2-m01", "query": "把一份 CSV 和一份 JSON 按业务主键关联，做字段映射、类型校验和缺失值处理后输出统一数据集", "expected_skill": "data-transform", "difficulty": "medium"}
+{"id": "dt-v2-h01", "query": "构建一条 CDC 数据处理链路，把多个来源的变更事件统一成目标 Schema，同时处理乱序、重复事件和 Schema 演进", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "dt-v2-h02", "query": "设计一条敏感数据处理管道，对不同字段执行脱敏、令牌化和格式标准化，并保持跨表关联关系可追踪", "expected_skill": "data-transform", "difficulty": "hard"}
+{"id": "dg-v2-m01", "query": "根据这次代码变更和配置差异生成一份升级迁移指南，包含破坏性变更、迁移步骤和回滚方式", "expected_skill": "doc-generation", "difficulty": "medium"}
+{"id": "dg-v2-h01", "query": "根据仓库源码、提交历史和 Issue 记录生成一组 ADR 文档，梳理关键架构决策、备选方案和演进原因", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "dg-v2-h02", "query": "根据部署清单、监控配置和故障处理脚本生成完整运维 Runbook，覆盖日常操作、告警处置和灾难恢复", "expected_skill": "doc-generation", "difficulty": "hard"}
+{"id": "fm-v2-e01", "query": "读取 invoice.txt，计算小计、税额和最终应付总额", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "fm-v2-e02", "query": "打开 scores.txt，计算其中成绩的最高值、最低值和平均值", "expected_skill": "file-math", "difficulty": "easy"}
+{"id": "fm-v2-m01", "query": "读取 loan.txt 中的本金、利率和期数，按文件给出的规则计算每期利息和剩余本金", "expected_skill": "file-math", "difficulty": "medium"}
+{"id": "fs-v2-e01", "query": "读取 release_notes.txt，概括这次版本更新的主要内容", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "fs-v2-e02", "query": "打开 interview.txt，提炼受访者表达的主要观点和结论", "expected_skill": "file-summary", "difficulty": "easy"}
+{"id": "fs-v2-m01", "query": "从这份事故复盘文档中提取事件时间线、已确认原因和后续行动项，不需要分析原始运行日志", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "fs-v2-m02", "query": "从现有 API 规范文档中提取端点、认证方式和限制条件，只整理已有内容，不要生成新的接口设计", "expected_skill": "file-summary", "difficulty": "medium"}
+{"id": "kc-v2-e01", "query": "比较 Redis 和 Memcached 在数据结构、持久化和典型使用场景上的差异", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "kc-v2-e02", "query": "对比线程和进程在资源隔离、通信成本和适用场景上的区别", "expected_skill": "knowledge-compare", "difficulty": "easy"}
+{"id": "kc-v2-m01", "query": "比较乐观锁和悲观锁在冲突率、吞吐量和实现复杂度上的取舍", "expected_skill": "knowledge-compare", "difficulty": "medium"}
+{"id": "kqa-v2-e01", "query": "根据项目文档说明 ContextBuilder 的主要职责是什么", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "kqa-v2-e02", "query": "知识库里 ToolRegistry 是如何做参数校验的", "expected_skill": "knowledge-qa", "difficulty": "easy"}
+{"id": "kqa-v2-m01", "query": "根据已有设计说明为什么 commit-on-success 不能回滚已经发生的外部副作用", "expected_skill": "knowledge-qa", "difficulty": "medium"}
+{"id": "la-v2-h01", "query": "网关、服务层和数据库的日志显示同一批请求偶发超时，请关联 Trace ID 还原完整时序并定位最初的阻塞点", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "la-v2-h02", "query": "一个批处理任务偶发少产数据，需要从调度器、执行器和对象存储日志中重建失败窗口并定位数据丢失发生在哪一阶段", "expected_skill": "log-analysis", "difficulty": "hard"}
+{"id": "sa-v2-m01", "query": "审计这个 GraphQL Resolver 的授权逻辑，检查是否存在 IDOR、字段级越权和敏感字段泄露", "expected_skill": "security-audit", "difficulty": "medium"}
+{"id": "sa-v2-h01", "query": "对 CI/CD 供应链进行安全审计，检查构建凭证、第三方 Action、依赖来源、制品签名和发布权限链路", "expected_skill": "security-audit", "difficulty": "hard"}
+{"id": "sq-v2-m01", "query": "写一个 PostgreSQL UPSERT，主键冲突时更新指定字段并返回最终记录", "expected_skill": "sql-query", "difficulty": "medium"}
+{"id": "sq-v2-h01", "query": "为多租户分析查询重写一套复杂 SQL，结合分区裁剪、窗口函数和预聚合降低大范围扫描成本", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "sq-v2-h02", "query": "把一组依赖 MySQL JSON 函数和窗口函数的查询迁移为 BigQuery Standard SQL，并保持结果语义一致", "expected_skill": "sql-query", "difficulty": "hard"}
+{"id": "tg-v2-m01", "query": "为这个 API 的消费者和提供者生成契约测试，覆盖版本兼容、字段新增和错误响应变化", "expected_skill": "test-generation", "difficulty": "medium"}
+{"id": "tg-v2-h01", "query": "为这个事务调度器生成有状态属性测试，自动探索任务交错顺序并验证不会破坏原子性和幂等性", "expected_skill": "test-generation", "difficulty": "hard"}
+{"id": "tg-v2-h02", "query": "为消息队列消费链路生成混沌测试，覆盖消费者重启、重复投递和网络抖动，并验证幂等处理", "expected_skill": "test-generation", "difficulty": "hard"}

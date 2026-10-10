@@ -1,7 +1,19 @@
 ---
 name: file-math
-description: 读取 workspace 文本文件中的数学任务，并通过 read_text_file 和 calculator 可靠完成计算。
+description: 当必须先读取文件中的数字、公式或计算规则，再执行数学或统计计算并得到数值结果时使用。若目标是总结文件内容使用 file-summary；若目标是清洗、转换或合并数据使用 data-transform；若用户直接给出简单表达式而无需读取文件，不使用此
+  Skill。
+version: 1.1.0
+tags:
+- file
+- math
+- calculation
+- formula
+- numeric
+- statistics
+- compute
+- arithmetic
 always: false
+enabled: true
 ---
 
 # File Math
@@ -14,9 +26,9 @@ always: false
 
 1. 先使用 `read_text_file` 读取用户指定的文件。
 2. 不要根据文件名猜测内容，必须以真实 Tool Result 为准。
-3. 如果文件内容包含需要精确执行的加、减、乘、除运算，使用 `calculator`。
-4. 不要让语言模型自行心算可以由 `calculator` 完成的运算。
-5. Calculator 返回结果后，再由 LLM 组织最终自然语言回答。
+3. 对 `calculator` 支持的精确数值运算优先使用 `calculator`，不要让语言模型自行心算可由工具完成的运算。
+4. 如果任务涉及统计量、矩阵、求根、迭代等超出当前计算工具能力的运算，不要伪造结果；应明确说明当前工具能力不足，或在运行时已有合适计算工具时再调用对应工具。
+5. 计算工具返回结果后，再由 LLM 组织最终自然语言回答。
 
 ## Error handling
 

@@ -1,11 +1,14 @@
 from copy import deepcopy
 from typing import Any
 from dataclasses import dataclass
-from app.memory import MemoryStore
-import tiktoken
-import json
-from app.skills import SkillLoader
 
+import json
+import tiktoken
+
+from app.memory import MemoryStore
+from app.skill_snapshot import (
+    SkillSnapshot,
+)
 _ENCODING = tiktoken.get_encoding("o200k_base")
 
 class ContextBudgetError(RuntimeError):
@@ -40,7 +43,7 @@ class ContextPolicy:
 
 @dataclass(frozen=True)
 class ContextStats:
-    """记录本轮 Context Builder 做了什么。"""
+    """记录本轮 Context Builder 实际注入了什么。"""
 
     max_input_tokens: int
     estimated_input_tokens: int
@@ -57,7 +60,6 @@ class ContextStats:
     total_memory_records: int
     selected_memory_records: int
 
-    total_skills: int
     active_skills: tuple[str, ...]
 
 @dataclass(frozen=True)
@@ -188,19 +190,26 @@ def build_memory_context(
 
 def build_runtime_context(
     session_messages: list[dict[str, Any]],
+    *,
     memory_store: MemoryStore | None = None,
-    skill_loader: SkillLoader | None = None,
+    skill_snapshots: tuple[SkillSnapshot, ...] = (),
     policy: ContextPolicy | None = None,
 ) -> ContextBuildResult:
     """
-    从完整 Session + Long-term Memory 中构建本轮 Runtime Context。
+    从 Session、Memory 和已经确定的 Active Skills
+    构建本轮 Runtime Context。
 
     重要原则：
+
     1. 不修改原始 Session。
     2. System Prompt 优先保留。
-    3. Memory 有独立预算。
-    4. Conversation 从最新 Turn 向前选择。
-    5. 永远不拆开完整 User Turn。
+    3. Memory 与 Active Skills 使用独立预算。
+    4. Active Skills 由外部 Skill Selection Runtime 决定；
+    ContextBuilder 不进行 Skill 选择。
+    5. Active Skill instructions 必须完整注入，
+    超预算时显式失败，不允许静默截断。
+    6. Conversation 从最新完整 User Turn 向前选择。
+    7. 永远不拆开完整 User Turn。
     """
 
     policy = policy or ContextPolicy()
@@ -238,22 +247,26 @@ def build_runtime_context(
         token_budget=available_memory_tokens,
     )
 
-    current_message = get_latest_user_text(history_messages)
-
     available_skills_tokens = min(
         policy.skills_budget_tokens,
-        policy.max_input_tokens- original_system_tokens- memory_tokens,
+        (
+            policy.max_input_tokens
+            - original_system_tokens
+            - memory_tokens
+        ),
     )
+
     (
         skills_text,
         skills_tokens,
-        active_skills,
-        total_skills,
+        active_skill_names,
     ) = build_skills_context(
-        skill_loader=skill_loader,
-        current_message=current_message,
-        token_budget=available_skills_tokens,
+        skill_snapshots=skill_snapshots,
+        token_budget=(
+            available_skills_tokens
+        ),
     )
+        
 
 
     runtime_prefix: list[dict[str, Any]] = []
@@ -290,7 +303,8 @@ def build_runtime_context(
 
     if prefix_tokens >= policy.max_input_tokens:
         raise ContextBudgetError(
-            "System Prompt + Long-term Memory 已经占满 Context Budget"
+            "System Prompt + Memory + Active Skills "
+            "已经占满 Context Budget"
         )
 
     history_budget = policy.max_input_tokens - prefix_tokens
@@ -336,21 +350,33 @@ def build_runtime_context(
 
     stats = ContextStats(
         max_input_tokens=policy.max_input_tokens,
-    estimated_input_tokens=estimate_messages_tokens(runtime_messages),
-    system_tokens=original_system_tokens,
-    memory_tokens=memory_tokens,
-    skills_tokens=skills_tokens,
-    history_tokens=selected_history_tokens,
-    total_session_messages=len(session_messages),
-    selected_session_messages=selected_session_messages,
-    dropped_session_messages=(
-        len(session_messages) - selected_session_messages
-    ),
-    total_memory_records=total_memory_records,
-    selected_memory_records=selected_memory_records,
-    total_skills=total_skills,
-    active_skills=active_skills,
-)
+        estimated_input_tokens=(
+            estimate_messages_tokens(
+                runtime_messages
+            )
+        ),
+        system_tokens=original_system_tokens,
+        memory_tokens=memory_tokens,
+        skills_tokens=skills_tokens,
+        history_tokens=selected_history_tokens,
+        total_session_messages=(
+            len(session_messages)
+        ),
+        selected_session_messages=(
+            selected_session_messages
+        ),
+        dropped_session_messages=(
+            len(session_messages)
+            - selected_session_messages
+        ),
+        total_memory_records=(
+            total_memory_records
+        ),
+        selected_memory_records=(
+            selected_memory_records
+        ),
+        active_skills=active_skill_names,
+    )
 
     return ContextBuildResult(
         messages=runtime_messages,
@@ -358,94 +384,67 @@ def build_runtime_context(
     )
 
 
-def build_runtime_messages(
-    session_messages: list[dict[str, Any]],
-    memory_store: MemoryStore | None = None,
-    policy: ContextPolicy | None = None,
-) -> list[dict[str, Any]]:
-    """
-    兼容 Stage 9 的调用方式。
-
-    真正逻辑已经集中到 build_runtime_context()。
-    """
-
-    return build_runtime_context(
-        session_messages=session_messages,
-        memory_store=memory_store,
-        policy=policy,
-    ).messages
-
-def get_latest_user_text(
-    messages: list[dict[str, Any]],
-) -> str:
-    for message in reversed(messages):
-        if message.get("role") != "user":
-            continue
-
-        content = message.get("content")
-
-        if isinstance(content, str):
-            return content
-
-    return ""
-
 def build_skills_context(
-    skill_loader: SkillLoader | None,
-    current_message: str,
+    skill_snapshots: tuple[
+        SkillSnapshot,
+        ...
+    ],
     token_budget: int,
-) -> tuple[str, int, tuple[str, ...], int]:
-    if skill_loader is None or token_budget <= 0:
-        return "", 0, (), 0
+) -> tuple[
+    str,
+    int,
+    tuple[str, ...],
+]:
+    if not skill_snapshots:
+        return "", 0, ()
 
-    all_skills = skill_loader.list_skills()
-
-    if not all_skills:
-        return "", 0, (), 0
-
-    active_skills = skill_loader.get_active_skills(current_message)
-    active_names = tuple(skill.name for skill in active_skills)
-
-    active_text = skill_loader.render_active_skills(active_skills)
-    active_tokens = estimate_text_tokens(active_text) if active_text else 0
-
-    if active_tokens > token_budget:
+    if token_budget <= 0:
         raise ContextBudgetError(
-            "Active Skills 全文超过 Skills Context Budget"
+            "存在 Active Skills，"
+            "但 Skills Context Budget 为 0"
         )
 
-    summary = skill_loader.build_summary(
-        exclude=set(active_names)
+    active_names = tuple(
+        snapshot.name
+        for snapshot in skill_snapshots
     )
 
-    if not summary:
-        return active_text, active_tokens, active_names, len(all_skills)
-
-    remaining_budget = token_budget - active_tokens
-    selected_summary_lines: list[str] = []
-    used_summary_tokens = 0
-
-    for line in summary.splitlines():
-        line_tokens = estimate_text_tokens(line + "\n")
-
-        if used_summary_tokens + line_tokens > remaining_budget:
-            break
-
-        selected_summary_lines.append(line)
-        used_summary_tokens += line_tokens
-
-    summary_text = "\n".join(selected_summary_lines).strip()
-
-    parts = [
-        part
-        for part in (active_text, summary_text)
-        if part
+    parts: list[str] = [
+        "## Active Skills"
     ]
 
-    final_text = "\n\n".join(parts)
+    for snapshot in skill_snapshots:
+        parts.append(
+            (
+                f"### Skill: "
+                f"{snapshot.name}"
+                f"\n"
+                f"Version: "
+                f"{snapshot.version}"
+                f"\n\n"
+                f"{snapshot.instructions}"
+            )
+        )
+
+    skills_text = "\n\n".join(
+        parts
+    )
+
+    skills_tokens = (
+        estimate_text_tokens(
+            skills_text
+        )
+    )
+
+    if skills_tokens > token_budget:
+        raise ContextBudgetError(
+            "Active Skills 全文超过 "
+            "Skills Context Budget，"
+            "禁止截断 Skill instructions"
+        )
 
     return (
-        final_text,
-        estimate_text_tokens(final_text),
+        skills_text,
+        skills_tokens,
         active_names,
-        len(all_skills),
     )

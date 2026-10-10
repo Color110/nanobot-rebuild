@@ -1,23 +1,52 @@
-import asyncio
-import time
+from pathlib import Path
+
+from app.skills import SkillLoader
+from app.skill_catalog import SkillCatalog
+from app.skill_activation import SkillActivationResolver
 
 
-async def task(name: str) -> None:
-    print(f"{name} start")
-    await asyncio.sleep(2)
-    print(f"{name} end")
+loader = SkillLoader(Path("workspace"))
+
+catalog = SkillCatalog(
+    loader.list_skills()
+)
+
+resolver = SkillActivationResolver(catalog)
 
 
-async def main() -> None:
-    start = time.perf_counter()
-
-    await task("A"),
-    await task("B"),
-    await task("C"),
-    time.sleep(2)
-    
-    elapsed = time.perf_counter() - start
-    print(f"elapsed: {elapsed:.2f}s")
+print("=== All Skills ===")
+for skill in catalog.list_all():
+    print(
+        skill.name,
+        skill.enabled,
+        skill.always,
+    )
 
 
-asyncio.run(main())
+print("\n=== Descriptors ===")
+for descriptor in catalog.descriptors():
+    print(
+        descriptor.routing_text()
+    )
+
+
+result = resolver.resolve(
+    "使用 $file-math 帮我处理"
+)
+
+print("\n=== Active Skills ===")
+
+for activation in result.activations:
+    print(
+        activation.skill.name,
+        activation.sources,
+    )
+
+
+print("\n=== Issues ===")
+
+for issue in result.issues:
+    print(
+        issue.name,
+        issue.reason,
+    )

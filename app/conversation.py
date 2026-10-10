@@ -53,7 +53,7 @@ def format_history(messages: list[dict[str, Any]]) -> str:
     for index,message in enumerate(messages):
         role = message.get("role", "unknown",)
         content = message.get("content","",)
-        if(role == "assistant" and message.get("tool_call")):
+        if(role == "assistant" and message.get("tool_calls")):
             lines.append(
                 f"{index}:"
                 f"[assistant/tool_call]"

@@ -1,0 +1,398 @@
+rrf=60
+=== Skill Retrieval Eval ===
+Recall@1: 60.80%
+Recall@3: 86.36%
+Recall@5: 93.47%
+MRR:      0.7377
+
+=== By Difficulty ===
+easy       R@1=62.99% R@3=88.19% MRR=0.7545
+hard       R@1=62.83% R@3=89.38% MRR=0.7574
+medium     R@1=56.25% R@3=81.25% MRR=0.6990
+
+=== Recall@3 Failures ===
+
+[file_summary_001] 读取 report.txt 并总结里面的主要内容
+expected: file-summary
+  1. file-math            0.0325
+  2. doc-generation       0.0318
+  3. knowledge-compare    0.0317
+  4. log-analysis         0.0296
+  5. bug-fix              0.0292
+
+[code_review_003] 帮我看看这个函数的命名和结构是否合理
+expected: code-review
+  1. code-refactor        0.0328
+  2. code-generation      0.0315
+  3. test-generation      0.0304
+  4. log-analysis         0.0303
+  5. code-review          0.0301
+
+[code_review_009] 帮我看看这个模块的依赖关系是否合理
+expected: code-review
+  1. code-generation      0.0320
+  2. security-audit       0.0315
+  3. sql-query            0.0308
+  4. code-refactor        0.0307
+  5. test-generation      0.0293
+
+[code_review_013] 这段代码有没有资源泄漏的风险，比如未关闭的连接或文件句柄
+expected: code-review
+  1. performance-optimize 0.0328
+  2. security-audit       0.0320
+  3. bug-fix              0.0308
+  4. data-transform       0.0306
+  5. code-review          0.0299
+
+[code_review_014] 审查这段代码的日志记录是否足够用于线上排查
+expected: code-review
+  1. log-analysis         0.0328
+  2. bug-fix              0.0315
+  3. security-audit       0.0312
+  4. test-generation      0.0308
+  5. code-review          0.0305
+
+[bug_fix_004] 运行时报了 TypeError，帮我修一下
+expected: bug-fix
+  1. log-analysis         0.0313
+  2. security-audit       0.0307
+  3. file-summary         0.0300
+  4. bug-fix              0.0164
+  5. performance-optimize 0.0161
+
+[file_summary_008] 这个会议纪要里有哪些决议和待办事项
+expected: file-summary
+  1. code-review          0.0315
+  2. code-refactor        0.0315
+  3. api-integration      0.0306
+  4. knowledge-compare    0.0299
+  5. test-generation      0.0295
+
+[file_summary_009] 帮我总结这个技术文档的关键设计决策
+expected: file-summary
+  1. knowledge-compare    0.0328
+  2. doc-generation       0.0315
+  3. code-review          0.0315
+  4. file-summary         0.0306
+  5. knowledge-qa         0.0305
+
+[file_summary_015] 帮我总结这份长篇报告的核心论点、支撑论据和最终结论
+expected: file-summary
+  1. knowledge-compare    0.0325
+  2. log-analysis         0.0315
+  3. file-math            0.0303
+  4. doc-generation       0.0302
+  5. security-audit       0.0301
+
+[knowledge_qa_003] AgentRunner 的启动流程是怎样的
+expected: knowledge-qa
+  1. log-analysis         0.0323
+  2. test-generation      0.0320
+  3. data-transform       0.0318
+  4. performance-optimize 0.0304
+  5. knowledge-qa         0.0303
+
+[knowledge_qa_008] EmbeddingProvider 接口有哪些方法
+expected: knowledge-qa
+  1. api-integration      0.0328
+  2. doc-generation       0.0315
+  3. file-summary         0.0310
+  4. knowledge-qa         0.0304
+  5. code-review          0.0292
+
+[knowledge_qa_009] 根据文档说明一下 HNSW 索引的构建过程
+expected: knowledge-qa
+  1. doc-generation       0.0325
+  2. sql-query            0.0315
+  3. file-summary         0.0310
+  4. knowledge-qa         0.0310
+  5. data-transform       0.0304
+
+[knowledge_qa_015] 根据文档详细解释 MRR 指标的计算方法和适用场景
+expected: knowledge-qa
+  1. knowledge-compare    0.0320
+  2. sql-query            0.0315
+  3. performance-optimize 0.0311
+  4. bug-fix              0.0311
+  5. file-math            0.0308
+
+[knowledge_compare_017] 从数据分片策略、副本机制和故障恢复流程对比不同向量数据库的高可用方案
+expected: knowledge-compare
+  1. sql-query            0.0325
+  2. data-transform       0.0320
+  3. log-analysis         0.0313
+  4. knowledge-compare    0.0310
+  5. knowledge-qa         0.0308
+
+[knowledge_compare_019] 对比一下同步写入和异步写入在向量数据库中的吞吐量、延迟和数据一致性表现
+expected: knowledge-compare
+  1. performance-optimize 0.0325
+  2. data-transform       0.0318
+  3. sql-query            0.0317
+  4. knowledge-compare    0.0307
+  5. bug-fix              0.0303
+
+[cg-e01] 帮我用Python写一个读取CSV文件的函数
+expected: code-generation
+  1. file-math            0.0328
+  2. file-summary         0.0320
+  3. doc-generation       0.0308
+  4. code-generation      0.0305
+  5. data-transform       0.0303
+
+[cg-e02] 生成一个Java冒泡排序算法
+expected: code-generation
+  1. file-summary         0.0320
+  2. knowledge-compare    0.0318
+  3. test-generation      0.0310
+  4. api-integration      0.0305
+  5. performance-optimize 0.0304
+
+[cg-e05] 编写一个正则表达式验证邮箱格式的代码
+expected: code-generation
+  1. security-audit       0.0313
+  2. api-integration      0.0308
+  3. file-math            0.0305
+  4. data-transform       0.0303
+  5. sql-query            0.0302
+
+[cg-m02] 实现一个带缓存和过期时间的键值存储，支持并发安全
+expected: code-generation
+  1. code-review          0.0320
+  2. performance-optimize 0.0309
+  3. code-refactor        0.0308
+  4. api-integration      0.0304
+  5. code-generation      0.0301
+
+[cg-m04] 写一个WebSocket聊天室后端，支持房间管理和消息广播
+expected: code-generation
+  1. api-integration      0.0328
+  2. data-transform       0.0315
+  3. code-review          0.0301
+  4. knowledge-compare    0.0298
+  5. test-generation      0.0294
+
+[cg-h02] 帮我实现一个基于Raft共识算法的简化版KV存储引擎，要支持Leader选举和日志复制
+expected: code-generation
+  1. knowledge-compare    0.0315
+  2. performance-optimize 0.0313
+  3. knowledge-qa         0.0313
+  4. sql-query            0.0308
+  5. log-analysis         0.0304
+
+[cr-e01] 把这段长函数拆分成几个小函数
+expected: code-refactor
+  1. code-generation      0.0320
+  2. api-integration      0.0302
+  3. log-analysis         0.0299
+  4. code-refactor        0.0164
+  5. file-math            0.0159
+
+[cr-m01] 这个类的职责太多了，帮我按单一职责原则拆分一下
+expected: code-refactor
+  1. code-generation      0.0328
+  2. knowledge-compare    0.0308
+  3. knowledge-qa         0.0290
+  4. code-refactor        0.0161
+  5. code-review          0.0159
+
+[cr-m02] 这段数据处理流程耦合度太高，能不能解耦成独立的pipeline阶段
+expected: code-refactor
+  1. data-transform       0.0328
+  2. log-analysis         0.0313
+  3. sql-query            0.0312
+  4. file-math            0.0311
+  5. code-review          0.0300
+
+[cr-m03] 把这些散落在各处的配置读取逻辑统一收口到一个配置管理器里
+expected: code-refactor
+  1. log-analysis         0.0312
+  2. knowledge-compare    0.0310
+  3. doc-generation       0.0306
+  4. code-refactor        0.0303
+  5. code-generation      0.0299
+
+[cr-m04] 当前的回调地狱太严重了，帮我重构成Promise链或者async/await
+expected: code-refactor
+  1. api-integration      0.0325
+  2. log-analysis         0.0306
+  3. performance-optimize 0.0164
+  4. code-refactor        0.0159
+  5. data-transform       0.0156
+
+[cr-h03] 这套同步处理的批处理系统需要重构为事件驱动架构，要求迁移过程中业务不能中断，且新旧系统能并行运行一段时间
+expected: code-refactor
+  1. sql-query            0.0320
+  2. code-generation      0.0313
+  3. log-analysis         0.0310
+  4. code-review          0.0305
+  5. performance-optimize 0.0301
+
+[dg-m04] 把这些散落的代码注释整理成一份完整的技术规格说明书
+expected: doc-generation
+  1. code-review          0.0318
+  2. code-refactor        0.0304
+  3. code-generation      0.0304
+  4. test-generation      0.0303
+  5. doc-generation       0.0303
+
+[sq-m01] 查询每个部门薪资排名前3的员工，需要用窗口函数
+expected: sql-query
+  1. data-transform       0.0323
+  2. code-generation      0.0315
+  3. api-integration      0.0298
+  4. sql-query            0.0164
+  5. performance-optimize 0.0161
+
+[sq-h01] 有一个十亿级流水表需要做实时多维分析，当前查询超时，需要在不改表结构的前提下通过物化视图、分区裁剪和查询改写将P99延迟降到秒级
+expected: sql-query
+  1. performance-optimize 0.0315
+  2. code-refactor        0.0313
+  3. code-generation      0.0306
+  4. data-transform       0.0306
+  5. bug-fix              0.0305
+
+[po-e05] 加个缓存提升这个接口的响应速度
+expected: performance-optimize
+  1. api-integration      0.0320
+  2. code-review          0.0313
+  3. code-refactor        0.0309
+  4. file-summary         0.0305
+  5. doc-generation       0.0292
+
+[la-m04] 这个间歇性的超时问题只在生产环境出现，测试环境复现不了，帮我从日志中分析可能的触发条件
+expected: log-analysis
+  1. bug-fix              0.0323
+  2. code-review          0.0310
+  3. performance-optimize 0.0309
+  4. code-generation      0.0306
+  5. sql-query            0.0303
+
+[cg-e06] 用Python写一个文件批量重命名的脚本
+expected: code-generation
+  1. file-summary         0.0320
+  2. code-refactor        0.0318
+  3. knowledge-compare    0.0311
+  4. code-generation      0.0310
+  5. file-math            0.0310
+
+[cg-e08] 用Rust写一个命令行参数解析器
+expected: code-generation
+  1. api-integration      0.0306
+  2. knowledge-compare    0.0299
+  3. file-summary         0.0293
+  4. knowledge-qa         0.0293
+  5. performance-optimize 0.0164
+
+[cg-m05] 实现一个支持断点续传的大文件上传客户端
+expected: code-generation
+  1. file-summary         0.0325
+  2. knowledge-compare    0.0317
+  3. api-integration      0.0315
+  4. file-math            0.0315
+  5. code-generation      0.0308
+
+[cg-h05] 用Rust写一个支持WASM插件的沙箱运行时，需要内存隔离和资源配额管理
+expected: code-generation
+  1. performance-optimize 0.0325
+  2. bug-fix              0.0318
+  3. security-audit       0.0313
+  4. api-integration      0.0310
+  5. code-review          0.0297
+
+[cg-h06] 实现一个简化版的Kubernetes调度器，支持亲和性、污点容忍和资源约束调度
+expected: code-generation
+  1. api-integration      0.0325
+  2. performance-optimize 0.0320
+  3. code-review          0.0318
+  4. knowledge-compare    0.0313
+  5. bug-fix              0.0303
+
+[cr-e09] 把这个过长的函数拆分成职责清晰的子函数
+expected: code-refactor
+  1. code-generation      0.0317
+  2. log-analysis         0.0305
+  3. api-integration      0.0300
+  4. code-refactor        0.0164
+  5. performance-optimize 0.0161
+
+[cr-m05] 把这组Service类中的业务逻辑和数据访问分离开
+expected: code-refactor
+  1. code-generation      0.0328
+  2. data-transform       0.0315
+  3. api-integration      0.0315
+  4. sql-query            0.0315
+  5. log-analysis         0.0311
+
+[cr-m07] 把这个硬编码的配置系统重构为支持多环境的动态配置
+expected: code-refactor
+  1. code-generation      0.0328
+  2. api-integration      0.0310
+  3. performance-optimize 0.0306
+  4. doc-generation       0.0304
+  5. test-generation      0.0302
+
+[cr-h05] 把基于MySQL直连的30个API端点重构为Repository模式，同时引入缓存层，保证迁移过程中API契约不变
+expected: code-refactor
+  1. sql-query            0.0323
+  2. api-integration      0.0320
+  3. code-generation      0.0313
+  4. code-refactor        0.0311
+  5. performance-optimize 0.0308
+
+[sq-e07] 帮我写一个把成绩从百分制转换为等级制的UPDATE语句
+expected: sql-query
+  1. data-transform       0.0312
+  2. performance-optimize 0.0311
+  3. code-generation      0.0306
+  4. file-math            0.0303
+  5. knowledge-compare    0.0299
+
+[sq-e08] 写一个按部门分组统计平均工资的查询
+expected: sql-query
+  1. file-math            0.0325
+  2. data-transform       0.0320
+  3. knowledge-compare    0.0306
+  4. file-summary         0.0303
+  5. knowledge-qa         0.0299
+
+[sq-h06] 为一个实时数仓设计增量物化视图方案，需要在基表高频写入时保证视图查询延迟在亚秒级且数据最终一致
+expected: sql-query
+  1. data-transform       0.0320
+  2. performance-optimize 0.0318
+  3. code-review          0.0311
+  4. sql-query            0.0309
+  5. code-refactor        0.0308
+
+[po-e09] 这个JSON序列化在大数据量下很慢，帮我换成更快的方案
+expected: performance-optimize
+  1. data-transform       0.0318
+  2. code-generation      0.0315
+  3. sql-query            0.0310
+  4. code-refactor        0.0309
+  5. knowledge-compare    0.0308
+
+[po-m07] Redis大Key导致集群不均衡，需要分析热Key分布并设计拆分方案
+expected: performance-optimize
+  1. knowledge-compare    0.0323
+  2. sql-query            0.0318
+  3. code-refactor        0.0313
+  4. code-review          0.0311
+  5. bug-fix              0.0306
+
+[po-h04] 一个Go微服务的goroutine数量在高并发下暴涨到10万+，导致调度延迟飙升，需要设计协程池和背压机制
+expected: performance-optimize
+  1. api-integration      0.0323
+  2. code-refactor        0.0313
+  3. code-review          0.0313
+  4. performance-optimize 0.0309
+  5. bug-fix              0.0306
+
+[la-m07] Nginx访问日志中出现了大量499状态码，帮我分析是客户端超时还是后端处理过慢
+expected: log-analysis
+  1. bug-fix              0.0320
+  2. performance-optimize 0.0315
+  3. api-integration      0.0313
+  4. data-transform       0.0307
+  5. log-analysis         0.0306
+(.venv) ubuntu@VM-0-7-ubuntu:/mnt/nanobot-rebuild$

@@ -1,0 +1,1 @@
+{"case_id":"planner_retry_regression","prompt":"比较消息队列中同步直连与通过 broker 解耦的主要工程差异，给出简洁结论。不要为了回答而进行无关的重复工具调用。","modes":["orchestrated"],"repeats":3,"max_planner_retries":1,"max_tool_calls":4,"max_tool_errors":0,"max_total_tokens":12000,"max_wall_latency_ms":22000,"allowed_workflow_statuses":["SUCCEEDED"],"tags":["planner","structured_output","regression"]}

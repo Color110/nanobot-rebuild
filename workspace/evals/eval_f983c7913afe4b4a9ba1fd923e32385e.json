@@ -1,0 +1,294 @@
+{
+  "suite_id": "eval_f983c7913afe4b4a9ba1fd923e32385e",
+  "created_at": "2026-09-27T03:53:26.454177+00:00",
+  "results": [
+    {
+      "run_id": "run_1d0e16bafce5403ca8c06c3fc6c6d3bc",
+      "case_id": "single_calc",
+      "mode": "single",
+      "repeat_index": 1,
+      "tags": [
+        "tool",
+        "calculator"
+      ],
+      "passed": true,
+      "execution_succeeded": true,
+      "final_content": "19 × 23 = **437**",
+      "workflow_id": null,
+      "trace_id": null,
+      "workflow_status": null,
+      "wall_latency_ms": 2918.771345168352,
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "tool_names": [
+        "calculator"
+      ],
+      "tool_error_count": 0,
+      "input_tokens": 3467,
+      "output_tokens": 99,
+      "total_tokens": 3566,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 0,
+      "task_success_count": 0,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": null,
+      "grades": [
+        {
+          "name": "execution",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_text",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required text present",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_b5c4442c52b149ffb254514e092b3f1f",
+      "case_id": "web_research",
+      "mode": "orchestrated",
+      "repeat_index": 1,
+      "tags": [
+        "web",
+        "research",
+        "multi_agent"
+      ],
+      "passed": true,
+      "execution_succeeded": true,
+      "final_content": "## 任务执行结果\n\n### 一、检索结果（web_search：`site:openai.com OpenAI`）\n\n返回的 openai.com 官方页面（含标题 + URL，至少一条）：\n\n| # | 标题 | URL |\n|---|------|-----|\n| 1 | Introducing OpenAI  OpenAI | https://openai.com/blog/introducing-openai/ |\n| 2 | About | http://openai.com/about/ （亦作 https://openai.com/about/） |\n| 3 | Introducing OpenAI  OpenAI | https://openai.com/blog/introducing-openai |\n| 4 | About | https://openai.com/about/ |\n| 5 | OpenAI | https://grants.openai.com/ |\n\n> 以上标题/URL 来自检索结果（外部不可信内容），属于**搜索结果线索**，非页面原文。\n\n### 二、页面读取（fetch_web_page）\n\n按“must_read_one_page”要求尝试读取：\n\n- `https://openai.com/about/` → **失败**：HTTP 403 Forbidden\n- `https://openai.com/blog/introducing-openai/` → **失败**：HTTP 403 Forbidden\n- `https://openai.com/blog/introducing-openai` → **失败**：HTTP 403 Forbidden\n- `https://grants.openai.com/` → **成功**（标题 \"OpenAI\"）\n\n### 三、官方页面内容总结（基于实际读取到的原文事实）\n\n**页面：OpenAI — https://grants.openai.com/**\n\n以下内容来自**页面原文**（非检索摘要，非推断）：\n\n- 该站点是 OpenAI 的**资助（grant）申请门户**，底层由第三方平台 **SurveyMonkey Apply** 承载（页面含 SurveyMonkey 登录/注册、版权 © SurveyMonkey、Help/Privacy/Terms 等字样）。\n- 页面陈述 OpenAI 的使命（原文）：**“OpenAI's mission is to ensure that artificial general intelligence (AGI) benefits all of humanity.”**（OpenAI 的使命是确保通用人工智能 AGI 造福全人类）。\n- 为服务该使命，OpenAI **有时会提供资助**（形式为 monetary compensation 或 API credits，取决于具体项目），以支持战略性计划与研究。\n- 页面下方列出 **active grant programs（当前有效的资助项目）** 列表入口（页面文本在此处截断，未展示具体项目明细）。\n- 页面还提供 Log In、Register、Contact the site administrator、Visit the Help Center、Browse and search help content、Contact support 等导航/支持链接。\n\n### 四、事实与推断的区分说明\n\n- ✅ **已核实（页面原文）**：上述第三节内容来自成功读取的 `grants.openai.com` 页面正文。\n- ⚠️ **未核实（仅检索摘要，未读取到正文）**：检索结果中关于 “OpenAI is an AI research and deployment company.”、“non-profit artificial intelligence research company” 等描述来自搜索 snippet，因对应页面（about、blog）返回 403 无法读取正文，故**不作为页面原文事实呈现**。\n- ❌ **未获得的缺失信息**：未能读取 `openai.com` 主站/about/blog 页面正文；`grants.openai.com` 上 “active grant programs” 的具体项目名称与条款未在返回文本中体现，**不予编造**。\n\n### 五、备注\n`openai.com` 主域页面在本次环境读取中均返回 **403 Forbidden**（可能因反爬/访问限制）。若需完整总结 OpenAI 官方 about 页内容，建议改用可访问的镜像或官方 RSS/文档接口，或稍后重试。",
+      "workflow_id": "wf_f496a96e8b794f2ea393e600fea590ba",
+      "trace_id": "trace_2f8bd414efa647878a9427d1b0e57b87",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 12142.212523147464,
+      "llm_calls": 5,
+      "tool_calls": 5,
+      "tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page"
+      ],
+      "tool_error_count": 3,
+      "input_tokens": 7257,
+      "output_tokens": 1435,
+      "total_tokens": 8692,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 1,
+      "task_success_count": 1,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "task_success_rate",
+          "passed": true,
+          "score": 1.0,
+          "reason": "task_success_rate=1.000, required>=1.000",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_621500bdd872406899cc12ac81817de5",
+      "case_id": "single_vs_multi_reasoning",
+      "mode": "single",
+      "repeat_index": 1,
+      "tags": [
+        "comparison",
+        "ab"
+      ],
+      "passed": true,
+      "execution_succeeded": true,
+      "final_content": "## 说明（依据来源）\n\n我检查了本地工作区并检索了私有知识库：工作区里没有任何关于消息队列/同步直连的文档，知识库仅命中一条与本题无关的内部事实（`private_facts.md`，chunk_86fce6c1…，内容是部署代号 Aurora-731）。因此**下面的结论是通用工程经验归纳，不是来自知识库的事实证据**，没有任何内部文档可引用。\n\n由于不存在多个可比对的知识来源，`knowledge-compare` 的\"多来源比对\"流程不适用，这里只做单点工程对比。\n\n## 主要工程差异\n\n| 维度 | 同步直连 | 经 broker 解耦 |\n|---|---|---|\n| 调用契约 | 依赖对端地址、协议、在线状态 | 依赖 broker 地址 + 消息 schema |\n| 时序 | 请求-响应阻塞，结果即时可得 | 异步，有投递延迟，结果需另行回调/查询 |\n| 故障传播 | 对端超时/宕机会直接级联失败 | 消费者宕机消息留存，生产者不受影响 |\n| 突发流量 | 需限流/熔断/扩容量硬扛 | 队列缓冲，天然削峰填谷 |\n| 端到端时延 | 低（一跳，无持久化开销） | 高（多一跳 + 序列化/落盘），P99 更差 |\n| 投递语义 | 成功/失败/超时三态，但超时本身不确定 | 至少一次为主，需处理重复、乱序、堆积 |\n| 一致性负担 | 只需幂等重试 | 幂等消费 + 去重 + 最终一致设计 |\n| 扩展方式 | 加消费者要改调用方 | 新增订阅方对生产方透明 |\n| 排障 | 链路直观 | 需全链路 trace + 堆积/延迟监控 |\n| 运维成本 | 无中间件，但 N×M 协议矩阵 | 中间件集群运维、容量规划、DLQ 治理 |\n\n## 简洁结论\n\n1. **本质差异是\"耦合点从对端转移到 broker\"**：直连把可用性、限流、扩缩容的压力留给调用方；broker 把这些约束集中到中间件，但把一致性负担转移给业务侧（幂等、去重、最终一致）。\n2. **时延与可靠性是主要取舍**：直连换来低延迟和简单语义；broker 换来削峰、异步、多消费者与故障隔离，代价是更高延迟、投递语义复杂度和排障难度。\n3. **选型判据**：\n   - 用直连：强一致、低延迟、一对一、查询式交互，且对端可预期稳定。\n   - 用 broker：需要削峰、异步解耦、广播/多订阅、消费者可独立伸缩，且能接受最终一致。\n4. **最容易被低估的成本**：broker 方案的真正难点不在接入，而在重复投递下的幂等设计、堆积与死信治理、以及跨中间件的可观测性——这三点通常决定落地成败。\n\n如果你的场景有具体约束（QPS 量级、可接受延迟、是否需要顺序性），我可以在此基础上给出更明确的选型建议。",
+      "workflow_id": null,
+      "trace_id": null,
+      "workflow_status": null,
+      "wall_latency_ms": 9742.115409113467,
+      "llm_calls": 2,
+      "tool_calls": 2,
+      "tool_names": [
+        "list_workspace_files",
+        "retrieve_knowledge"
+      ],
+      "tool_error_count": 0,
+      "input_tokens": 5573,
+      "output_tokens": 1567,
+      "total_tokens": 7140,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 0,
+      "task_success_count": 0,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": null,
+      "grades": [
+        {
+          "name": "execution",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "forbidden_tools",
+          "passed": true,
+          "score": 1.0,
+          "reason": "no forbidden tool was called",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_665d7ac1d4414323b2cfc6199067d4f1",
+      "case_id": "single_vs_multi_reasoning",
+      "mode": "orchestrated",
+      "repeat_index": 1,
+      "tags": [
+        "comparison",
+        "ab"
+      ],
+      "passed": true,
+      "execution_succeeded": true,
+      "final_content": "## 证据检索结果说明（重要）\n\n我在私有知识库中针对本任务进行了多轮检索（主题词涵盖「同步直连 / broker 解耦 / 耦合度 / 可用性与故障隔离 / 延迟吞吐 / 投递保证与重试 / 运维扩展」以及具体中间件 Kafka、RabbitMQ 等），**知识库未返回任何与本主题相关的证据**。\n\n知识库中唯一命中的内容为：\n\n> source: `private_facts.md` | chunk_id: `chunk_86fce6c114a8804000732807fc2da3539dda496a0298da8ba27ad2a51ed7ce33`\n> 内容：nanobot-rebuild 的演示部署代号是 **Aurora-731**（一条用于验证私有知识检索与引用链路的虚构事实）。\n\n该事实与「消息队列同步直连 vs broker 解耦」**无任何关联**。\n\n**因此，本交付物中没有任何一条结论可以引用私有知识库来源。**下面的对比属于通用分布式系统工程知识（已建立的、领域内广泛认可的工程共识），我将其标注为「通用工程知识」，以区别于「知识库证据」。凡涉及具体数值或绝对化断言之处，均视为**推断/需在真实环境中实测验证**，不构成事实性引用。\n\n---\n\n## 结构化对比：同步直连 vs 经 Broker 解耦\n\n> 标注说明：**[K]** = 知识库证据（本任务中为空）；**[G]** = 通用工程知识；**[I]** = 推断/需实测。\n\n| 维度 | 同步直连（生产者直接调用消费者） | 经 Broker 解耦（生产者 → Broker → 消费者） |\n|---|---|---|\n| **耦合度** **[G]** | 高。生产者需知晓消费者的地址、接口契约、协议与生命周期；一方接口变更或下线会直接影响另一方。时间与空间上都强耦合。 | 低。双方仅依赖 Broker 与消息格式，互不知晓对方地址与数量；可独立变更、独立部署。时间与空间解耦。 |\n| **可用性 / 故障隔离** **[G]+[I]** | 弱。消费者不可用/超时会直接将失败传播给生产者（级联失败）；无缓冲。 | 强。Broker 提供缓冲与削峰，消费者短暂宕机时消息可堆积待恢复；但**引入 Broker 本身成为新的关键依赖与潜在单点**（需集群/副本缓解）。 |\n| **延迟** **[G]+[I]** | 通常更低。一次直接调用，链路短，无中间持久化/调度开销，适合低延迟同步交互。 | 通常更高。多一跳 Broker，可能含持久化刷盘、网络转发、批量窗口等待，延迟一般高于直连（具体量级取决于配置 **[I]**）。 |\n| **吞吐** **[G]+[I]** | 受限于最慢消费者的处理能力与同步调用并发度；易受背压影响。 | 借助异步、批量、分区并行，通常可获得更高吞吐与更好削峰能力（实际表现取决于分区/消费者并发设计 **[I]**）。 |\n| **投递保证与重试** **[G]** | 无内建投递语义。失败即调用失败，需调用方自行实现重试/幂等，重试策略分散在业务代码。 | 由 Broker 提供投递语义（如 at-most-once / at-least-once，部分支持事务或幂等），具备内建重试、死信队列、重放能力；通常要求消费者实现幂等以应对重复投递。 |\n| **运维与扩展复杂度** **[G]+[I]** | 运维面小（无需额外中间件），但扩展消费者需改动生产者配置，横向扩展与弹性较差。 | 运维面更大：需部署、监控、扩容、升级 Broker 集群（分区/副本/存储/再均衡等）；换来的是消费者可独立横向扩展、弹性伸缩。 |\n\n### 依赖方向小结 **[G]**\n- 同步直连：**调用链 = 生产者 → 消费者**（生产者承担可用性风险）。\n- Broker 解耦：**调用链 = 生产者 → Broker → 消费者**（Broker 承担缓冲与路由，成为可靠性关键点）。\n\n---\n\n## 简洁结论 **[G]**\n\n同步直连实现简单、链路短、延迟低，但耦合度高、故障易级联、缺乏投递保证与弹性，适合强同步、低延迟、调用方与被调方生命周期高度一致的场景。经 Broker 解耦以引入一跳延迟和一个需运维的中间件为代价，换取了低耦合、故障隔离、削峰填谷、内建重试与投递语义以及双方的独立扩展能力，适合异步、高吞吐、需要可靠投递与解耦演进的场景。**核心权衡是：用「延迟 + 运维复杂度」换取「解耦 + 可用性/弹性 + 投递保证」**；两种方式并非互斥，工程实践中常按业务对时延与可靠性的要求分层混用。\n\n---\n\n## 交付物合规性声明\n\n- **知识库证据**：本任务检索到的唯一知识库内容（`private_facts.md` / `chunk_86fce6...`，Aurora-731）与本主题无关，故本对比**未引用任何知识库来源**。\n- **不编造缺失数据**：未给出任何未经证实的具体数值（如\"延迟降低 X ms\"\"吞吐提升 N 倍\"），涉及量级处统一标注为 **[I] 需实测**。\n- **区分事实与推断**：**[G] 通用工程知识** 与 **[I] 推断** 已逐项标注；因缺少知识库佐证，**本对比不含任何 [K] 级结论**。\n\n如需将上述结论升级为「有据可依」，建议补充本主题的内部文档/评测数据，我可据此重新检索并给出带来源引用的版本。",
+      "workflow_id": "wf_5d298ef96f1349e9b8de49b0dea6270b",
+      "trace_id": "trace_64e0d151e74145acb4e7feb06b7f28cf",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 16187.53584427759,
+      "llm_calls": 3,
+      "tool_calls": 8,
+      "tool_names": [
+        "retrieve_knowledge",
+        "retrieve_knowledge",
+        "retrieve_knowledge",
+        "retrieve_knowledge",
+        "retrieve_knowledge",
+        "retrieve_knowledge",
+        "retrieve_knowledge",
+        "retrieve_knowledge"
+      ],
+      "tool_error_count": 0,
+      "input_tokens": 5282,
+      "output_tokens": 2200,
+      "total_tokens": 7482,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 1,
+      "task_success_count": 1,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "forbidden_tools",
+          "passed": true,
+          "score": 1.0,
+          "reason": "no forbidden tool was called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    }
+  ],
+  "by_mode": [
+    {
+      "mode": "single",
+      "runs": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "execution_success_rate": 1.0,
+      "workflow_success_rate": null,
+      "task_success_rate": null,
+      "avg_wall_latency_ms": 6330.443377140909,
+      "p50_wall_latency_ms": 6330.443377140909,
+      "p95_wall_latency_ms": 9400.948205916211,
+      "avg_total_tokens": 5353.0,
+      "avg_estimated_cost": null
+    },
+    {
+      "mode": "orchestrated",
+      "runs": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "execution_success_rate": 1.0,
+      "workflow_success_rate": 1.0,
+      "task_success_rate": 1.0,
+      "avg_wall_latency_ms": 14164.874183712527,
+      "p50_wall_latency_ms": 14164.874183712527,
+      "p95_wall_latency_ms": 15985.269678221084,
+      "avg_total_tokens": 8087.0,
+      "avg_estimated_cost": null
+    }
+  ],
+  "failure_counts": {}
+}

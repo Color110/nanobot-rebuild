@@ -1,0 +1,45 @@
+---
+name: performance-optimize
+description: 当核心目标是诊断或优化性能与资源效率，包括延迟、吞吐、CPU、内存、GC、内存泄漏、OOM、算法时间/空间复杂度、锁竞争或 I/O 瓶颈时使用。即使表现为超时或资源异常，只要主要目标是性能/资源指标，优先本 Skill；SQL
+  专项调优使用 sql-query，普通功能性错误修复使用 bug-fix。
+version: 1.1.0
+tags:
+- performance
+- optimize
+- profiling
+- latency
+- throughput
+- cpu
+- memory
+- gc
+- oom
+- complexity
+- bottleneck
+always: false
+enabled: true
+---
+
+# Performance Optimize
+
+这个 Skill 用于“分析程序性能瓶颈并给出优化方案”的场景。
+
+## Procedure
+
+当用户提出性能优化需求时：
+
+1. 使用 `read_text_file` 读取相关代码文件，了解程序结构和关键路径。
+2. 向用户确认性能问题的具体表现：响应时间、CPU 占用、内存泄漏、吞吐量等。
+3. 分析可能的瓶颈点：
+   - 算法复杂度（O(n²) 循环、重复计算）
+   - I/O 阻塞（同步网络请求、文件读写）
+   - 内存问题（大对象未释放、缓存无限增长）
+   - 并发问题（锁竞争、线程池配置）
+4. 给出具体的优化方案，按预期收益排序，说明每步优化的原理和预期效果。
+5. 如果可能，提供优化前后的复杂度对比或基准测试建议。
+6. 提示用户优化后需要验证功能正确性未受影响。
+
+## Error handling
+
+如果代码文件不存在或无法读取，不要猜测性能瓶颈，应向用户说明。
+
+如果缺乏运行时数据（profiling 结果、监控指标），应明确说明需要补充信息，不要凭空推测瓶颈位置。

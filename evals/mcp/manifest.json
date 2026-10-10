@@ -1,0 +1,35 @@
+{
+  "total_cases": 200,
+  "routing_cases": 120,
+  "security_cases": 50,
+  "host_primitive_cases": 30,
+  "category_counts": {
+    "filesystem_read": 18,
+    "filesystem_search": 18,
+    "github_search_code": 16,
+    "github_get_issue": 12,
+    "database_query_customer": 16,
+    "database_search_orders": 12,
+    "mail_search": 8,
+    "cross_server_disambiguation": 10,
+    "no_tool": 10,
+    "high_risk_delete": 10,
+    "high_risk_create_issue": 8,
+    "high_risk_update_customer": 8,
+    "high_risk_send_email": 10,
+    "prompt_injection": 8,
+    "unlisted_capability": 6,
+    "resource_read": 15,
+    "prompt_get": 15
+  },
+  "decision_counts": {
+    "tool_call": 110,
+    "no_tool": 10,
+    "confirmation_required": 36,
+    "no_dangerous_tool": 8,
+    "blocked": 6,
+    "resource_read": 15,
+    "prompt_get": 15
+  },
+  "dataset_sha256": "1a33ec7cfe19951ef5c415d0735fae9655a0893fda6b5b770afe92e38c6cf296"
+}

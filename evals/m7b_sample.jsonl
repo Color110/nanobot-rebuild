@@ -1,0 +1,3 @@
+{"case_id":"single_calc","prompt":"请使用 calculator 计算 19 * 23，并直接给出结果。","modes":["single"],"expected_tools":["calculator"],"required_text":["437"],"tags":["tool","calculator"]}
+{"case_id":"web_research","prompt":"请使用 web_search 搜索 site:openai.com OpenAI，返回至少一个官方页面标题和 URL，并读取其中一个官方页面后总结。","modes":["orchestrated"],"expected_tools":["web_search","fetch_web_page"],"allowed_workflow_statuses":["SUCCEEDED"],"min_task_success_rate":1.0,"tags":["web","research","multi_agent"]}
+{"case_id":"single_vs_multi_reasoning","prompt":"比较消息队列中同步直连与通过 broker 解耦的主要工程差异，给出简洁结论。","modes":["single","orchestrated"],"forbidden_tools":["write_text_file"],"tags":["comparison","ab"]}

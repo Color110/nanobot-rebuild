@@ -1,12 +1,13 @@
 Metadata-Version: 2.4
 Name: nanobot-rebuild
-Version: 0.15.0
+Version: 0.16.0
 Summary: Rebuild a lightweight AI agent from scratch
 Requires-Python: >=3.11
 Requires-Dist: openai>=2.8.0
 Requires-Dist: pydantic<3.0.0,>=2.12.0
 Requires-Dist: tiktoken>=0.8.0
 Requires-Dist: pyyaml<7.0.0,>=6.0
+Requires-Dist: jsonschema<5.0.0,>=4.23.0
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
 Requires-Dist: pytest-asyncio>=0.23; extra == "dev"

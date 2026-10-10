@@ -1,5 +1,5 @@
 import json
-import os
+import os,re
 import secrets
 
 from dataclasses import dataclass
@@ -23,7 +23,11 @@ class MemoryCandidate(BaseModel):
     key: str = Field(
         min_length=1,
         max_length=80,
-        description="稳定、简洁的记忆键，例如 user.name、user.language_preference、project.main_language",
+        pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$",
+        description=(
+            "稳定、简洁的小写记忆键，例如 "
+            "user.name、user.language_preference、project.main_language"
+        ),
     )
 
     value: str = Field(
@@ -67,6 +71,7 @@ class MemoryBatch(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     memories: list[MemoryCandidate] = Field(
+        max_length=20,
         description="从当前 Conversation 中提取出的值得长期保存的信息列表",
     )
 
@@ -82,8 +87,71 @@ MEMORY_SAVE_TOOL_SCHEMA = {
         "parameters": MemoryBatch.model_json_schema(),
     },
 }
+_SECRET_KEY_PATTERN = re.compile(
+    r"(?:^|[._-])"
+    r"(?:password|passwd|api[_-]?key|access[_-]?token|"
+    r"refresh[_-]?token|private[_-]?key|secret)"
+    r"(?:$|[._-])",
+    re.IGNORECASE,
+)
 
 
+_SECRET_VALUE_PATTERNS = (
+    re.compile(
+        r"\bsk-[A-Za-z0-9_-]{12,}\b"
+    ),
+    re.compile(
+        r"\bBearer\s+[A-Za-z0-9._~+/=-]{12,}\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"-----BEGIN [A-Z ]*PRIVATE KEY-----"
+    ),
+    re.compile(
+        r"(?:password|passwd|api[_ -]?key|"
+        r"access[_ -]?token|refresh[_ -]?token|"
+        r"secret|密码)"
+        r"\s*[:=：]\s*\S+",
+        re.IGNORECASE,
+    ),
+)
+@dataclass(frozen=True)
+class MemoryAdmissionPolicy:
+    """
+    长期 Memory 的 Runtime 准入边界。
+
+    LLM 只负责提出 Candidate；
+    Runtime 决定 Candidate 是否允许持久化。
+    """
+
+    def filter(
+        self,
+        memories: list[MemoryCandidate],
+    ) -> list[MemoryCandidate]:
+
+        accepted: list[MemoryCandidate] = []
+
+        for memory in memories:
+            key = memory.key.strip().lower()
+            value = memory.value.strip()
+
+            if _SECRET_KEY_PATTERN.search(key):
+                continue
+
+            if any(
+                pattern.search(value)
+                for pattern in _SECRET_VALUE_PATTERNS
+            ):
+                continue
+
+            accepted.append(
+                MemoryCandidate(
+                    key=key,
+                    value=value,
+                )
+            )
+
+        return accepted
 class MemoryStore:
 
     def __init__(self, workspace: Path) -> None:
@@ -138,7 +206,7 @@ class MemoryStore:
         changed = 0
 
         for memory in memories:
-            key = memory.key.strip()
+            key = memory.key.strip().lower()
             value = memory.value.strip()
             now = utc_now()
 
@@ -164,43 +232,58 @@ class MemoryStore:
         self.save(sorted(by_key.values(), key=lambda item: item.key))
         return changed
 
-    def render_context(self) -> str:
-        records = self.load()
-        if not records:
-            return ""
-
-        lines = ["## Long-term Memory"]
-        for record in records:
-            lines.append(f"- [{record.key}] {record.value}")
-        return "\n".join(lines)
-
+   
     def clear(self) -> None:
         self.save([])
 
     def list_records(self) -> list[MemoryRecord]:
         return self.load()
+    def delete(
+        self,
+        key: str,
+    ) -> bool:
 
+        normalized_key = key.strip().lower()
 
-def build_memory_transcript(messages: list[dict[str, Any]]) -> str:
+        records = self.load()
+
+        kept = [
+            record
+            for record in records
+            if record.key.lower()
+            != normalized_key
+        ]
+
+        if len(kept) == len(records):
+            return False
+
+        self.save(kept)
+
+        return True
+def build_memory_transcript(
+    messages: list[dict[str, Any]],
+) -> str:
     lines: list[str] = []
+
     for message in messages:
         role = message.get("role")
         content = message.get("content")
 
-        if role not in {"user", "assistant"}:
+        # 长期用户事实只允许来自用户明确陈述。
+        if role != "user":
             continue
 
         if not isinstance(content, str):
             continue
 
         content = content.strip()
+
         if not content:
             continue
 
-        lines.append(f"{role.upper()}: {content}")
+        lines.append(f"USER: {content}")
 
     return "\n".join(lines)
-
 
 async def extract_memories(
     messages: list[dict[str, Any]],
@@ -216,6 +299,9 @@ async def extract_memories(
             "role": "system",
             "content": (
                 "你是长期记忆提取器。"
+                "你只能依据 USER 明确陈述过的信息生成长期记忆。"
+                "不能把 Assistant 的推断、总结或外部工具内容当作用户事实。"
+                "不要根据语气、暗示或可能性猜测长期状态。"
                 "请从对话中提取未来多个会话中仍然有价值的稳定信息。"
                 "\n\n"
                 "适合保存："
@@ -255,13 +341,29 @@ async def extract_memories(
 
     return candidates
 
-
 async def consolidate_session_to_memory(
     messages: list[dict[str, Any]],
     session_id: str,
     store: MemoryStore,
     provider: LLMProvider,
+    admission_policy: MemoryAdmissionPolicy | None = None,
 ) -> tuple[int, list[MemoryCandidate]]:
-    candidates = await extract_memories(messages,provider)
-    changed = store.upsert_many(candidates, source_session=session_id)
-    return changed, candidates
+
+    candidates = await extract_memories(
+        messages,
+        provider,
+    )
+
+    policy = (
+        admission_policy
+        or MemoryAdmissionPolicy()
+    )
+
+    accepted = policy.filter(candidates)
+
+    changed = store.upsert_many(
+        accepted,
+        source_session=session_id,
+    )
+
+    return changed, accepted

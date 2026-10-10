@@ -1,7 +1,6 @@
 from typing import Any,Literal
-from app.tools.base import BaseTool
+from app.tools.base import PydanticTool
 from pydantic import BaseModel, ConfigDict, Field
-from abc import ABC, abstractmethod
 class CalculatorArguments(BaseModel):
     """
     Calculator Tool 的参数模型。
@@ -65,7 +64,7 @@ def calculate(
         f"不支持的运算符: {operator}"
     )
 
-class CalculatorTool(BaseTool):
+class CalculatorTool(PydanticTool):
     @property
     def name(self) ->str:
         return "calculator"
@@ -102,34 +101,3 @@ class CalculatorTool(BaseTool):
 
         return str(result)
 
-
-
-
-    @property
-    def parameters(self) -> dict[str, Any]:
-        return {
-            "type": "object",
-            "properties": {
-                "left": {
-                    "type": "number",
-                    "description": "左操作数",
-                },
-                "operator": {
-                    "type": "string",
-                    "enum": ["+", "-", "*", "/"],
-                    "description": "四则运算符",
-                },
-                "right": {
-                    "type": "number",
-                    "description": "右操作数",
-                },
-            },
-            "required": [
-                "left",
-                "operator",
-                "right",
-            ],
-            "additionalProperties": False,
-        }
-    
-    

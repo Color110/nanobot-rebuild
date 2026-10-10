@@ -1,0 +1,16 @@
+{"id":"none_001","query":"你好","expected_skills":[]}
+{"id":"none_002","query":"谢谢你的帮助","expected_skills":[]}
+{"id":"none_003","query":"再见，明天聊","expected_skills":[]}
+{"id":"none_004","query":"把“收到”改得更礼貌一点","expected_skills":[]}
+{"id":"none_005","query":"帮我写一句生日祝福","expected_skills":[]}
+{"id":"none_006","query":"把这句话改得更简洁：我们目前正在对这个问题进行进一步的讨论","expected_skills":[]}
+{"id":"none_007","query":"给我想三个微信群名称","expected_skills":[]}
+{"id":"none_008","query":"把“我不同意”改得委婉一点","expected_skills":[]}
+{"id":"none_009","query":"写一句周末问候","expected_skills":[]}
+{"id":"none_010","query":"把“请尽快回复”改得不那么强硬","expected_skills":[]}
+{"id":"none_011","query":"把“祝你今天顺利”翻译成英文","expected_skills":[]}
+{"id":"none_012","query":"把 Thank you for your patience 翻译成中文","expected_skills":[]}
+{"id":"none_013","query":"帮我写一句简短的道歉短信","expected_skills":[]}
+{"id":"none_014","query":"把“这个方案不好”改成更职业的表达","expected_skills":[]}
+{"id":"none_015","query":"写一句面试结束后的感谢话","expected_skills":[]}
+{"id":"none_016","query":"给刚搬家的朋友写一句祝福","expected_skills":[]}

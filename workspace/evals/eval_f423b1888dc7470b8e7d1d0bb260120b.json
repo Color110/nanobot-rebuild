@@ -1,0 +1,483 @@
+{
+  "suite_id": "eval_f423b1888dc7470b8e7d1d0bb260120b",
+  "created_at": "2026-09-27T07:06:37.581120+00:00",
+  "results": [
+    {
+      "run_id": "run_698614ce75d6408e8cee30f827e02133",
+      "case_id": "single_calc_hardened",
+      "mode": "single",
+      "repeat_index": 1,
+      "tags": [
+        "tool",
+        "calculator",
+        "hardening"
+      ],
+      "passed": true,
+      "correctness_pass": true,
+      "reliability_pass": true,
+      "efficiency_pass": true,
+      "execution_succeeded": true,
+      "final_content": "19 × 23 = **437**",
+      "workflow_id": null,
+      "trace_id": null,
+      "workflow_status": null,
+      "wall_latency_ms": 3243.6391511000693,
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "tool_names": [
+        "calculator"
+      ],
+      "successful_tool_calls": 1,
+      "successful_tool_names": [
+        "calculator"
+      ],
+      "tool_error_count": 0,
+      "input_tokens": 3462,
+      "output_tokens": 94,
+      "total_tokens": 3556,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 0,
+      "task_success_count": 0,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": null,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "successful_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools completed successfully",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_text",
+          "dimension": "correctness",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required text present",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=0 <= 0",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=1 <= 2",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "total_tokens=3556 <= 8000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "3243.6ms <= 12000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_54d1161e3d12444d94c6cd267690e117",
+      "case_id": "web_research_hardened",
+      "mode": "orchestrated",
+      "repeat_index": 1,
+      "tags": [
+        "web",
+        "research",
+        "multi_agent",
+        "hardening"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": false,
+      "efficiency_pass": false,
+      "execution_succeeded": true,
+      "final_content": "## 最终回答\n\n### 官方页面（标题 + URL）\n\n| 标题 | URL |\n|---|---|\n| About \\| OpenAI | https://openai.com/about/ |\n| OpenAI（grants 子域） | https://grants.openai.com/ |\n\n（此外在站内搜索中还可见以下 openai.com 官方页面标题与 URL，但其正文因 HTTP 403 未能读取，因此不在下方总结范围内：`Introducing OpenAI` — https://openai.com/blog/introducing-openai/；`OpenAI o3-mini` — https://openai.com/index/openai-o3-mini/；`OpenAI o1-mini` — https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/；`Research` — https://openai.com/research/。）\n\n---\n\n### 对所读取官方页面的总结\n\n**1. `About | OpenAI`（https://openai.com/about/）**\n\n- 定位陈述：OpenAI 自称为 \"an AI research and deployment company\"（一家 AI 研究与部署公司）。\n- 使命：确保通用人工智能（AGI）惠及全人类 —— \"Our mission is to ensure that artificial general intelligence benefits all of humanity.\"\n- 对 AGI 的界定：比人类更通用的智能系统（AI systems that are generally smarter than humans）。\n- 目标声明：正在构建安全且有益的 AGI；若自身工作能帮助他人达成该成果，也视使命为达成。\n- 组织架构：由非营利的 OpenAI Foundation 与营利的 OpenAI Group 组成，Foundation 治理 Group，Group 以公益性公司（public benefit corporation）形式运营。\n- 页面底部为导航与页脚（Research / Products / Business / Developers / Company 等栏目），版权标注 \"OpenAI © 2015–2026\"。\n\n**2. `OpenAI`（https://grants.openai.com/）**\n\n- 该站点基于 SurveyMonkey Apply 搭建，用于承载 OpenAI 的资助（grants）项目申请。\n- 页面说明 OpenAI 的使命是确保 AGI 惠及全人类，并会以资金补偿或 API 额度形式提供资助，以支持战略性项目与研究。\n- 页面下方列出当前活跃的资助计划（Programs）。\n\n---\n\n### 证据边界与不确定性说明\n\n- 本次仅完整读取了上述 2 个官方页面；`/blog/introducing-openai`、`/index/openai-o3-mini`、`/research/` 均返回 `HTTP Error 403: Forbidden`，未取得正文，403 属反爬拦截，不代表页面不存在。\n- About 页顶部若干\"最新动态\"条目（含日期，如 Sep 2026）来自网页渲染快照，内容与日期均未经独立交叉验证，可能为动态渲染或过期缓存，故未作为事实在总结中引用。\n- 关于\"OpenAI 官方定位随时间由非营利研究组织演变为研究与部署公司/集团结构\"的说法属推断（基于搜索摘要与 About 页对比），未读到博客正文核实，故不作为结论。",
+      "workflow_id": "wf_180f5a2e19ec464b8db4067a2d190b2a",
+      "trace_id": "trace_9b43c6beb7344869a80fa0c0aee2b7db",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 21526.8488349393,
+      "llm_calls": 5,
+      "tool_calls": 7,
+      "tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page"
+      ],
+      "successful_tool_calls": 3,
+      "successful_tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "fetch_web_page"
+      ],
+      "tool_error_count": 4,
+      "input_tokens": 10850,
+      "output_tokens": 2996,
+      "total_tokens": 13846,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 2,
+      "task_success_count": 2,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "successful_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools completed successfully",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "task_success_rate",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "task_success_rate=1.000, required>=1.000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": false,
+          "score": 0.0,
+          "reason": "tool_errors=4 > 3",
+          "failure_category": "TOOL_EXECUTION"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "tool_calls=7 > 6",
+          "failure_category": "INEFFICIENT_TOOL_USE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "total_tokens=13846 > 12000",
+          "failure_category": "PERFORMANCE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "21526.8ms <= 25000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "TOOL_EXECUTION",
+      "failure_detail": "tool_errors=4 > 3",
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_1046417fb01644bfb136e0d0514b1549",
+      "case_id": "single_vs_multi_efficiency",
+      "mode": "single",
+      "repeat_index": 1,
+      "tags": [
+        "comparison",
+        "ab",
+        "efficiency"
+      ],
+      "passed": true,
+      "correctness_pass": null,
+      "reliability_pass": true,
+      "efficiency_pass": true,
+      "execution_succeeded": true,
+      "final_content": "## 同步直连 vs 通过 Broker 解耦：主要工程差异\n\n| 维度 | 同步直连（RPC/HTTP 直调） | 通过 Broker 解耦 |\n|---|---|---|\n| 耦合度 | 调用方需知道被调方地址、接口、协议，双方同时在线 | 只依赖 topic/队列契约，生产和消费互不知道对方 |\n| 时间耦合 | 强：请求期间两端必须同时存活 | 弱：可缓存消息，消费方稍后或下线后再处理 |\n| 失败处理 | 调用方直接承担失败，需同步重试/熔断/降级 | Broker 负责持久化与重投，天然削峰填谷 |\n| 可用性 | 被调方故障直接传导给调用方，易级联雪崩 | 生产方与消费方故障域隔离，但引入 Broker 单点风险 |\n| 背压 | 靠超时、限流、线程池硬扛，容易堆积 | 队列长度即是背压信号，可延迟消费、扩容消费者 |\n| 时延 | 低且可预测（一跳网络） | 多一跳，端到端时延升高且抖动更大 |\n| 一致性 | 容易实现强一致/事务语义 | 一般为最终一致，需处理重复、乱序、幂等 |\n| 可观测性 | 链路清晰，trace 直观 | 需额外接入消息轨迹、积压/延迟监控 |\n| 扩展方式 | 扩容被调方即可，但流量仍是同步放大的 | 水平扩消费者，按分区并行消费 |\n| 运维成本 | 组件少，运维简单 | 多一套中间件：集群、存储、版本兼容、积压治理 |\n| 典型失败模式 | 超时风暴、级联失败、连接数打满 | 消息积压、重复消费、消息丢失（若未持久化/未 ack） |\n\n## 结论\n\n- **要低时延、强一致、链路简单** → 同步直连更合适；代价是可用性互相绑架、故障易级联。\n- **要削峰、异步解耦、故障域隔离、独立扩缩容** → 用 Broker；代价是最终一致、时延上升，以及一整套积压/幂等/运维负担。\n- 两者不是替代关系：实践中常用“**同步入口 + 异步内部流转**”的混合模式，只在真正需要解耦和缓冲的边界引入 Broker，避免全链路异步化带来的复杂度。\n- 决策要点：**能否接受最终一致** 与 **是否有明显流量峰值/上下游发布节奏不一致**——这两个回答通常直接决定选型。\n\n（注：以上为通用工程经验层面的比较，未涉及你方特定系统的配置或内部规范；如需结合具体文档/检索结果对比，请提供来源，我再按相同维度做逐条比对。）",
+      "workflow_id": null,
+      "trace_id": null,
+      "workflow_status": null,
+      "wall_latency_ms": 6318.536075297743,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "tool_names": [],
+      "successful_tool_calls": 0,
+      "successful_tool_names": [],
+      "tool_error_count": 0,
+      "input_tokens": 1900,
+      "output_tokens": 771,
+      "total_tokens": 2671,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 0,
+      "task_success_count": 0,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": null,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "forbidden_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "no forbidden tool was called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=0 <= 0",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=0 <= 4",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "total_tokens=2671 <= 9000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "6318.5ms <= 22000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "NONE",
+      "failure_detail": null,
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_8472c58ee408415eab538bfe51759601",
+      "case_id": "single_vs_multi_efficiency",
+      "mode": "orchestrated",
+      "repeat_index": 1,
+      "tags": [
+        "comparison",
+        "ab",
+        "efficiency"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": false,
+      "efficiency_pass": false,
+      "execution_succeeded": false,
+      "final_content": "",
+      "workflow_id": null,
+      "trace_id": null,
+      "workflow_status": null,
+      "wall_latency_ms": 3868.9481001347303,
+      "llm_calls": 0,
+      "tool_calls": 0,
+      "tool_names": [],
+      "successful_tool_calls": 0,
+      "successful_tool_names": [],
+      "tool_error_count": 0,
+      "input_tokens": null,
+      "output_tokens": null,
+      "total_tokens": null,
+      "token_source": "unavailable",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 0,
+      "task_success_count": 0,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": null,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": false,
+          "score": 0.0,
+          "reason": "模型返回了非法 Tool arguments JSON: '{\"plan_version\": \"1\", \"tasks\": [{\"task_id\": \"compare_sync_vs_broker\", \"objective\": \"对比消息队列中『同步直连调用』与『经 broker 解耦（异步消息）』的主要工程差异，覆盖耦合度/可用性与故障传播/吞吐与背压/顺序与一致性/可观测与运维成本/改造成本等维度，并给出简洁结论（含适用场景建议）。明确区分公认事实与推断，不编造具体数据。\", \"agent_type\": \"analyst\", \"dependencies\": [], \"requested_tools\": [\"retrieve_knowledge\"], \"required\": true, \"input_data\": {\"goal\": \"比较消息队列中同步直连与通过 broker 解耦的主要工程差异，给出简洁结论\", \"comparison_dimensions\": [\"耦合与依赖关系\", \"故障传播与可用性\", \"吞吐与背压/削峰\", \"顺序性与一致性语义\", \"延迟与复杂度/运维成本\", \"演进与改造成本\"], \"output_format\": \"结构化差异对比 + 3-5 条简洁结论\"}]}]}'",
+          "failure_category": "MODEL_OUTPUT"
+        },
+        {
+          "name": "forbidden_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "no forbidden tool was called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": false,
+          "score": 0.0,
+          "reason": "unexpected status=None; allowed=['SUCCEEDED']",
+          "failure_category": "MODEL_OUTPUT"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=0 <= 0",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=0 <= 4",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "total_tokens unavailable; cannot verify token budget",
+          "failure_category": "PERFORMANCE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "3868.9ms <= 22000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "MODEL_OUTPUT",
+      "failure_detail": "模型返回了非法 Tool arguments JSON: '{\"plan_version\": \"1\", \"tasks\": [{\"task_id\": \"compare_sync_vs_broker\", \"objective\": \"对比消息队列中『同步直连调用』与『经 broker 解耦（异步消息）』的主要工程差异，覆盖耦合度/可用性与故障传播/吞吐与背压/顺序与一致性/可观测与运维成本/改造成本等维度，并给出简洁结论（含适用场景建议）。明确区分公认事实与推断，不编造具体数据。\", \"agent_type\": \"analyst\", \"dependencies\": [], \"requested_tools\": [\"retrieve_knowledge\"], \"required\": true, \"input_data\": {\"goal\": \"比较消息队列中同步直连与通过 broker 解耦的主要工程差异，给出简洁结论\", \"comparison_dimensions\": [\"耦合与依赖关系\", \"故障传播与可用性\", \"吞吐与背压/削峰\", \"顺序性与一致性语义\", \"延迟与复杂度/运维成本\", \"演进与改造成本\"], \"output_format\": \"结构化差异对比 + 3-5 条简洁结论\"}]}]}'",
+      "error_type": "ProviderError",
+      "error_message": "模型返回了非法 Tool arguments JSON: '{\"plan_version\": \"1\", \"tasks\": [{\"task_id\": \"compare_sync_vs_broker\", \"objective\": \"对比消息队列中『同步直连调用』与『经 broker 解耦（异步消息）』的主要工程差异，覆盖耦合度/可用性与故障传播/吞吐与背压/顺序与一致性/可观测与运维成本/改造成本等维度，并给出简洁结论（含适用场景建议）。明确区分公认事实与推断，不编造具体数据。\", \"agent_type\": \"analyst\", \"dependencies\": [], \"requested_tools\": [\"retrieve_knowledge\"], \"required\": true, \"input_data\": {\"goal\": \"比较消息队列中同步直连与通过 broker 解耦的主要工程差异，给出简洁结论\", \"comparison_dimensions\": [\"耦合与依赖关系\", \"故障传播与可用性\", \"吞吐与背压/削峰\", \"顺序性与一致性语义\", \"延迟与复杂度/运维成本\", \"演进与改造成本\"], \"output_format\": \"结构化差异对比 + 3-5 条简洁结论\"}]}]}'"
+    }
+  ],
+  "by_mode": [
+    {
+      "mode": "single",
+      "runs": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "correctness_pass_rate": 1.0,
+      "reliability_pass_rate": 1.0,
+      "efficiency_pass_rate": 1.0,
+      "execution_success_rate": 1.0,
+      "workflow_success_rate": null,
+      "task_success_rate": null,
+      "avg_wall_latency_ms": 4781.087613198906,
+      "p50_wall_latency_ms": 4781.087613198906,
+      "p95_wall_latency_ms": 6164.791229087859,
+      "avg_tool_calls": 0.5,
+      "avg_tool_errors": 0.0,
+      "avg_total_tokens": 3113.5,
+      "avg_estimated_cost": null
+    },
+    {
+      "mode": "orchestrated",
+      "runs": 2,
+      "passed": 0,
+      "pass_rate": 0.0,
+      "correctness_pass_rate": null,
+      "reliability_pass_rate": 0.0,
+      "efficiency_pass_rate": 0.0,
+      "execution_success_rate": 0.5,
+      "workflow_success_rate": 0.5,
+      "task_success_rate": 1.0,
+      "avg_wall_latency_ms": 12697.898467537016,
+      "p50_wall_latency_ms": 12697.898467537016,
+      "p95_wall_latency_ms": 20643.953798199072,
+      "avg_tool_calls": 3.5,
+      "avg_tool_errors": 2.0,
+      "avg_total_tokens": 13846.0,
+      "avg_estimated_cost": null
+    }
+  ],
+  "failure_counts": {
+    "TOOL_EXECUTION": 1,
+    "MODEL_OUTPUT": 1
+  }
+}

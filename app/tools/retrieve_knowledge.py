@@ -7,8 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.rag.citation import format_evidence
 from app.rag.reranker import NoOpReranker, Reranker
 from app.rag.retriever import HybridRetriever
-from app.tools.base import BaseTool
-
+from app.tools.base import PydanticTool
 
 class RetrieveKnowledgeArguments(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -25,7 +24,7 @@ class RetrieveKnowledgeArguments(BaseModel):
     )
 
 
-class RetrieveKnowledgeTool(BaseTool):
+class RetrieveKnowledgeTool(PydanticTool):
     def __init__(
         self,
         retriever: HybridRetriever,

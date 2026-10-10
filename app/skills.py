@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
-
+import hashlib
 
 _FRONTMATTER_PATTERN = re.compile(
     r"^---\s*\r?\n(.*?)\r?\n---\s*\r?\n?",
@@ -14,8 +14,9 @@ _SKILL_NAME_PATTERN = re.compile(
     r"^(?!.*--)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
 )
 
-_SKILL_REFERENCE_PATTERN = re.compile(
-    r"(?<![\w$])\$([A-Za-z0-9_-]+)"
+
+_SKILL_VERSION_PATTERN = re.compile(
+    r"^\d+\.\d+\.\d+$"
 )
 
 
@@ -27,9 +28,13 @@ class SkillFormatError(ValueError):
 class Skill:
     name: str
     description: str
+    version: str 
+    tags:tuple[str, ...]
     path: Path
     instructions: str
     always: bool = False
+    enabled: bool = True
+    content_hash: str=""
 
 
 class SkillLoader:
@@ -64,76 +69,12 @@ class SkillLoader:
 
         return None
 
-    def get_explicitly_invoked_skills(self, text: str) -> list[str]:
-        available = {skill.name for skill in self.list_skills()}
-        invoked: list[str] = []
-
-        for match in _SKILL_REFERENCE_PATTERN.finditer(text):
-            name = match.group(1)
-
-            if name in available and name not in invoked:
-                invoked.append(name)
-
-        return invoked
-
-    def get_active_skills(self, current_message: str) -> list[Skill]:
-        skills = self.list_skills()
-        explicitly_invoked = set(
-            self.get_explicitly_invoked_skills(current_message)
-        )
-
-        return [
-            skill
-            for skill in skills
-            if skill.always or skill.name in explicitly_invoked
-        ]
-
-    def build_summary(self, exclude: set[str] | None = None) -> str:
-        excluded = exclude or set()
-
-        skills = [
-            skill
-            for skill in self.list_skills()
-            if skill.name not in excluded
-        ]
-
-        if not skills:
-            return ""
-
-        lines = [
-            "## Available Skills",
-            (
-                "Skills are reusable task procedures. "
-                "When a skill is relevant, read its SKILL.md with "
-                "read_text_file before executing the task."
-            ),
-        ]
-
-        for skill in skills:
-            relative_path = skill.path.relative_to(self.workspace).as_posix()
-            lines.append(
-                f"- **{skill.name}** — {skill.description}  `{relative_path}`"
-            )
-
-        return "\n".join(lines)
-
-    def render_active_skills(self, skills: list[Skill]) -> str:
-        if not skills:
-            return ""
-
-        parts = ["## Active Skills"]
-
-        for skill in skills:
-            parts.append(
-                f"### Skill: {skill.name}\n\n{skill.instructions}"
-            )
-
-        return "\n\n".join(parts)
-
     def _load_file(self, path: Path) -> Skill:
         content = path.read_text(encoding="utf-8")
         match = _FRONTMATTER_PATTERN.match(content)
-
+        content_hash = hashlib.sha256(
+            content.encode("utf-8")
+        ).hexdigest()
         if match is None:
             raise SkillFormatError(
                 f"{path} 缺少合法 YAML frontmatter"
@@ -155,6 +96,9 @@ class SkillLoader:
         name = metadata.get("name")
         description = metadata.get("description")
         always = metadata.get("always", False)
+        version = metadata.get("version", "1.0.0")
+        tags = metadata.get("tags", [])
+        enabled = metadata.get("enabled", True)
 
         if not isinstance(name, str):
             raise SkillFormatError(f"{path} 缺少 name")
@@ -185,6 +129,37 @@ class SkillLoader:
                 f"{path} always 必须是 boolean"
             )
 
+        if not isinstance(version, str):
+            raise SkillFormatError(
+                f"{path} version 必须是 string"
+            )
+
+        version = version.strip()
+
+        if not _SKILL_VERSION_PATTERN.fullmatch(version):
+            raise SkillFormatError(
+                f"{path} version 必须符合 x.y.z 格式"
+            )
+
+        if not isinstance(tags, list):
+            raise SkillFormatError(
+                f"{path} tags 必须是 string list"
+            )
+
+        normalized_tags: list[str] = []
+
+        for tag in tags:
+            if not isinstance(tag, str) or not tag.strip():
+                raise SkillFormatError(
+                    f"{path} tags 必须包含非空字符串"
+                )
+
+            normalized_tags.append(tag.strip().lower())
+        tags = tuple(normalized_tags)
+        if not isinstance(enabled, bool):
+            raise SkillFormatError(
+                f"{path} enabled 必须是 boolean"
+            )
         instructions = content[match.end():].strip()
 
         if not instructions:
@@ -195,7 +170,11 @@ class SkillLoader:
         return Skill(
             name=name,
             description=description.strip(),
+            version=version,
+            tags=tags,
             path=path,
             instructions=instructions,
             always=always,
+            enabled=enabled,
+            content_hash=content_hash
         )

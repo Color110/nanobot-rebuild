@@ -2,27 +2,69 @@ import json
 import os
 from typing import Any
 
-from openai import OpenAI, OpenAIError
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, OpenAIError
+
 from app.providers.base import (
     LLMProvider,
     ProviderError,
     ProviderResponse,
+    ProviderUsage,
+    StructuredOutputError,
     ToolCallRequest,
 )
 
 
-def parse_tool_arguments(raw_arguments: str) -> dict[str, Any]:
+def _usage_from_response(response: Any) -> ProviderUsage | None:
+    upstream_usage = getattr(response, "usage", None)
+    if upstream_usage is None:
+        return None
+
+    input_tokens = getattr(upstream_usage, "prompt_tokens", None)
+    if input_tokens is None:
+        input_tokens = getattr(upstream_usage, "input_tokens", None)
+
+    output_tokens = getattr(upstream_usage, "completion_tokens", None)
+    if output_tokens is None:
+        output_tokens = getattr(upstream_usage, "output_tokens", None)
+
+    total_tokens = getattr(upstream_usage, "total_tokens", None)
+    if (
+        total_tokens is None
+        and input_tokens is not None
+        and output_tokens is not None
+    ):
+        total_tokens = input_tokens + output_tokens
+
+    return ProviderUsage(
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
+        total_tokens=total_tokens,
+    )
+
+
+def parse_tool_arguments(
+    raw_arguments: str,
+    *,
+    usage: ProviderUsage | None = None,
+) -> dict[str, Any]:
     try:
         parsed = json.loads(raw_arguments or "{}")
     except json.JSONDecodeError as exc:
-        raise ProviderError(
-            f"模型返回了非法 Tool arguments JSON: {raw_arguments!r}"
+        preview = (raw_arguments or "")[:1200]
+        raise StructuredOutputError(
+            "模型返回了非法 Tool arguments JSON: "
+            f"{preview!r}",
+            stage="tool_arguments_json",
+            raw_value=raw_arguments,
+            usage=usage,
         ) from exc
 
     if not isinstance(parsed, dict):
-        raise ProviderError(
-            "Tool arguments 必须是 JSON object"
+        raise StructuredOutputError(
+            "Tool arguments 必须是 JSON object",
+            stage="tool_arguments_type",
+            raw_value=raw_arguments,
+            usage=usage,
         )
 
     return parsed
@@ -93,14 +135,20 @@ class OpenAICompatibleProvider(LLMProvider):
                 f"{self.name} 模型调用失败: {exc}"
             ) from exc
 
+        # Capture usage before parsing tool arguments. If the model returned
+        # malformed JSON, Planner retry still needs to account for this LLM
+        # attempt instead of silently dropping its token cost.
+        usage = _usage_from_response(response)
+
         message = response.choices[0].message
         tool_calls: list[ToolCallRequest] = []
 
         for tool_call in message.tool_calls or []:
             arguments = parse_tool_arguments(
-                tool_call.function.arguments
+                tool_call.function.arguments,
+                usage=usage,
             )
-            
+
             tool_calls.append(
                 ToolCallRequest(
                     id=tool_call.id,
@@ -112,4 +160,5 @@ class OpenAICompatibleProvider(LLMProvider):
         return ProviderResponse(
             content=message.content or "",
             tool_calls=tool_calls,
+            usage=usage,
         )

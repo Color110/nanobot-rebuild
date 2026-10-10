@@ -1,0 +1,328 @@
+Building prefix dict from the default dictionary ...
+Loading model from cache /tmp/jieba.cache
+Loading model cost 0.766 seconds.
+Prefix dict has been built successfully.
+
+=== Complementarity @3 ===
+Total:        352
+Both hit:     221
+Vector only:  88
+BM25 only:    20
+Neither:      23
+
+Vector R@3: 87.78%
+BM25 R@3:   68.47%
+Oracle R@3: 93.47%
+BM25 rescue rate: 46.51%
+
+=== BM25-only Hits ===
+
+[code_review_001] 帮我检查这段代码有没有线程安全问题
+expected: code-review
+Vector:
+  1. security-audit         0.4130
+  2. bug-fix                0.4006
+  3. performance-optimize   0.3906
+BM25:
+  1. code-review            3.2507
+  2. security-audit         2.7973
+  3. data-transform         2.4571
+
+[code_review_002] 看看这段服务端代码有没有问题，但暂时不要修改
+expected: code-review
+Vector:
+  1. performance-optimize   0.3919
+  2. bug-fix                0.3782
+  3. api-integration        0.3717
+BM25:
+  1. api-integration        5.1917
+  2. code-review            2.9132
+  3. code-refactor          2.8525
+
+[knowledge_qa_002] 根据已有资料告诉我 Commit-on-success 解决什么问题，不需要比较不同方案
+expected: knowledge-qa
+Vector:
+  1. bug-fix                0.5168
+  2. knowledge-compare      0.5161
+  3. code-review            0.4928
+BM25:
+  1. knowledge-qa           10.4120
+  2. knowledge-compare      5.7392
+  3. doc-generation         5.3252
+
+[code_review_011] 这段代码的错误处理逻辑是否覆盖了所有边界情况
+expected: code-review
+Vector:
+  1. bug-fix                0.4306
+  2. performance-optimize   0.4122
+  3. code-refactor          0.4063
+BM25:
+  1. code-review            7.4826
+  2. test-generation        5.2988
+  3. code-generation        4.6168
+
+[code_review_017] 这段并发代码在多核环境下是否安全，请从内存模型角度分析
+expected: code-review
+Vector:
+  1. bug-fix                0.3995
+  2. performance-optimize   0.3931
+  3. security-audit         0.3853
+BM25:
+  1. code-generation        6.2921
+  2. code-review            6.1049
+  3. code-refactor          4.9553
+
+[code_review_020] 审查这个分布式事务的实现，看看有没有数据不一致的可能
+expected: code-review
+Vector:
+  1. sql-query              0.4122
+  2. performance-optimize   0.4043
+  3. data-transform         0.3657
+BM25:
+  1. code-review            2.3785
+  2. security-audit         2.3476
+  3. test-generation        2.3476
+
+[code_review_022] 这段代码的单元测试覆盖是否充分，有没有遗漏的分支
+expected: code-review
+Vector:
+  1. test-generation        0.4875
+  2. performance-optimize   0.4445
+  3. bug-fix                0.4380
+BM25:
+  1. test-generation        15.6682
+  2. code-review            4.2337
+  3. data-transform         2.4571
+
+[file_summary_009] 帮我总结这个技术文档的关键设计决策
+expected: file-summary
+Vector:
+  1. knowledge-compare      0.4276
+  2. performance-optimize   0.4136
+  3. code-review            0.4032
+BM25:
+  1. knowledge-compare      3.7754
+  2. doc-generation         3.7107
+  3. file-summary           3.4538
+
+[file_summary_021] 帮我从这份代码文档中提取所有公开接口及其用途说明
+expected: file-summary
+Vector:
+  1. doc-generation         0.5659
+  2. api-integration        0.5630
+  3. code-refactor          0.5268
+BM25:
+  1. doc-generation         6.1764
+  2. file-summary           4.3917
+  3. code-generation        4.1622
+
+[knowledge_qa_006] SkillVectorIndex 的作用是什么
+expected: knowledge-qa
+Vector:
+  1. code-review            0.5367
+  2. performance-optimize   0.5288
+  3. code-generation        0.5189
+BM25:
+  1. knowledge-qa           3.6474
+  2. code-generation        1.7513
+  3. file-math              1.2909
+
+[knowledge_qa_008] EmbeddingProvider 接口有哪些方法
+expected: knowledge-qa
+Vector:
+  1. api-integration        0.3790
+  2. data-transform         0.3671
+  3. code-generation        0.3627
+BM25:
+  1. api-integration        1.3791
+  2. doc-generation         0.9916
+  3. knowledge-qa           0.9792
+
+[knowledge_qa_011] 根据已有资料解释一下为什么需要对向量做归一化
+expected: knowledge-qa
+Vector:
+  1. performance-optimize   0.3616
+  2. knowledge-compare      0.3586
+  3. bug-fix                0.3536
+BM25:
+  1. knowledge-qa           9.0879
+  2. doc-generation         4.4812
+  3. knowledge-compare      3.7754
+
+[knowledge_qa_012] 文档中关于 Skill 的 upsert 语义是怎么定义的
+expected: knowledge-qa
+Vector:
+  1. performance-optimize   0.5241
+  2. sql-query              0.5211
+  3. code-review            0.4801
+BM25:
+  1. knowledge-qa           7.7532
+  2. file-summary           3.5834
+  3. file-math              3.2555
+
+[knowledge_qa_018] 文档中关于分布式向量数据库的一致性保证是怎么说的
+expected: knowledge-qa
+Vector:
+  1. sql-query              0.4455
+  2. performance-optimize   0.4231
+  3. knowledge-compare      0.4060
+BM25:
+  1. data-transform         5.8707
+  2. sql-query              5.3986
+  3. knowledge-qa           4.2395
+
+[knowledge_qa_020] 知识库中关于 Skill 热更新机制的完整流程是什么
+expected: knowledge-qa
+Vector:
+  1. code-review            0.4613
+  2. performance-optimize   0.4552
+  3. code-generation        0.4322
+BM25:
+  1. knowledge-qa           10.5448
+  2. file-math              3.2555
+  3. knowledge-compare      2.9902
+
+[dg-e01] 给这个函数加上docstring注释
+expected: doc-generation
+Vector:
+  1. performance-optimize   0.4830
+  2. file-math              0.4822
+  3. data-transform         0.4810
+BM25:
+  1. doc-generation         3.5454
+  2. code-refactor          2.4419
+  3. api-integration        1.9281
+
+[dg-h03] 根据这套框架的源码和变更历史，生成一份面向新入职工程师的内部培训文档，需要提炼核心概念、设计哲学和常见陷阱
+expected: doc-generation
+Vector:
+  1. code-refactor          0.4368
+  2. bug-fix                0.4147
+  3. performance-optimize   0.4061
+BM25:
+  1. doc-generation         6.0657
+  2. file-summary           5.3530
+  3. knowledge-qa           4.7208
+
+[cg-e06] 用Python写一个文件批量重命名的脚本
+expected: code-generation
+Vector:
+  1. data-transform         0.3786
+  2. code-refactor          0.3746
+  3. file-math              0.3746
+BM25:
+  1. file-summary           2.6459
+  2. knowledge-compare      2.4727
+  3. code-generation        2.4419
+
+[cr-h04] 这个单体应用的认证模块与业务代码深度耦合，需要抽离为独立的认证中间件并保持所有接口向后兼容
+expected: code-refactor
+Vector:
+  1. api-integration        0.4959
+  2. security-audit         0.4788
+  3. code-generation        0.3885
+BM25:
+  1. api-integration        9.4130
+  2. code-refactor          5.3311
+  3. code-generation        4.6168
+
+[dg-m06] 根据数据库DDL生成数据字典文档，包含表关系ER图描述
+expected: doc-generation
+Vector:
+  1. sql-query              0.5847
+  2. code-generation        0.4917
+  3. data-transform         0.4853
+BM25:
+  1. sql-query              11.8458
+  2. doc-generation         9.2442
+  3. data-transform         5.7376
+
+=== Vector-only Hits ===
+[file_summary_001] 读取 report.txt 并总结里面的主要内容
+[code_review_007] 检查一下这段代码的异常处理是否完善
+[code_review_008] 这段代码的性能有没有可以优化的地方，先给出建议不要直接改
+[code_review_010] 审查这段异步代码，看看有没有竞态条件
+[code_review_012] 帮我检查这个类的接口设计是否符合单一职责原则
+[code_review_021] 帮我检查这段代码是否符合项目的编码规范，包括命名、格式和注释
+[bug_fix_003] 这段代码报错了，帮我看看是什么原因
+[bug_fix_004] 运行时报了 TypeError，帮我修一下
+[bug_fix_005] 这个函数返回值不对，帮我调试一下
+[bug_fix_006] 页面加载后按钮点击没反应，帮我排查一下
+[bug_fix_009] 这个接口偶尔超时，帮我分析可能的原因并给出修复方案
+[bug_fix_011] 这段代码在特定输入下会产生死循环，帮我修复
+[bug_fix_015] 这个接口在高并发下偶发 500 错误，日志里有这个堆栈，帮我修复
+[bug_fix_018] 消息队列消费偶尔丢消息，帮我排查消费逻辑的可靠性问题
+[bug_fix_019] 这个缓存和数据库之间数据不一致，帮我分析原因并修复
+[bug_fix_022] 这个事务在部分失败时没有正确回滚，帮我排查并修复
+[file_math_003] 打开 calc.txt，把里面的加减法算出来
+[file_summary_004] 总结一下这个文档的核心内容
+[file_summary_015] 帮我总结这份长篇报告的核心论点、支撑论据和最终结论
+[knowledge_compare_005] 对比一下 HNSW 和 IVF 两种索引结构的区别
+[knowledge_compare_006] pgvector 和专用向量数据库各有什么优劣
+[knowledge_compare_013] 从扩展性角度对比 Milvus 和 Weaviate 的分布式架构
+[knowledge_compare_016] 比较一下 DiskANN、HNSW 和 IVF-PQ 在十亿级数据下的内存占用、查询延迟和召回率
+[knowledge_compare_017] 从数据分片策略、副本机制和故障恢复流程对比不同向量数据库的高可用方案
+[knowledge_compare_019] 对比一下同步写入和异步写入在向量数据库中的吞吐量、延迟和数据一致性表现
+[knowledge_compare_020] 从索引构建时间、增量更新能力和查询时延三个维度对比不同 ANN 算法在动态数据场景下的表现
+[knowledge_compare_022] 从成本、性能、运维复杂度和生态成熟度四个维度全面对比自建 Milvus 集群和使用 Pinecone 全托管服务
+[cg-e02] 生成一个Java冒泡排序算法
+[cg-e05] 编写一个正则表达式验证邮箱格式的代码
+[cg-m03] 创建一个异步任务队列，支持优先级和重试机制
+[cg-m04] 写一个WebSocket聊天室后端，支持房间管理和消息广播
+[cg-h03] 需要一个插件化架构的核心框架，支持热加载、依赖注入和生命周期管理，用TypeScript写
+[cr-e01] 把这段长函数拆分成几个小函数
+[cr-e02] 重构这段代码，去掉重复的逻辑
+[cr-e05] 把这个if-else链重构成多态
+[cr-m01] 这个类的职责太多了，帮我按单一职责原则拆分一下
+[cr-m04] 当前的回调地狱太严重了，帮我重构成Promise链或者async/await
+[cr-h03] 这套同步处理的批处理系统需要重构为事件驱动架构，要求迁移过程中业务不能中断，且新旧系统能并行运行一段时间
+[dg-e04] 给这个类的所有公开方法写Javadoc
+[dg-h02] 为一个包含20个微服务的平台生成统一的API文档门户，需要自动聚合各服务的接口定义并处理版本差异和跨服务引用
+[sq-e02] 帮我写一个LEFT JOIN关联订单表和用户表的查询
+[sq-m01] 查询每个部门薪资排名前3的员工，需要用窗口函数
+[sq-m04] 需要把两个库的数据做增量同步，帮我写MERGE语句
+[sq-h01] 有一个十亿级流水表需要做实时多维分析，当前查询超时，需要在不改表结构的前提下通过物化视图、分区裁剪和查询改写将P99延迟降到秒级
+[po-e01] 这个函数太慢了，帮我优化一下
+[po-e03] 减少这个循环的执行次数
+[po-e05] 加个缓存提升这个接口的响应速度
+[po-m03] 数据库连接池频繁耗尽，如何调优连接池参数和查询并发
+[po-m04] 这个批量导入任务跑了4小时，需要通过并行化和批处理优化到30分钟内
+[po-h03] 分布式系统中跨多个服务的链路延迟不稳定，需要建立端到端的性能基线，识别长尾请求的根因并提出系统性优化方案
+[la-e05] 帮我从这段日志中找到关键的错误信息
+[la-m01] 服务每隔几小时就重启一次，日志里没有明显ERROR，帮我从INFO日志中找线索
+[la-m04] 这个间歇性的超时问题只在生产环境出现，测试环境复现不了，帮我从日志中分析可能的触发条件
+[la-h01] 一个分布式事务在极端情况下出现数据不一致，需要从十几个服务的海量日志中还原事件时序，定位是哪个环节的补偿逻辑出了问题
+[la-h02] 系统在特定负载模式下出现级联故障，日志中充满了噪声和误导信息，需要从混乱的日志中提取真正的根因信号并区分症状与病因
+[sa-e03] 帮我看看这个密码存储方式是否安全
+[sa-m01] 审计这个JWT认证实现，检查签名算法、token过期和刷新机制是否安全
+[sa-m03] 审计这个RBAC权限模型的实现，检查是否存在越权和权限绕过漏洞
+[cg-e09] 写一个Python装饰器来记录函数执行时间
+[cr-e07] 把这个工具类的重复代码提取成通用方法
+[cr-e09] 把这个过长的函数拆分成职责清晰的子函数
+[cr-m06] 将这段过程式代码重构为面向对象设计
+[cr-m07] 把这个硬编码的配置系统重构为支持多环境的动态配置
+[cr-h05] 把基于MySQL直连的30个API端点重构为Repository模式，同时引入缓存层，保证迁移过程中API契约不变
+[cr-h06] 将一套基于jQuery的2万行前端代码逐步迁移到React Hooks架构，要求新旧组件共存且不影响现有功能
+[dg-h05] 为一个有200+微服务的平台生成统一API网关文档，需要自动发现服务、聚合接口和处理鉴权说明
+[sq-e07] 帮我写一个把成绩从百分制转换为等级制的UPDATE语句
+[sq-e08] 写一个按部门分组统计平均工资的查询
+[sq-m05] 写一个计算用户留存率的SQL，需要按注册月份分组统计次月到第12月的留存
+[sq-m06] 帮我写一个行列转换的PIVOT查询，把月度销售数据转成横向展示
+[sq-h04] 设计一个时间序列数据的分区+分区索引方案，需要支持按租户和时间范围的高效查询和自动过期清理
+[sq-h06] 为一个实时数仓设计增量物化视图方案，需要在基表高频写入时保证视图查询延迟在亚秒级且数据最终一致
+[dt-e07] 把这份CSV数据的金额列从字符串转成浮点数并保留两位小数
+[dt-e08] 把多个TXT文件的内容合并成一个CSV
+[dt-h05] 设计一个数据血缘追踪系统，能自动从SQL、Spark和Airflow任务中提取列级血缘关系
+[po-e06] 这个前端bundle体积太大了，帮我分析并优化打包
+[po-e08] 这个正则匹配在长文本上很慢，帮我优化
+[po-e09] 这个JSON序列化在大数据量下很慢，帮我换成更快的方案
+[po-m06] 这个Python数据分析脚本处理100万行数据需要20分钟，需要优化到2分钟以内
+[po-m07] Redis大Key导致集群不均衡，需要分析热Key分布并设计拆分方案
+[po-h04] 一个Go微服务的goroutine数量在高并发下暴涨到10万+，导致调度延迟飙升，需要设计协程池和背压机制
+[po-h05] 一个向量检索引擎在十亿级数据下召回率达标但QPS只有目标的1/5，需要从索引结构、SIMD优化和批处理多维度提速
+[po-h06] 一个实时流处理管道的端到端延迟从500ms劣化到5秒，需要排查反压、水印和checkpoint对吞吐的影响
+[la-e09] 帮我从这段应用日志中提取所有带ERROR关键字的条目
+[la-m05] Kafka消费者组频繁rebalance，帮我从消费者日志中分析原因和触发条件
+[la-m07] Nginx访问日志中出现了大量499状态码，帮我分析是客户端超时还是后端处理过慢
+[la-h04] 一个金融交易系统出现偶发的价格偏差，需要从交易引擎、行情网关和风控系统的日志中还原毫秒级时序并定位竞态窗口
+[sa-h04] 对一个区块链智能合约进行安全审计，需要覆盖重入攻击、整数溢出、闪电贷和预言机操纵等DeFi特有攻击向量

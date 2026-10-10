@@ -1,0 +1,424 @@
+{
+  "suite_id": "eval_a279569823744130b919aeb908664ce7",
+  "created_at": "2026-09-27T08:37:35.909438+00:00",
+  "results": [
+    {
+      "run_id": "run_b6eda55ba52e4356a4f964e2aff85e85",
+      "case_id": "web_fetch_failure_strategy",
+      "mode": "orchestrated",
+      "repeat_index": 1,
+      "tags": [
+        "web",
+        "research",
+        "fetch_guard",
+        "regression"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": true,
+      "efficiency_pass": false,
+      "execution_succeeded": true,
+      "final_content": "# 最终回答\n\n## 一、官方页面标题 + URL 列表\n\n以下条目来自检索证据（来源标注为 `source: openai.com`）：\n\n| 排名 | 标题 | URL |\n|---|---|---|\n| 1 | Introducing OpenAI  OpenAI | https://openai.com/blog/introducing-openai/ |\n| 2 | About | http://openai.com/about/ |\n| 3 | Introducing OpenAI  OpenAI | https://openai.com/blog/introducing-openai |\n| 4 | About | https://openai.com/about/ |\n| 5 | OpenAI（grants 子域） | https://grants.openai.com/ |\n\n即至少提供以下官方页面标题与 URL：\n- **About** — https://openai.com/about/\n- **Introducing OpenAI  OpenAI** — https://openai.com/blog/introducing-openai/\n- **OpenAI**（grants 子域）— https://grants.openai.com/\n\n## 二、页面读取情况\n\n**主域 openai.com 页面读取失败：**\n- `https://openai.com/about/` → HTTP 403 Forbidden\n- `https://openai.com/blog/introducing-openai/` → HTTP 403 Forbidden\n- 再次尝试 `https://openai.com/blog/introducing-openai` → 被 Runtime 阻止（`WEB_FETCH_REPEAT_BLOCKED`：同一 hostname 已连续失败 2 次）\n- 失败原因：openai.com 主域对抓取请求返回 403，正文无法获取（该 403 是否为反爬/CDN 防护属推测，非直接证实）。\n\n**成功读取的官方子域页面：**\n- URL：https://grants.openai.com/ ；标题：`OpenAI` ；HTTP 状态：成功（200），返回正文。\n\n## 三、已读取官方页面内容总结（grants.openai.com，标题 \"OpenAI\"）\n\n**直接引述（已知事实，来自页面正文）：**\n\n> \"OpenAI's mission is to ensure that artificial general intelligence (AGI) benefits all of humanity. In service of that mission, we sometimes provide grants (in the form of monetary compensation or API credits, depending on the program) to support strategic initiatives and research. Please see below for our active grant programs.\"\n\n**内容要点：**\n- 该页面是 OpenAI 的**资助（grants）项目门户**，由第三方平台 SurveyMonkey Apply 承载。\n- 页面声明 OpenAI 的使命是\"确保通用人工智能（AGI）惠及全人类\"。\n- OpenAI 会以**资金补偿或 API 额度**（视项目而定）的形式提供资助，支持战略性倡议与研究。\n- 页面功能为：展示当前有效的资助项目，并支持登录/注册申请。\n\n## 四、说明与边界\n\n- 本回答仅使用依赖任务中已给出的事实，未补充未经支持的内容。\n- openai.com 主域的页面标题与 URL 有检索证据支持，但其**正文未能读取**（HTTP 403），故不对其正文内容作断言。\n- 检索结果 snippet 中出现的 About 页与 Introducing 博文片段文字**仅为搜索摘要**，未取得页面正文，不作为已核验正文引用。\n\n（完整结果已写入 `final_answer.md`。）",
+      "workflow_id": "wf_fd7906ba121c46ac82eb72479e26db95",
+      "trace_id": "trace_748bcb0c4d814dfea98421df1b60ac6d",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 21638.547035865486,
+      "llm_calls": 8,
+      "tool_calls": 6,
+      "tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "write_text_file"
+      ],
+      "successful_tool_calls": 3,
+      "successful_tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "write_text_file"
+      ],
+      "tool_error_count": 3,
+      "planner_attempts": 1,
+      "planner_retries": 0,
+      "input_tokens": 15986,
+      "output_tokens": 4093,
+      "total_tokens": 20079,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 2,
+      "task_success_count": 2,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "successful_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools completed successfully",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "task_success_rate",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "task_success_rate=1.000, required>=1.000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_errors=3 <= 3",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=6 <= 6",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "total_tokens=20079 > 12000",
+          "failure_category": "PERFORMANCE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "21638.5ms <= 25000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "PERFORMANCE",
+      "failure_detail": "total_tokens=20079 > 12000",
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_c2685d7ac64e43d092373a212285bdce",
+      "case_id": "web_fetch_failure_strategy",
+      "mode": "orchestrated",
+      "repeat_index": 2,
+      "tags": [
+        "web",
+        "research",
+        "fetch_guard",
+        "regression"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": false,
+      "efficiency_pass": false,
+      "execution_succeeded": true,
+      "final_content": "已完成。以下为最终总结（已写入 `final_answer.md`）：\n\n# OpenAI 官方页面检索与阅读总结\n\n> 依据依赖任务 `research_openai_official` 的检索与抓取结果整理，仅陈述该任务已提供的证据。\n\n## 一、检索到的官方页面标题与 URL\n\n通过查询 `site:openai.com OpenAI` 检索到以下官方页面线索（标题与 URL 均为检索结果原文）：\n\n| 标题 | URL |\n|---|---|\n| About | `https://openai.com/about/` |\n| Introducing OpenAI  OpenAI | `https://openai.com/blog/introducing-openai/` |\n| OpenAI | `https://grants.openai.com/` |\n\n（`About` 另有 http 版本 `http://openai.com/about/`，`Introducing OpenAI` 另有去尾斜杠版本，均为同一页面的不同写法。）\n\n## 二、页面抓取情况\n\n- **抓取失败**：`https://openai.com/about/` 与 `https://openai.com/blog/introducing-openai/` 均返回 `WEB_FETCH_HTTP_403`（403 Forbidden），正文无法读取；随后对 `openai.com` 同一 hostname 的重复尝试被 Runtime 阻止（`WEB_FETCH_REPEAT_BLOCKED`）。故 About 页与博客页正文**未能验证**，本总结不引用其正文。\n- **抓取成功**：`https://grants.openai.com/`（页面标题 **OpenAI**，text/html）。\n\n## 三、所读页面主要内容（`https://grants.openai.com/`）\n\n- 站点由 **SurveyMonkey Apply** 平台驱动，含登录、注册、帮助中心、支持等导航元素；提及 \"Programs / Sign Up\"，引导查看活跃资助计划（active grant programs）。\n- 核心声明（原文摘录）：\n  > \"OpenAI's mission is to ensure that artificial general intelligence (AGI) benefits all of humanity. In service of that mission, we sometimes provide grants (in the form of monetary compensation or API credits, depending on the program) to support strategic initiatives and research.\"\n- 页脚版权标注为 **SurveyMonkey**，含 Help / Privacy / Terms 链接。\n\n## 四、说明与边界\n\n- 成功读取的仅有 `grants.openai.com` 一个页面，其内容依托第三方 SurveyMonkey Apply 托管平台呈现。\n- `openai.com` 主域因 403 未能读取正文，故仅依据检索所得标题与 URL 报告，未对其正文内容做任何陈述。\n- 检索结果中的 snippet 未经原文读取核验，不作为已证实事实引用。",
+      "workflow_id": "wf_1911951626e0444596a5b0892106f7d7",
+      "trace_id": "trace_cf397a5387eb4e7db1300270e9ed0d58",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 22671.496054157615,
+      "llm_calls": 9,
+      "tool_calls": 7,
+      "tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "write_text_file",
+        "write_text_file"
+      ],
+      "successful_tool_calls": 3,
+      "successful_tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "write_text_file"
+      ],
+      "tool_error_count": 4,
+      "planner_attempts": 1,
+      "planner_retries": 0,
+      "input_tokens": 21300,
+      "output_tokens": 4364,
+      "total_tokens": 25664,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 2,
+      "task_success_count": 2,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "successful_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools completed successfully",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "task_success_rate",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "task_success_rate=1.000, required>=1.000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": false,
+          "score": 0.0,
+          "reason": "tool_errors=4 > 3",
+          "failure_category": "TOOL_EXECUTION"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "tool_calls=7 > 6",
+          "failure_category": "INEFFICIENT_TOOL_USE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "total_tokens=25664 > 12000",
+          "failure_category": "PERFORMANCE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "22671.5ms <= 25000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "TOOL_EXECUTION",
+      "failure_detail": "tool_errors=4 > 3",
+      "error_type": null,
+      "error_message": null
+    },
+    {
+      "run_id": "run_37e0c8fa2d004e0083f41c9dffe68ae2",
+      "case_id": "web_fetch_failure_strategy",
+      "mode": "orchestrated",
+      "repeat_index": 3,
+      "tags": [
+        "web",
+        "research",
+        "fetch_guard",
+        "regression"
+      ],
+      "passed": false,
+      "correctness_pass": null,
+      "reliability_pass": false,
+      "efficiency_pass": false,
+      "execution_succeeded": true,
+      "final_content": "# 最终回答：openai.com 官方页面标题 + URL 与内容总结\n\n## 一、官方页面清单（标题 / URL）\n\n以下标题与 URL 来源于依赖任务中 `web_search`（query = `site:openai.com OpenAI`）返回的**检索元数据**。其中属于 OpenAI 官方域名（openai.com 及其子域）的条目如下：\n\n| # | 标题 | URL | 域名归属 |\n|---|---|---|---|\n| 1 | About | `https://openai.com/about/` | openai.com（主域） |\n| 2 | Research \\| OpenAI | `https://openai.com/research/` | openai.com（主域） |\n| 3 | OpenAI o3-mini \\| OpenAI | `https://openai.com/index/openai-o3-mini/` | openai.com（主域） |\n| 4 | OpenAI o1-mini \\| OpenAI | `https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/` | openai.com（主域） |\n| 5 | Introducing OpenAI \\| OpenAI | `https://openai.com/blog/introducing-openai/` | openai.com（主域） |\n| 6 | OpenAI | `https://openai.com/research/dall-e` | openai.com（主域） |\n| 7 | OpenAI | `https://grants.openai.com/` | grants.openai.com（官方子域） |\n\n> 说明：检索结果中还包含 `community.openai.com`（OpenAI Developer Forum），是否视为\"官方页面\"取决于口径，此处一并列出以供参考，但未对其正文做任何读取。\n\n---\n\n## 二、页面内容总结\n\n**在所列页面中，依赖任务实际成功读取正文的只有 1 个：**\n\n### `https://grants.openai.com/`（标题：OpenAI）\n\n**内容总结**：该页面是 OpenAI 的资助（Grants）项目页面。页面正文核心陈述为——OpenAI 的使命是**确保通用人工智能（AGI）造福全人类**；为服务这一使命，OpenAI 会视项目不同，以**资金补偿（monetary compensation）或 API 额度（API credits）**的形式提供资助，以支持战略性计划（strategic initiatives）与研究，并列出当前活跃的资助项目（active grant programs）。页面其余部分为站点框架性文本（如 Log In、Register、SurveyMonkey Apply、帮助中心、版权与隐私条款等）。\n\n> 证据来源：`fetch_web_page` 实际返回的 `text/html` 正文（trust 标记为 untrusted_external_content）。\n\n---\n\n## 三、信息缺失与证据边界（重要说明）\n\n1. **主域 `openai.com` 下页面的正文未能获取**。依赖任务尝试读取 `https://openai.com/about/`、`https://openai.com/index/openai-o3-mini/`、`https://openai.com/research/`、`https://openai.com/blog/introducing-openai/` 均失败：前三次返回 `WEB_FETCH_HTTP_403: Forbidden`（HTTP 403），随后 Runtime 触发 `WEB_FETCH_REPEAT_BLOCKED`（同一 Task 内禁止继续抓取该 hostname），并停止重试。\n2. 因此，**上表第 1–6 条（openai.com 主域页面）仅提供了标题与 URL 元数据，其页面正文内容未获取，本回答不对其做任何陈述或推断**。\n3. 检索结果中的 snippet（如 \"OpenAI is an AI research and deployment company...\"）属于**搜索引擎摘要**，未被当作页面正文使用，也未据此推断页面内容。\n4. 除上述工具返回内容外，**未补充任何其他来源信息，也未做超出证据的推断**。\n\n**结论**：本回答基于已提供证据，列出了 7 个 OpenAI 官方（含子域）页面标题与 URL；其中仅 `https://grants.openai.com/` 的正文被实际读取并完成内容总结，其余主域页面的正文因 HTTP 403 与重复抓取限制而缺失，已明确标注。",
+      "workflow_id": "wf_eb217d97c473456f9b5a6b42d03634ba",
+      "trace_id": "trace_bece029ad5d34b7084c41b74461e01ed",
+      "workflow_status": "SUCCEEDED",
+      "wall_latency_ms": 18215.953027829528,
+      "llm_calls": 7,
+      "tool_calls": 6,
+      "tool_names": [
+        "web_search",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page",
+        "fetch_web_page"
+      ],
+      "successful_tool_calls": 2,
+      "successful_tool_names": [
+        "web_search",
+        "fetch_web_page"
+      ],
+      "tool_error_count": 4,
+      "planner_attempts": 1,
+      "planner_retries": 0,
+      "input_tokens": 13130,
+      "output_tokens": 3334,
+      "total_tokens": 16464,
+      "token_source": "provider",
+      "estimated_cost": null,
+      "cost_currency": null,
+      "task_count": 2,
+      "task_success_count": 2,
+      "task_failure_count": 0,
+      "task_skipped_count": 0,
+      "task_success_rate": 1.0,
+      "grades": [
+        {
+          "name": "execution",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "execution completed",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "required_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools were called",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "successful_tools",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "all required tools completed successfully",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "workflow_status",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "status=SUCCEEDED",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "task_success_rate",
+          "dimension": "reliability",
+          "passed": true,
+          "score": 1.0,
+          "reason": "task_success_rate=1.000, required>=1.000",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "tool_error_budget",
+          "dimension": "reliability",
+          "passed": false,
+          "score": 0.0,
+          "reason": "tool_errors=4 > 3",
+          "failure_category": "TOOL_EXECUTION"
+        },
+        {
+          "name": "tool_call_budget",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "tool_calls=6 <= 6",
+          "failure_category": "NONE"
+        },
+        {
+          "name": "token_budget",
+          "dimension": "efficiency",
+          "passed": false,
+          "score": 0.0,
+          "reason": "total_tokens=16464 > 12000",
+          "failure_category": "PERFORMANCE"
+        },
+        {
+          "name": "latency_slo",
+          "dimension": "efficiency",
+          "passed": true,
+          "score": 1.0,
+          "reason": "18216.0ms <= 25000.0ms",
+          "failure_category": "NONE"
+        }
+      ],
+      "failure_category": "TOOL_EXECUTION",
+      "failure_detail": "tool_errors=4 > 3",
+      "error_type": null,
+      "error_message": null
+    }
+  ],
+  "by_mode": [
+    {
+      "mode": "orchestrated",
+      "runs": 3,
+      "passed": 0,
+      "pass_rate": 0.0,
+      "correctness_pass_rate": null,
+      "reliability_pass_rate": 0.3333333333333333,
+      "efficiency_pass_rate": 0.0,
+      "execution_success_rate": 1.0,
+      "workflow_success_rate": 1.0,
+      "task_success_rate": 1.0,
+      "avg_wall_latency_ms": 20841.998705950875,
+      "p50_wall_latency_ms": 21638.547035865486,
+      "p95_wall_latency_ms": 22568.2011523284,
+      "avg_tool_calls": 6.333333333333333,
+      "avg_tool_errors": 3.6666666666666665,
+      "avg_planner_attempts": 1.0,
+      "avg_planner_retries": 0.0,
+      "planner_retry_rate": 0.0,
+      "avg_total_tokens": 20735.666666666668,
+      "avg_estimated_cost": null
+    }
+  ],
+  "failure_counts": {
+    "PERFORMANCE": 1,
+    "TOOL_EXECUTION": 2
+  }
+}

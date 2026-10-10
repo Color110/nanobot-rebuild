@@ -9,6 +9,16 @@ key sk-976c661dc41147388f214114baf7db6a
 export LLM_BASE_URL=https://api.deepseek.com
 export LLM_API_KEY=sk-976c661dc41147388f214114baf7db6a
 export LLM_MODEL=deepseek-v4-flash
+export EMBEDDING_API_KEY=sk-ws-H.PMPPLHR.mXeU.MEUCIB5lfdVwexz3Rguxzn_9eDCgIEIDZBhxjyu8FIXZZ3FDAiEAv0M-5aLj0jbLR6c3qTNOl2n2CPqBVbH_86gKYuuAEuY
+export EMBEDDING_MODEL=text-embedding-v4
+export EMBEDDING_DIMENSION=1024
+export EMBEDDING_BASE_URL=https://ws-0izm7nlwm0z510bq.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+export EMBEDDING_BATCH_SIZE=10
+export BOCHA_API_KEY=sk-64ca1c0856fa43a091a55bf244848376
+
+
+https://ws-0izm7nlwm0z510bq.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+sk-ws-H.PMPPLHR.mXeU.MEUCIB5lfdVwexz3Rguxzn_9eDCgIEIDZBhxjyu8FIXZZ3FDAiEAv0M-5aLj0jbLR6c3qTNOl2n2CPqBVbH_86gKYuuAEuY
 
 
 while(true):
